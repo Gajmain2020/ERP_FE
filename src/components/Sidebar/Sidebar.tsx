@@ -22,9 +22,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { navItems } from "@/lib/nav-items";
+import { Link } from "react-router-dom";
+import { navItems } from "@/utils/nav-items";
+import useAuthStore from "@/store/userAuthStore";
 
 export function AppSidebar() {
+  const { name } = useAuthStore();
   const { state } = useSidebar();
   const [activeItem, setActiveItem] = useState(navItems[0].title);
 
@@ -55,10 +58,10 @@ export function AppSidebar() {
                     onClick={() => setActiveItem(item.title)}
                     tooltip={state === "collapsed" ? item.title : undefined}
                   >
-                    <a href={item.path}>
+                    <Link to={item.path} key={item.title}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -75,7 +78,7 @@ export function AppSidebar() {
                   <User2 />
                   {state === "expanded" && (
                     <>
-                      <span>Username</span>
+                      <span>{name}</span>
                       <ChevronUp className="ml-auto" />
                     </>
                   )}

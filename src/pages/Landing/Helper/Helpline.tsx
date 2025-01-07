@@ -43,8 +43,10 @@ export const ContactModal: React.FC<ContactModalProps> = ({
           <div className="mb-4 text-center flex flex-col">
             <span className="font-medium text-lg text-gray-700">
               Helpline No :{" "}
-              <span className="font-semibold">+91 9713829282</span> <br /> Our
-              helpline is available from 10 AM to 5 PM on working days.
+              <span className="font-semibold">+91 9713829282</span> <br />{" "}
+              <span className="text-sm">
+                Our helpline is available from 10 AM to 5 PM on working days.
+              </span>
             </span>
           </div>
 

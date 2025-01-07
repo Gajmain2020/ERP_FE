@@ -7,8 +7,32 @@ import { Button } from "@/components/ui/button";
 import { ContactModal } from "./Helper/Helpline";
 import LoginForm from "./Helper/LoginForm";
 import LandingFooter from "./Helper/LandingFooter";
+// import useAuthStore from "@/store/userAuthStore";
 
 export default function Landing() {
+  // const { setUserType, setName, setAuthToken } = useAuthStore();
+
+  // const handleDummyLogin = () => {
+  //   // Set random values for testing
+  //   const randomUserTypes: Array<"admin" | "student" | "faculty"> = [
+  //     "admin",
+  //     "student",
+  //     "faculty",
+  //   ];
+  //   const randomName = `User_${Math.floor(Math.random() * 1000)}`;
+  //   const randomAuthToken = `token_${Math.random()
+  //     .toString(36)
+  //     .substring(2, 15)}`;
+
+  //   setUserType(
+  //     randomUserTypes[Math.floor(Math.random() * randomUserTypes.length)]
+  //   );
+  //   setName(randomName);
+  //   setAuthToken(randomAuthToken);
+
+  //   console.log("Dummy login executed!");
+  // };
+
   const [isContactModalOpen, setContactModalOpen] = useState(false);
 
   const openContactModal = () => setContactModalOpen(true);
@@ -62,6 +86,16 @@ export default function Landing() {
         </div>
       </div>
       <ContactModal isOpen={isContactModalOpen} onClose={closeContactModal} />
+
+      {/* <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <h1 className="text-4xl font-bold mb-4">Welcome to the Landing Page</h1>
+        <button
+          onClick={handleDummyLogin}
+          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        >
+          Dummy Login
+        </button>
+      </div> */}
 
       <LandingFooter />
     </div>
