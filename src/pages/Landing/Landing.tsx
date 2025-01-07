@@ -1,21 +1,11 @@
 import LOGO from "../../../public/full logo.png";
 import BackgroundImage from "../../../public/mainbackground.jpg";
 import CenterImage from "../../../public/landing image.avif";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { z } from "zod";
-import { toast } from "sonner";
-import { ContactModal } from "./Helper/Helpline";
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters long")
-    .max(20, "Password must be at most 20 characters long"),
-});
+import { ContactModal } from "./Helper/Helpline";
+import LoginForm from "./Helper/LoginForm";
 
 export default function Landing() {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
@@ -93,133 +83,3 @@ export default function Landing() {
     </div>
   );
 }
-
-const LoginForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      loginSchema.parse({ email, password });
-      toast.success("Login Successful!");
-      // Login logic here
-
-      //
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err.errors) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        err.errors.forEach((error: any) => {
-          toast.error(error.message);
-        });
-      }
-    }
-  };
-
-  const handleUserTypeChange = (type: "Faculty" | "Student") => {
-    console.log("Selected User Type:", type);
-  };
-
-  return (
-    <div className="w-full h-full mx-auto bg-white rounded-lg shadow-lg p-6 flex flex-col gap-5">
-      <h2 className="text-2xl font-semibold text-gray-800 text-center">
-        Login
-      </h2>
-
-      <UserTypeSelector onChange={handleUserTypeChange} />
-
-      <div>
-        {/* Email Input */}
-        <div className="relative mb-4">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            className="pr-10 text-black border-gray-300 focus:border-blue-500"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Mail className="absolute right-3 top-2.5 text-gray-500" />
-        </div>
-
-        {/* Password Input */}
-        <div className="relative">
-          <Input
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            className="pr-10 text-black border-gray-300 focus:border-blue-500"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {showPassword ? (
-            <EyeOff
-              className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
-              onClick={togglePasswordVisibility}
-            />
-          ) : (
-            <Eye
-              className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
-              onClick={togglePasswordVisibility}
-            />
-          )}
-        </div>
-      </div>
-
-      {/* Login Button */}
-      <Button
-        onClick={handleSubmit}
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg"
-      >
-        Login
-      </Button>
-    </div>
-  );
-};
-
-interface UserTypeSelectorProps {
-  selectedType?: "Faculty" | "Student";
-  onChange: (type: "Faculty" | "Student") => void;
-}
-
-const UserTypeSelector: React.FC<UserTypeSelectorProps> = ({
-  selectedType = "Student",
-  onChange,
-}) => {
-  const [userType, setUserType] = useState<"Faculty" | "Student">(selectedType);
-
-  const handleSelect = (type: "Faculty" | "Student") => {
-    setUserType(type);
-    onChange(type);
-  };
-
-  return (
-    <div className="flex gap-4">
-      <div
-        onClick={() => handleSelect("Student")}
-        className={`cursor-pointer px-4 py-1 border rounded-lg flex-1 text-center ${
-          userType === "Student"
-            ? "bg-blue-500 text-white border-blue-700 hover:bg-blue-600/90 transition"
-            : "bg-gray-100 text-gray-700 border-gray-300"
-        }`}
-      >
-        Student
-      </div>
-      <div
-        onClick={() => handleSelect("Faculty")}
-        className={`cursor-pointer px-4 py-1 border rounded-lg flex-1 text-center ${
-          userType === "Faculty"
-            ? "bg-blue-500 text-white border-blue-700 hover:bg-blue-600/90 transition"
-            : "bg-gray-100 text-gray-700 border-gray-300"
-        }`}
-      >
-        Faculty
-      </div>
-    </div>
-  );
-};

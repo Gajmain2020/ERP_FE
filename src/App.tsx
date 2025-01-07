@@ -6,7 +6,7 @@ import Landing from "./pages/Landing/Landing";
 import { Toaster } from "sonner";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state for login status
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Example state for login status
 
   return (
     <>
