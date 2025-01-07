@@ -62,12 +62,12 @@ export default function Landing() {
           >
             Helpline
           </Button>
-          <Button
+          {/* <Button
             onClick={() => alert("General Notice Clicked")}
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-md"
           >
             General Notice
-          </Button>
+          </Button> */}
         </div>
       </div>
       <ContactModal isOpen={isContactModalOpen} onClose={closeContactModal} />
