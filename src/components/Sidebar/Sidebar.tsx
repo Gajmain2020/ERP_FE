@@ -1,67 +1,101 @@
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import SmallLogo from "../../../public/logo1.jpeg";
+import NormalLogo from "../../../public/logo2.png";
+
+import { ChevronUp, User2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { navItems } from "@/lib/nav-items";
 
 export function AppSidebar() {
-  const location = useLocation();
-  const { state, toggleSidebar } = useSidebar();
-
-  const isCollapsed = state === "collapsed";
+  const { state } = useSidebar();
+  const [activeItem, setActiveItem] = useState(navItems[0].title);
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex items-center justify-between border-b px-4 py-2">
-        <span className={cn("font-bold text-lg", isCollapsed && "hidden")}>
-          ERP & LMS
-        </span>
-        <SidebarTrigger>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            {isCollapsed ? (
-              <Menu className="h-6 w-6" />
-            ) : (
-              <X className="h-6 w-6" />
-            )}
-            <span className="sr-only">Toggle sidebar</span>
-          </Button>
-        </SidebarTrigger>
-      </SidebarHeader>
+    <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarMenu>
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.path}>
-              <SidebarMenuButton isActive={location.pathname === item.path}>
-                <Link
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                    location.pathname === item.path
-                      ? "bg-accent text-accent-foreground"
-                      : "transparent"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span className={cn(isCollapsed && "hidden")}>
-                    {item.title}
-                  </span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        <div className="flex w-full items-center justify-between p-4">
+          {state === "expanded" ? (
+            <img
+              src={NormalLogo}
+              alt="Full Logo"
+              className="shadow rounded border"
+            />
+          ) : (
+            <img src={SmallLogo} alt="Icon Logo" className="w-[50px]" />
+          )}
+        </div>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="sr-only">Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {navItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={activeItem === item.title}
+                    onClick={() => setActiveItem(item.title)}
+                    tooltip={state === "collapsed" ? item.title : undefined}
+                  >
+                    <a href={item.path}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 />
+                  {state === "expanded" && (
+                    <>
+                      <span>Username</span>
+                      <ChevronUp className="ml-auto" />
+                    </>
+                  )}
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" align="start" className="w-56">
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
