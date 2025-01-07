@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import { ContactModal } from "./Helper/Helpline";
 import LoginForm from "./Helper/LoginForm";
+import LandingFooter from "./Helper/LandingFooter";
 
 export default function Landing() {
   const [isContactModalOpen, setContactModalOpen] = useState(false);
@@ -62,24 +63,7 @@ export default function Landing() {
       </div>
       <ContactModal isOpen={isContactModalOpen} onClose={closeContactModal} />
 
-      {/* Footer */}
-      <footer className="h-auto bg-[#3D3D3D] text-white py-4 px-5">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between">
-          <p className="text-sm">
-            © 2025 BIT. All Rights Reserved.
-            <br />
-            Developed by Gajendra Sahu.
-          </p>
-          <div className="space-x-4 text-sm mt-2 sm:mt-0">
-            <a href="#privacy" className="hover:underline">
-              Privacy Policy
-            </a>
-            <a href="#terms" className="hover:underline">
-              Terms of Service
-            </a>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }
