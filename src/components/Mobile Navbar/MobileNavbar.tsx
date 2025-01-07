@@ -8,7 +8,7 @@ export function MobileNavbar() {
       <div className="flex justify-between items-center w-full">
         <SidebarTrigger />
         <div className="w-48">
-          <img src={logo} alt="" />
+          <img src={logo} alt="BIT LOGO" />
         </div>
 
         <div></div>
