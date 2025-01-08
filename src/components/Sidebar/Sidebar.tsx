@@ -27,12 +27,30 @@ import { navItems } from "@/utils/nav-items";
 import useAuthStore from "@/store/userAuthStore";
 
 export function AppSidebar() {
-  const { name } = useAuthStore();
+  const { name, userType } = useAuthStore(); // Ensure userType and username are available
   const { state } = useSidebar();
-  const [activeItem, setActiveItem] = useState(navItems[0].title);
+  const [activeItem, setActiveItem] = useState(navItems.general[0].title);
+  const [expandedGroups, setExpandedGroups] = useState({
+    general: true,
+    academics: true,
+    profile: true,
+    financial: true,
+    performance: true,
+  });
+
+  const toggleGroup = (group: keyof typeof navItems) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [group]: !prev[group],
+    }));
+  };
+
+  const getDynamicPath = (basePath: string) => {
+    return `/user/${userType}/${name}${basePath}`;
+  };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="w-[320px] text-lg ">
       <SidebarContent>
         <div className="flex w-full items-center justify-between p-4">
           {state === "expanded" ? (
@@ -46,29 +64,49 @@ export function AppSidebar() {
           )}
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="sr-only">Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={activeItem === item.title}
-                    onClick={() => setActiveItem(item.title)}
-                    tooltip={state === "collapsed" ? item.title : undefined}
-                  >
-                    <Link to={item.path} key={item.title}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {Object.entries(navItems).map(([group, items]) => (
+          <SidebarGroup key={group}>
+            <SidebarGroupLabel
+              className="flex justify-between items-center px-4 py-2 font-bold cursor-pointer"
+              onClick={() => toggleGroup(group as keyof typeof navItems)}
+            >
+              {group.charAt(0).toUpperCase() + group.slice(1)}
+              <ChevronUp
+                className={`ml-2 transition-transform ${
+                  expandedGroups[group as keyof typeof navItems]
+                    ? "rotate-0"
+                    : "rotate-180"
+                }`}
+              />
+            </SidebarGroupLabel>
+            {expandedGroups[group as keyof typeof navItems] && (
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={activeItem === item.title}
+                        onClick={() => setActiveItem(item.title)}
+                        tooltip={state === "collapsed" ? item.title : undefined}
+                      >
+                        <Link
+                          to={getDynamicPath(item.path)}
+                          className="flex items-center gap-3 px-4 py-2"
+                        >
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            )}
+          </SidebarGroup>
+        ))}
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

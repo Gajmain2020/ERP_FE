@@ -1,3 +1,7 @@
 export default function Homepage() {
-  return <div>This is homepage for new erp hello world</div>;
+  return (
+    <div className="w-full h-full">
+      This is homepage for new erp hello world
+    </div>
+  );
 }

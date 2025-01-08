@@ -40,7 +40,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <button
+      {/* <button
         onClick={loginExample}
         className="px-4 py-2 bg-blue-500 text-white rounded"
       >
@@ -48,7 +48,7 @@ const App: React.FC = () => {
       </button>
       <p>
         Current User: {name} ({userType})
-      </p>
+      </p> */}
       <Router>
         <Routes>
           {/* Landing Page */}
@@ -71,7 +71,7 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<Homepage />} />
-            <Route path="courses" element={<>Hello from student side</>} />
+            <Route path="notice" element={<>Hello from student side</>} />
           </Route>
 
           {/* Protected Routes for faculty */}
@@ -86,7 +86,7 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<Homepage />} />
-            <Route path="courses" element={<>Hello from faculty side</>} />
+            <Route path="notice" element={<>Hello from faculty side</>} />
           </Route>
 
           {/* Not Authorized Page */}

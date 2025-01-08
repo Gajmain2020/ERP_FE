@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PageNotFound from "../../utils/svg/not-found.svg";
+import BackgroundImage from "../../../public/mainbackground.jpg";
 
 const NotFound: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen gap-5 bg-gray-100 text-gray-800">
+    <div
+      style={{
+        backgroundImage: `linear-gradient(rgba(211, 211, 211, 0.95), rgba(211, 211, 211, 0.85)), url(${BackgroundImage})`,
+      }}
+      className="flex flex-col items-center bg-cover justify-center h-screen gap-5 bg-gray-100 text-gray-800"
+    >
       <div className="w-72 rounded-md overflow-hidden shadow-md">
         <img src={PageNotFound} alt="Page not found" />
       </div>

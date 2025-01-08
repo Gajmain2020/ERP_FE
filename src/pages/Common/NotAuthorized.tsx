@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import NotAllowed from "../../utils/svg/not-allowed.svg";
+import BackgroundImage from "../../../public/mainbackground.jpg";
 
 const NotAuthorized: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 gap-5 text-gray-800">
+    <div
+      style={{
+        backgroundImage: `linear-gradient(rgba(211, 211, 211, 0.95), rgba(211, 211, 211, 0.85)), url(${BackgroundImage})`,
+      }}
+      className="flex flex-col items-center bg-cover justify-center h-screen bg-gray-100 gap-5 text-gray-800"
+    >
       <div className="w-72 rounded-md overflow-hidden shadow-md">
         <img src={NotAllowed} alt="Page not found" />
       </div>

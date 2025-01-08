@@ -1,41 +1,99 @@
 import {
   Home,
-  BookOpen,
+  Calendar,
+  ClipboardList,
   FileText,
-  Layers,
-  Settings,
-  Users,
+  Book,
+  Archive,
+  User,
+  Bell,
+  AlertCircle,
+  ReceiptIndianRupee,
+  ArrowLeftRight,
 } from "lucide-react";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { TbReportAnalytics } from "react-icons/tb";
+import { VscFeedback } from "react-icons/vsc";
 
-export const navItems = [
-  {
-    title: "Dashboard",
-    icon: Home,
-    path: "/",
-  },
-  {
-    title: "Courses",
-    icon: BookOpen,
-    path: "/courses",
-  },
-  {
-    title: "Students",
-    icon: Users,
-    path: "/students",
-  },
-  {
-    title: "Inventory",
-    icon: Layers,
-    path: "/inventory",
-  },
-  {
-    title: "Reports",
-    icon: FileText,
-    path: "/reports",
-  },
-  {
-    title: "Settings",
-    icon: Settings,
-    path: "/settings",
-  },
-];
+// Grouped Navigation Items with Suitable Icons
+export const navItems = {
+  general: [
+    {
+      title: "Dashboard",
+      icon: Home,
+      path: "/",
+    },
+    {
+      title: "Details",
+      icon: User,
+      path: "/details",
+    },
+    {
+      title: "Notice",
+      icon: Bell,
+      path: "/notice",
+    },
+    {
+      title: "Complaints",
+      icon: AlertCircle,
+      path: "/complaints",
+    },
+  ],
+  academics: [
+    {
+      title: "Attendance",
+      icon: ClipboardList,
+      path: "/attendance",
+    },
+    {
+      title: "Time Table",
+      icon: Calendar,
+      path: "/time-table",
+    },
+    {
+      title: "Assignments",
+      icon: FileText,
+      path: "/assignments",
+    },
+    {
+      title: "Quiz",
+      icon: Archive,
+      path: "/quiz",
+    },
+    {
+      title: "PYQ(s)",
+      icon: Book,
+      path: "/pyqs",
+    },
+  ],
+  financial: [
+    {
+      title: "Fees",
+      icon: ReceiptIndianRupee,
+      path: "/fees",
+    },
+    {
+      title: "Transections",
+      icon: ArrowLeftRight,
+      path: "/transections",
+    },
+  ],
+
+  performance: [
+    {
+      title: "CT Marks",
+      icon: TbReportAnalytics,
+      path: "/ct-marks",
+    },
+    {
+      title: "Exam Results",
+      icon: HiOutlineDocumentReport,
+      path: "/exam-results",
+    },
+    {
+      title: "Feedback of Faculty",
+      icon: VscFeedback,
+      path: "/feedback-faculty",
+    },
+  ],
+};
