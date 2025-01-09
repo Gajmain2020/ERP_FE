@@ -140,3 +140,15 @@ export const dummyNotice = [
     link: "/event/cleanup-drive",
   },
 ];
+
+export const dummyStudentData = {
+  detailsFilled: false,
+  name: "Jone Doe",
+  urn: "123123",
+  semester: "1",
+  department: "CSE",
+  section: "A",
+  TG: "DOE jone",
+  image:
+    "https://gimgs2.nohat.cc/thumb/f/640/flat-person-icon-download-dummy-man--m2i8d3i8N4d3N4K9.jpg",
+};
