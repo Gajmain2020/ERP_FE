@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import NotAllowed from "../../utils/svg/not-allowed.svg";
-import BackgroundImage from "../../../public/mainbackground.jpg";
+import BackgroundImage from "/mainbackground.jpg";
 
 const NotAuthorized: React.FC = () => {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PageNotFound from "../../utils/svg/not-found.svg";
-import BackgroundImage from "../../../public/mainbackground.jpg";
+import BackgroundImage from "/mainbackground.jpg";
 
 const NotFound: React.FC = () => {
   return (

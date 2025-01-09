@@ -11,10 +11,12 @@ import {
   ReceiptIndianRupee,
   ArrowLeftRight,
   IdCard,
+  BadgeAlert,
 } from "lucide-react";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { VscFeedback } from "react-icons/vsc";
+import { FaWpforms } from "react-icons/fa";
 
 // Grouped Navigation Items for Student
 export const studentNavItems = {
@@ -30,14 +32,9 @@ export const studentNavItems = {
       path: "/details",
     },
     {
-      title: "Notice",
+      title: "Notice / Complaints",
       icon: Bell,
-      path: "/notice",
-    },
-    {
-      title: "Complaints",
-      icon: AlertCircle,
-      path: "/complaints",
+      path: "/notice-complaints",
     },
   ],
   academics: [
@@ -66,6 +63,11 @@ export const studentNavItems = {
       icon: Book,
       path: "/pyqs",
     },
+    {
+      title: "Exam Form",
+      icon: FaWpforms,
+      path: "/exam-form",
+    },
   ],
   financial: [
     {
@@ -89,6 +91,11 @@ export const studentNavItems = {
       title: "Exam Results",
       icon: HiOutlineDocumentReport,
       path: "/exam-results",
+    },
+    {
+      title: "Current Backlog(s)",
+      icon: BadgeAlert,
+      path: "/current-backlogs",
     },
     {
       title: "Faculty Feedback",

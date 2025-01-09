@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import Homepage from "./components/Homepage/Homepage";
+import StudentHomepage from "./components/Homepage/StudentHomepage";
 import Layout from "./components/Layout/Layout";
 import Landing from "./pages/Landing/Landing";
 import useAuthStore from "./store/userAuthStore";
@@ -70,7 +70,7 @@ const App: React.FC = () => {
               </ProtectedRoutes>
             }
           >
-            <Route index element={<Homepage />} />
+            <Route index element={<StudentHomepage />} />
             <Route path="notice" element={<>Hello from student side</>} />
           </Route>
 
@@ -85,7 +85,7 @@ const App: React.FC = () => {
               </ProtectedRoutes>
             }
           >
-            <Route index element={<Homepage />} />
+            <Route index element={<>faculty home page comming soon</>} />
             <Route path="notice" element={<>Hello from faculty side</>} />
           </Route>
 

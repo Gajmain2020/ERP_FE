@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SmallLogo from "../../../public/logo1.jpeg";
-import NormalLogo from "../../../public/logo2.png";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import NormalLogo from "/logo2.png";
 
 import { ChevronUp, User2 } from "lucide-react";
 import {
@@ -21,25 +21,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link, useNavigate } from "react-router-dom";
 import { navItems } from "@/utils/nav-items";
 import useAuthStore from "@/store/userAuthStore";
 
 // Define the type for the item
 interface NavItem {
   title: string;
-  icon: React.ComponentType; // Type for the icon component (e.g., Home, User, etc.)
+  icon: React.ComponentType;
   path: string;
 }
 
 interface SidebarNavItemProps {
-  item: NavItem; // The item to be displayed
-  isActive: boolean; // Indicates if the item is active
-  onClick: () => void; // Function to be called on click
+  item: NavItem;
+  isActive: boolean;
+  onClick: () => void;
   path: string;
 }
 
-// Reusable component for rendering individual nav items
 const SidebarNavItem = ({
   item,
   isActive,
@@ -63,16 +61,12 @@ const SidebarNavItem = ({
 
 export function AppSidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { name, userType } = useAuthStore() as {
     name: string;
     userType: keyof typeof navItems;
   };
   const { state } = useSidebar();
-  const [activeItem, setActiveItem] = useState<string>(
-    userType === "student"
-      ? navItems.student.general[0].title
-      : navItems.faculty.general[0].title
-  );
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {
       general: true,
@@ -85,7 +79,7 @@ export function AppSidebar() {
 
   if (!userType) {
     navigate("/");
-    return;
+    return null;
   }
 
   const toggleGroup = (group: keyof typeof navItems) => {
@@ -96,31 +90,29 @@ export function AppSidebar() {
   };
 
   const getDynamicPath = (basePath: string) => {
-    console.log(basePath);
     return `/user/${userType}/${name}${basePath}`;
   };
 
-  const navItemsForUser = navItems[userType]; // Get nav items based on the user type
+  const navItemsForUser = navItems[userType];
+
+  // Determine the active item based on the current path
+  const activePath = location.pathname;
 
   return (
     <Sidebar collapsible="icon" className="w-[320px] text-lg">
       <SidebarContent>
         <div className="flex w-full sticky top-0 items-center justify-between p-4">
-          {state === "expanded" ? (
-            <img
-              src={NormalLogo}
-              alt="Full Logo"
-              className="shadow rounded border"
-            />
-          ) : (
-            <img src={SmallLogo} alt="Icon Logo" className="w-[50px]" />
-          )}
+          <img
+            src={NormalLogo}
+            alt="Full Logo"
+            className="shadow rounded border"
+          />
         </div>
 
         {Object.entries(navItemsForUser).map(([group, items]) => (
-          <SidebarGroup key={group}>
+          <SidebarGroup className="py-1" key={group}>
             <SidebarGroupLabel
-              className="flex justify-between items-center px-4 py-2 font-bold cursor-pointer"
+              className="flex justify-between items-center px-3 py-1 font-bold cursor-pointer"
               onClick={() => toggleGroup(group as keyof typeof navItems)}
             >
               {group.charAt(0).toUpperCase() + group.slice(1)}
@@ -136,15 +128,19 @@ export function AppSidebar() {
             {expandedGroups[group as keyof typeof navItems] && (
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {items.map((item) => (
-                    <SidebarNavItem
-                      key={item.title}
-                      item={item}
-                      path={getDynamicPath(item.path)}
-                      isActive={activeItem === item.title}
-                      onClick={() => setActiveItem(item.title)}
-                    />
-                  ))}
+                  {items.map((item) => {
+                    const path = getDynamicPath(item.path);
+                    const isActive = activePath === path;
+                    return (
+                      <SidebarNavItem
+                        key={item.title}
+                        item={item}
+                        path={path}
+                        isActive={isActive}
+                        onClick={() => {}}
+                      />
+                    );
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             )}

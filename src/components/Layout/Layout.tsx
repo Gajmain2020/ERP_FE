@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "../Sidebar/Sidebar";
 import { MobileNavbar } from "../Mobile Navbar/MobileNavbar";
-import BackgroundImage from "../../../public/mainbackground.jpg";
+import BackgroundImage from "/mainbackground.jpg";
 
 export default function Layout() {
   return (
