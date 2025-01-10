@@ -13,6 +13,7 @@ import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import UserTypeCheck from "./utils/UsetTypeCheck";
+import ImageUpload from "./components/Testing/Test";
 
 const App: React.FC = () => {
   const {
@@ -58,6 +59,7 @@ const App: React.FC = () => {
               isLoggedIn ? <Navigate to={userRoute} replace /> : <Landing />
             }
           />
+          <Route path="/test" element={<ImageUpload />} />
 
           {/* Protected Routes for student */}
           <Route
