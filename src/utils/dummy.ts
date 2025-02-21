@@ -206,3 +206,5 @@ export const dummyStudentDetails = {
   studentMobileNumber: "9123456780",
   studentUrn: "URN2024001",
 };
+
+export const test = "testing";
