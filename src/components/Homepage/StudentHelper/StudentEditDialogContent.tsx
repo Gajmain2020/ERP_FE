@@ -75,6 +75,28 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     }));
   };
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file); // Store file for uploading later
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setStudentDetails((prev) => ({
+          ...prev,
+          profilePhoto: reader.result as string, // Base64 preview
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleStudentOtherDetailsChange = (key: string, value: string) => {
+    setStudentDetails((prev) => ({ ...prev, [key]: value }));
+  };
+
   const handleSubmit = () => {
     onSave(studentInfo, studentDetails);
     onOpenChange(false);
@@ -88,15 +110,17 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="basic" className="flex-1 flex flex-col">
-          <TabsList className="grid grid-cols-3 mb-4">
+          <TabsList className="grid grid-cols-5 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="address">Address</TabsTrigger>
             <TabsTrigger value="guardian">Guardian Info</TabsTrigger>
+            <TabsTrigger value="profile">Profile Pic</TabsTrigger>
+            <TabsTrigger value="other">Other Info</TabsTrigger>
           </TabsList>
 
           <div className="flex-1 overflow-y-auto">
             {/* Basic info mostly unchangable */}
-            <TabsContent value="basic">
+            <TabsContent className="px-1" value="basic">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Name</Label>
@@ -182,7 +206,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             </TabsContent>
 
             {/* Address related information */}
-            <TabsContent value="address">
+            <TabsContent className="px-1" value="address">
               <div className="grid grid-cols-2 gap-6">
                 {(
                   ["currentAddress", "permanentAddress"] as Array<
@@ -289,7 +313,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             </TabsContent>
 
             {/* Guardian related information */}
-            <TabsContent value="guardian">
+            <TabsContent className="px-1" value="guardian">
               <div className="grid grid-cols-2 gap-6">
                 {(
                   ["father", "mother", "alternateGuardian"] as Array<
@@ -391,76 +415,139 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                           />
                         </div>
                       )}
-                      <div className="mt-6 p-4 border rounded-lg shadow-sm">
-                        <h3 className="text-lg font-semibold mb-4">
-                          Emergency Contact
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label>Name</Label>
-                            <Input
-                              value={
-                                studentDetails.emergencyContact?.name || ""
-                              }
-                              disabled
-                            />
-                          </div>
-                          <div>
-                            <Label>Mobile Number</Label>
-                            <Input
-                              value={
-                                studentDetails.emergencyContact?.mobileNumber ||
-                                ""
-                              }
-                              disabled
-                            />
-                          </div>
-                          <div>
-                            <Label>Relation</Label>
-                            <Input
-                              value={
-                                studentDetails.emergencyContact?.relation || ""
-                              }
-                              disabled
-                            />
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 ))}
-              </div>
-
-              {/* Emergency Contact Section */}
-              <div className="mt-6 p-4 border rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold mb-4">
-                  Emergency Contact
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Name</Label>
-                    <Input
-                      value={studentDetails.emergencyContact?.name || ""}
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <Label>Mobile Number</Label>
-                    <Input
-                      value={
-                        studentDetails.emergencyContact?.mobileNumber || ""
-                      }
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <Label>Relation</Label>
-                    <Input
-                      value={studentDetails.emergencyContact?.relation || ""}
-                      disabled
-                    />
+                <div className="p-4 border rounded-lg shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4">
+                    Emergency Contact
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Name</Label>
+                      <Input
+                        value={studentDetails.emergencyContact?.name || ""}
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <Label>Mobile Number</Label>
+                      <Input
+                        value={
+                          studentDetails.emergencyContact?.mobileNumber || ""
+                        }
+                        disabled
+                      />
+                    </div>
+                    <div>
+                      <Label>Relation</Label>
+                      <Input
+                        value={studentDetails.emergencyContact?.relation || ""}
+                        disabled
+                      />
+                    </div>
                   </div>
                 </div>
+              </div>
+            </TabsContent>
+
+            {/* Profile Picture */}
+            <TabsContent className="px-1" value="profile">
+              <div className="flex flex-col items-center justify-center space-y-4 p-6 border rounded-lg shadow-sm">
+                <div className="relative w-64 h-64">
+                  <img
+                    src={
+                      studentDetails.profilePhoto || "/placeholder-profile.png"
+                    }
+                    alt="Profile"
+                    className="w-full h-full object-cover rounded-full border-2 border-gray-300 shadow-md"
+                  />
+                </div>
+
+                {/* File Upload Input */}
+                <Label className="cursor-pointer bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg shadow-sm">
+                  Upload Profile Picture
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfilePicChange}
+                    className="hidden"
+                  />
+                </Label>
+              </div>
+            </TabsContent>
+
+            {/* Other Info */}
+            <TabsContent className="px-1" value="other">
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: "Aadhar Number", key: "aadharNumber", type: "text" },
+                  { label: "ABC ID", key: "abcId", type: "text" },
+                  {
+                    label: "Admission Number",
+                    key: "admissionNumber",
+                    type: "text",
+                  },
+                  { label: "Date of Birth", key: "dob", type: "date" },
+                  { label: "Nationality", key: "nationality", type: "text" },
+                ].map(({ label, key, type }) => (
+                  <div key={key}>
+                    <Label>{label}</Label>
+                    <Input
+                      type={type}
+                      value={
+                        studentDetails[
+                          key as keyof StudentDetailsData
+                        ] as string
+                      }
+                      onChange={(e) =>
+                        handleStudentOtherDetailsChange(
+                          key as keyof StudentDetailsData,
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+
+                {[
+                  {
+                    label: "Blood Group",
+                    key: "bloodGroup",
+                    options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+                  },
+                  {
+                    label: "Category",
+                    key: "category",
+                    options: ["Gen", "OBC", "ST", "SC"],
+                  },
+                  {
+                    label: "Gender",
+                    key: "gender",
+                    options: ["Male", "Female", "Other"],
+                  },
+                ].map(({ label, key, options }) => (
+                  <div key={key}>
+                    <Label>{label}</Label>
+                    <select
+                      value={
+                        studentDetails[
+                          key as keyof StudentDetailsData
+                        ] as string
+                      }
+                      onChange={(e) =>
+                        handleStudentOtherDetailsChange(key, e.target.value)
+                      }
+                      className="border rounded-lg p-2 w-full"
+                    >
+                      {options.map((opt) => (
+                        <option key={opt} value={opt.toLowerCase()}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
               </div>
             </TabsContent>
           </div>
