@@ -141,14 +141,68 @@ export const dummyNotice = [
   },
 ];
 
-export const dummyStudentData = {
-  detailsFilled: false,
-  name: "Jone Doe",
-  urn: "123123",
-  semester: "1",
-  department: "CSE",
+export const dummyStudentBasicDetails = {
+  crn: "CRN123456",
+  department: "Computer Science",
+  email: "student@example.com",
+  isDetailsFilled: true,
+  isVerified: true,
+  name: "John Doe",
   section: "A",
-  TG: "DOE jone",
-  image:
-    "https://gimgs2.nohat.cc/thumb/f/640/flat-person-icon-download-dummy-man--m2i8d3i8N4d3N4K9.jpg",
+  semester: "V",
+  TG: {
+    teacherEmpId: "EMP98765",
+    teacherId: "TCH12345",
+    teacherName: "Dr. Smith",
+    teacherPhoneNumber: "9876543210",
+  },
+  urn: "URN2024001",
+};
+
+export const dummyStudentDetails = {
+  aadharNumber: "123456789012",
+  abcId: "ABC123456",
+  admissionNumber: "ADM2024001",
+  bloodGroup: "B+",
+  category: "GEN",
+  currentAddress: {
+    address: "123, MG Road",
+    city: "Bangalore",
+    pinCode: "560001",
+    state: "Karnataka",
+  },
+  dob: "2003-08-15T00:00:00.000Z",
+  emergencyContact: {
+    mobileNumber: "9876543210",
+    name: "Rajesh Kumar",
+    relation: "Uncle",
+  },
+  gender: "male",
+  guardianDetails: {
+    alternateGuardian: {
+      mobileNumber: "9123456789",
+      name: "Suresh Sharma",
+      relationship: "Grandfather",
+    },
+    father: {
+      mobileNumber: "9876543211",
+      name: "Amit Kumar",
+    },
+    mother: {
+      mobileNumber: "9876543212",
+      name: "Priya Sharma",
+    },
+  },
+  nationality: "Indian",
+  permanentAddress: {
+    address: "45, Lajpat Nagar",
+    city: "New Delhi",
+    pinCode: "110024",
+    state: "Delhi",
+  },
+  profilePhoto:
+    "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png",
+  studentId: "652c6f3e52a0a3e456789abc",
+  studentMobileNumber: "9123456780",
+  studentUrn: "URN2024001",
 };
