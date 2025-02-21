@@ -45,14 +45,16 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   };
 
   const handleStudentDetailsChange = (
-    parentField: string,
+    parentField: keyof StudentDetailsData,
     field: string,
     value: string
   ) => {
     setStudentDetails((prev) => ({
       ...prev,
       [parentField]: {
-        ...(prev[parentField] || {}),
+        ...(typeof prev[parentField] === "object" && prev[parentField] !== null
+          ? prev[parentField]
+          : {}),
         [field]: value,
       },
     }));
@@ -68,7 +70,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
       guardianDetails: {
         ...prev.guardianDetails,
         [guardianType]: {
-          ...prev.guardianDetails[guardianType],
+          ...(prev.guardianDetails?.[guardianType] || {}),
           [field]: value,
         },
       },
