@@ -16,7 +16,7 @@ export const quickLinks = [
     title: "Time Table",
     description: "Stay updated with the latest time table and schedules.",
     icon: "📅",
-    link: "/exam",
+    link: "/time-table",
   },
 
   {

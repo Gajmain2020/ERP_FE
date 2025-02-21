@@ -14,14 +14,15 @@ import NotFound from "./pages/Common/NotFound";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import UserTypeCheck from "./utils/UsetTypeCheck";
 import ImageUpload from "./components/Testing/Test";
+import StudentDetails from "./pages/Student/StudentDetails";
 
 const App: React.FC = () => {
   const {
     authToken,
-    setUserType,
-    setName,
-    setAuthToken,
-    setId,
+    // setUserType,
+    // setName,
+    // setAuthToken,
+    // setId,
     userType,
     name,
   } = useAuthStore();
@@ -30,12 +31,12 @@ const App: React.FC = () => {
   const isLoggedIn = !!authToken;
 
   // Example login function
-  const loginExample = () => {
-    setUserType("student");
-    setName("JohnDoe");
-    setAuthToken("example-token-1234");
-    setId("123");
-  };
+  // const loginExample = () => {
+  //   setUserType("student");
+  //   setName("JohnDoe");
+  //   setAuthToken("example-token-1234");
+  //   setId("123");
+  // };
 
   const userRoute = `/user/${userType}/${name}`;
 
@@ -73,6 +74,7 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<StudentHomepage />} />
+            <Route path="details" element={<StudentDetails />} />
             <Route path="notice" element={<>Hello from student side</>} />
           </Route>
 

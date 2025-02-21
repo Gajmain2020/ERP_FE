@@ -14,8 +14,8 @@ const DetailsNotFilledWarning: React.FC = () => {
         are required for accessing the full features of the system. Please
         update your information by filling out the Student Details Form at the
         earliest. <br />
-        <span className="text-red-500 font-semibold">
-          Note: Until your profile is updated, you may encounter limited access
+        <span className="text-red-500 font-semibold text-sm">
+          *Note: Until your profile is updated, you may encounter limited access
           to certain services.
         </span>
       </div>
