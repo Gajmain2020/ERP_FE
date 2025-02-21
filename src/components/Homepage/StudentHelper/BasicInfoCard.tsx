@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { StudentData, StudentDetailsData, StudentProps } from "@/utils/types";
+import { StudentData, StudentDetailsData } from "@/utils/types";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
@@ -11,9 +11,9 @@ import {
 } from "@radix-ui/react-tooltip";
 import { useState } from "react";
 import EditStudentDialog from "./StudentEditDialogContent";
-import { dummyStudentDetails } from "@/utils/dummy";
+// import { dummyStudentDetails } from "@/utils/dummy";
 
-const BasicInfo = ({ details }: { details: StudentProps }) => {
+const BasicInfo = ({ details }: { details: StudentData }) => {
   const navigate = useNavigate();
 
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -58,7 +58,6 @@ const BasicInfo = ({ details }: { details: StudentProps }) => {
         {/* Dialog for editing the data */}
         <EditStudentDialog
           studentData={details}
-          studentDetailsData={null}
           isOpen={isDialogOpen}
           onOpenChange={setDialogOpen}
           onSave={handleSave} // ✅ Correctly passing a function
@@ -125,7 +124,9 @@ const BasicInfo = ({ details }: { details: StudentProps }) => {
           </div>
           <div>
             <span className="font-semibold">TG:</span>{" "}
-            <span className="text-gray-600">{details.TG.teacherName}</span>
+            <span className="text-gray-600">
+              {details.TG ? details.TG.teacherName : "TG not assigned"}
+            </span>
           </div>
         </div>
 

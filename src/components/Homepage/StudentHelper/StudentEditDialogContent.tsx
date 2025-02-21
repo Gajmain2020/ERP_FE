@@ -36,15 +36,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     ...studentData,
   });
   const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
-    currentAddress: {} as Address,
-    permanentAddress: {} as Address,
-    guardianDetails: {
-      father: {},
-      mother: {},
-      alternateGuardian: {},
-    },
-    emergencyContact: {},
-    ...studentDetailsData, // Spread the provided details last to override defaults
+    ...studentDetailsData,
   });
 
   const handleStudentInfoChange = (field: string, value: string) => {
@@ -236,7 +228,12 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                           onClick={() =>
                             setStudentDetails((prev) => ({
                               ...prev,
-                              permanentAddress: { ...prev.currentAddress },
+                              permanentAddress: {
+                                address: prev.currentAddress?.address || "",
+                                city: prev.currentAddress?.city || "",
+                                pinCode: prev.currentAddress?.pinCode || "",
+                                state: prev.currentAddress?.state || "",
+                              },
                             }))
                           }
                         >
@@ -364,7 +361,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                         <Label>Name</Label>
                         <Input
                           value={
-                            studentDetails.guardianDetails[guardianType]
+                            studentDetails.guardianDetails?.[guardianType]
                               ?.name || ""
                           }
                           onChange={(e) =>
@@ -380,7 +377,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                         <Label>Mobile Number</Label>
                         <Input
                           value={
-                            studentDetails.guardianDetails[guardianType]
+                            studentDetails?.guardianDetails?.[guardianType]
                               ?.mobileNumber || ""
                           }
                           onChange={(e) => {
@@ -394,13 +391,13 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                             }
                           }}
                           className={
-                            studentDetails.guardianDetails[guardianType]
+                            studentDetails?.guardianDetails?.[guardianType]
                               ?.mobileNumber?.length === 10
                               ? "border-green-500"
                               : "border-red-500"
                           }
                         />
-                        {studentDetails.guardianDetails[guardianType]
+                        {studentDetails.guardianDetails?.[guardianType]
                           ?.mobileNumber &&
                           studentDetails.guardianDetails[guardianType]
                             ?.mobileNumber?.length !== 10 && (
@@ -414,7 +411,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                           <Label>Relationship</Label>
                           <Input
                             value={
-                              studentDetails.guardianDetails.alternateGuardian
+                              studentDetails?.guardianDetails?.alternateGuardian
                                 ?.relationship || ""
                             }
                             onChange={(e) =>

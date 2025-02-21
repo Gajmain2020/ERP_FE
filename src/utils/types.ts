@@ -30,17 +30,19 @@ export interface StudentData {
   TG?: {
     teacherName: string;
   };
+  isDetailsFilled: boolean;
+  isVerified: boolean;
 }
 
 export interface StudentDetailsData {
-  currentAddress: Address;
-  permanentAddress: Address;
-  guardianDetails: {
-    father: GuardianDetails;
-    mother: GuardianDetails;
-    alternateGuardian: AlternateGuardianDetails;
+  currentAddress?: Address;
+  permanentAddress?: Address;
+  guardianDetails?: {
+    father?: GuardianDetails;
+    mother?: GuardianDetails;
+    alternateGuardian?: AlternateGuardianDetails;
   };
-  emergencyContact: EmergencyContact;
+  emergencyContact?: EmergencyContact;
   profilePhoto?: string;
   aadharNumber?: string;
   abcId?: string;
