@@ -1,3 +1,5 @@
+import type React from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -15,17 +17,17 @@ import { Button } from "@/components/ui/button";
 // } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import {
+import type {
   EditStudentDialogProps,
   StudentData,
   StudentDetailsData,
 } from "@/utils/types";
 import { Label } from "@/components/ui/label";
-import { Address } from "@/utils/types";
+import type { Address } from "@/utils/types";
 
 const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   studentData,
-  studentDetailsData,
+  studentDetailsData = {}, // Provide empty object as default
   isOpen,
   onOpenChange,
   onSave,
@@ -34,7 +36,15 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     ...studentData,
   });
   const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
-    ...studentDetailsData,
+    currentAddress: {} as Address,
+    permanentAddress: {} as Address,
+    guardianDetails: {
+      father: {},
+      mother: {},
+      alternateGuardian: {},
+    },
+    emergencyContact: {},
+    ...studentDetailsData, // Spread the provided details last to override defaults
   });
 
   const handleStudentInfoChange = (field: string, value: string) => {
@@ -459,7 +469,8 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
                 <div className="relative w-64 h-64">
                   <img
                     src={
-                      studentDetails.profilePhoto || "/placeholder-profile.png"
+                      studentDetails.profilePhoto ||
+                      "https://www.strasys.uk/wp-content/uploads/2022/02/Depositphotos_484354208_S.jpg"
                     }
                     alt="Profile"
                     className="w-full h-full object-cover rounded-full border-2 border-gray-300 shadow-md"
@@ -555,7 +566,10 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
           </div>
         </Tabs>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex gap-4 justify-end mt-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
           <Button onClick={handleSubmit}>Save</Button>
         </div>
       </DialogContent>

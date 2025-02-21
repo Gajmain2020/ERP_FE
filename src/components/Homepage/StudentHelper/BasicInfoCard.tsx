@@ -58,7 +58,7 @@ const BasicInfo = ({ details }: { details: StudentProps }) => {
         {/* Dialog for editing the data */}
         <EditStudentDialog
           studentData={details}
-          studentDetailsData={dummyStudentDetails}
+          studentDetailsData={null}
           isOpen={isDialogOpen}
           onOpenChange={setDialogOpen}
           onSave={handleSave} // ✅ Correctly passing a function
