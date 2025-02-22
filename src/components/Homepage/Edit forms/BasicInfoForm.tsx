@@ -3,7 +3,7 @@ import { StudentData } from "@/utils/types";
 import { Label } from "@radix-ui/react-label";
 
 interface BasicInfoFormProps {
-  handleStudentInfoChange: (key: keyof StudentData, value: string) => void;
+  onChangeHandler: (key: keyof StudentData, value: string) => void;
   studentInfo: StudentData;
 }
 
@@ -29,7 +29,7 @@ const fields: {
 ];
 
 const BasicInfoForm = ({
-  handleStudentInfoChange,
+  onChangeHandler,
   studentInfo,
 }: BasicInfoFormProps) => (
   <div className="grid grid-cols-2 gap-4">
@@ -45,7 +45,7 @@ const BasicInfoForm = ({
               ? studentInfo[key]
               : ""
           }
-          onChange={(e) => handleStudentInfoChange(key, e.target.value)}
+          onChange={(e) => onChangeHandler(key, e.target.value)}
         />
       </div>
     ))}

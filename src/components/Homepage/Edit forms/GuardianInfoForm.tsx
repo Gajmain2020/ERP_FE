@@ -4,7 +4,7 @@ import { StudentDetailsData } from "@/utils/types";
 
 interface GuardianInfoFormProps {
   studentDetails: StudentDetailsData;
-  handleGuardianDetailsChange: (
+  onChangeHandler: (
     guardianType: keyof StudentDetailsData["guardianDetails"],
     field: string,
     value: string
@@ -13,7 +13,7 @@ interface GuardianInfoFormProps {
 
 const GuardianInfoForm = ({
   studentDetails,
-  handleGuardianDetailsChange,
+  onChangeHandler,
 }: GuardianInfoFormProps) => (
   <div className="grid grid-cols-2 gap-6">
     {(
@@ -39,11 +39,7 @@ const GuardianInfoForm = ({
                 ""
               }
               onChange={(e) =>
-                handleGuardianDetailsChange(
-                  guardianType,
-                  "name",
-                  e.target.value
-                )
+                onChangeHandler(guardianType, "name", e.target.value)
               }
             />
           </div>
@@ -60,11 +56,7 @@ const GuardianInfoForm = ({
                 ""
               }
               onChange={(e) =>
-                handleGuardianDetailsChange(
-                  guardianType,
-                  "mobileNumber",
-                  e.target.value
-                )
+                onChangeHandler(guardianType, "mobileNumber", e.target.value)
               }
               className={
                 studentDetails.guardianDetails?.[guardianType] &&

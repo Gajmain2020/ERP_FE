@@ -1,29 +1,18 @@
 import type React from "react";
-
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import type {
   EditStudentDialogProps,
   StudentData,
   StudentDetailsData,
 } from "@/utils/types";
-import { Label } from "@/components/ui/label";
-import type { Address } from "@/utils/types";
 import BasicInfoForm from "../Edit forms/BasicInfoForm";
 import TabsListComponent from "../Edit forms/TabListComponent";
 import AddressForm from "../Edit forms/AddressForm";
@@ -33,26 +22,27 @@ import OtherInfoForm from "../Edit forms/OtherInfoForm";
 
 const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   studentData,
-  studentDetailsData = {}, // Provide empty object as default
+  studentDetailsData = {},
   isOpen,
   onOpenChange,
   onSave,
 }) => {
+  // State for student basic information
   const [studentInfo, setStudentInfo] = useState<StudentData>({
     ...studentData,
   });
+
+  // State for student additional details
   const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
     ...studentDetailsData,
   });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // Handler to update basic student information
   const handleStudentInfoChange = (field: keyof StudentData, value: string) => {
-    setStudentInfo((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setStudentInfo((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Handler to update address or other object-type details
   const handleStudentDetailsChange = (
     parentField: keyof StudentDetailsData,
     field: string,
@@ -69,6 +59,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     }));
   };
 
+  // Handler to update guardian details
   const handleGuardianDetailsChange = (
     guardianType: keyof StudentDetailsData["guardianDetails"],
     field: string,
@@ -86,26 +77,27 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     }));
   };
 
+  // Handler for updating profile picture
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file); // Store file for uploading later
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setStudentDetails((prev) => ({
           ...prev,
-          profilePhoto: reader.result as string, // Base64 preview
+          profilePhoto: reader.result as string,
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Handler for updating other student details (simple key-value pairs)
   const handleStudentOtherDetailsChange = (key: string, value: string) => {
     setStudentDetails((prev) => ({ ...prev, [key]: value }));
   };
 
+  // Submits updated student details
   const handleSubmit = () => {
     onSave(studentInfo, studentDetails);
     onOpenChange(false);
@@ -119,53 +111,49 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="basic" className="flex-1 flex flex-col">
+          {/* Tab Navigation */}
           <TabsListComponent />
 
+          {/* Tab Content */}
           <div className="flex-1 overflow-y-auto">
-            {/* Basic info mostly unchangable */}
             <TabsContent className="px-1" value="basic">
               <BasicInfoForm
-                handleStudentInfoChange={handleStudentInfoChange}
+                onChangeHandler={handleStudentInfoChange}
                 studentInfo={studentInfo}
               />
             </TabsContent>
 
-            {/* Address related information */}
             <TabsContent className="px-1" value="address">
               <AddressForm
                 studentDetails={studentDetails}
-                handleStudentDetailsChange={handleStudentDetailsChange}
+                onChangeHandler={handleStudentDetailsChange}
               />
             </TabsContent>
 
-            {/* Guardian related information */}
             <TabsContent className="px-1" value="guardian">
               <GuardianInfoForm
-                handleGuardianDetailsChange={handleGuardianDetailsChange}
                 studentDetails={studentDetails}
+                onChangeHandler={handleGuardianDetailsChange}
               />
             </TabsContent>
 
-            {/* Profile Picture */}
             <TabsContent className="px-1" value="profile">
               <ProfilePictureForm
-                handleProfilePicChange={handleProfilePicChange}
                 studentDetails={studentDetails}
+                onChangeHandler={handleProfilePicChange}
               />
             </TabsContent>
 
-            {/* Other Info */}
             <TabsContent className="px-1" value="other">
               <OtherInfoForm
-                handleStudentOtherDetailsChange={
-                  handleStudentOtherDetailsChange
-                }
                 studentDetails={studentDetails}
+                onChangeHandler={handleStudentOtherDetailsChange}
               />
             </TabsContent>
           </div>
         </Tabs>
 
+        {/* Footer Buttons */}
         <div className="flex gap-4 justify-end mt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel

@@ -2,12 +2,12 @@ import { Label } from "@/components/ui/label";
 
 interface ProfilePictureFormProps {
   studentDetails: { profilePhoto?: string };
-  handleProfilePicChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfilePictureForm: React.FC<ProfilePictureFormProps> = ({
   studentDetails,
-  handleProfilePicChange,
+  onChangeHandler,
 }) => (
   <div className="flex flex-col items-center justify-center space-y-4 p-6 border rounded-lg shadow-sm">
     <div className="relative w-64 h-64">
@@ -27,7 +27,7 @@ const ProfilePictureForm: React.FC<ProfilePictureFormProps> = ({
       <input
         type="file"
         accept="image/*"
-        onChange={handleProfilePicChange}
+        onChange={onChangeHandler}
         className="hidden"
       />
     </Label>

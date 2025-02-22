@@ -3,12 +3,12 @@ import { StudentDetailsData } from "@/utils/types";
 
 interface OtherInfoFormProps {
   studentDetails: StudentDetailsData;
-  handleStudentOtherDetailsChange: (key: string, value: string) => void;
+  onChangeHandler: (key: string, value: string) => void;
 }
 
 const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
   studentDetails,
-  handleStudentOtherDetailsChange,
+  onChangeHandler,
 }) => (
   <div className="grid grid-cols-2 gap-4">
     {[
@@ -25,7 +25,7 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
           value={
             typeof studentDetails[key] === "string" ? studentDetails[key] : ""
           }
-          onChange={(e) => handleStudentOtherDetailsChange(key, e.target.value)}
+          onChange={(e) => onChangeHandler(key, e.target.value)}
           className="border rounded-lg p-2 w-full"
         />
       </div>
@@ -50,7 +50,7 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
           value={
             typeof studentDetails[key] === "string" ? studentDetails[key] : ""
           }
-          onChange={(e) => handleStudentOtherDetailsChange(key, e.target.value)}
+          onChange={(e) => onChangeHandler(key, e.target.value)}
           className="border rounded-lg p-2 w-full"
         >
           {options.map((opt) => (

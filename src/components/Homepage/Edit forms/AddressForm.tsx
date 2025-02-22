@@ -5,17 +5,14 @@ import { StudentDetailsData, Address } from "@/utils/types";
 
 interface AddressFormProps {
   studentDetails: StudentDetailsData;
-  handleStudentDetailsChange: (
+  onChangeHandler: (
     parentField: keyof StudentDetailsData,
     field: string,
     value: string
   ) => void;
 }
 
-const AddressForm = ({
-  studentDetails,
-  handleStudentDetailsChange,
-}: AddressFormProps) => (
+const AddressForm = ({ studentDetails, onChangeHandler }: AddressFormProps) => (
   <div className="grid grid-cols-2 gap-6">
     {["currentAddress", "permanentAddress"].map((type: string, index) => (
       <div key={type} className="p-4 border rounded-lg shadow-sm">
@@ -27,7 +24,7 @@ const AddressForm = ({
             <Button
               variant="outline"
               onClick={() =>
-                handleStudentDetailsChange(
+                onChangeHandler(
                   "permanentAddress",
                   "address",
                   studentDetails.currentAddress?.address || ""
@@ -49,7 +46,7 @@ const AddressForm = ({
                   )?.[field as keyof Address] || ""
                 }
                 onChange={(e) =>
-                  handleStudentDetailsChange(
+                  onChangeHandler(
                     type as keyof StudentDetailsData,
                     field,
                     e.target.value
