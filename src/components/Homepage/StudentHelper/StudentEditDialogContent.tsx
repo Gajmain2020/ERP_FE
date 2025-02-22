@@ -27,6 +27,7 @@ import type { Address } from "@/utils/types";
 import BasicInfoForm from "../Edit forms/BasicInfoForm";
 import TabsListComponent from "../Edit forms/TabListComponent";
 import AddressForm from "../Edit forms/AddressForm";
+import GuardianInfoForm from "../Edit forms/GuardianInfoForm";
 
 const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   studentData,
@@ -41,6 +42,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
     ...studentDetailsData,
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleStudentInfoChange = (field: keyof StudentData, value: string) => {
     setStudentInfo((prev) => ({
@@ -81,8 +83,6 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
       },
     }));
   };
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -138,141 +138,10 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
 
             {/* Guardian related information */}
             <TabsContent className="px-1" value="guardian">
-              <div className="grid grid-cols-2 gap-6">
-                {(
-                  ["father", "mother", "alternateGuardian"] as Array<
-                    keyof StudentDetailsData["guardianDetails"]
-                  >
-                ).map((guardianType) => (
-                  <div
-                    key={guardianType}
-                    className="p-4 border rounded-lg shadow-sm"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold capitalize">
-                        {guardianType}
-                      </h3>
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          setStudentDetails((prev) => ({
-                            ...prev,
-                            emergencyContact: {
-                              ...prev.guardianDetails[guardianType],
-                              relation:
-                                guardianType === "alternateGuardian"
-                                  ? prev?.guardianDetails?.alternateGuardian
-                                      ?.relationship
-                                  : guardianType,
-                            },
-                          }))
-                        }
-                      >
-                        Set as Emergency Contact
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Name</Label>
-                        <Input
-                          value={
-                            studentDetails.guardianDetails?.[guardianType]
-                              ?.name || ""
-                          }
-                          onChange={(e) =>
-                            handleGuardianDetailsChange(
-                              guardianType,
-                              "name",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                      <div>
-                        <Label>Mobile Number</Label>
-                        <Input
-                          value={
-                            studentDetails?.guardianDetails?.[guardianType]
-                              ?.mobileNumber || ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (/^\d{0,10}$/.test(value)) {
-                              handleGuardianDetailsChange(
-                                guardianType,
-                                "mobileNumber",
-                                value
-                              );
-                            }
-                          }}
-                          className={
-                            studentDetails?.guardianDetails?.[guardianType]
-                              ?.mobileNumber?.length === 10
-                              ? "border-green-500"
-                              : "border-red-500"
-                          }
-                        />
-                        {studentDetails.guardianDetails?.[guardianType]
-                          ?.mobileNumber &&
-                          studentDetails.guardianDetails[guardianType]
-                            ?.mobileNumber?.length !== 10 && (
-                            <p className="text-red-500 text-sm mt-1">
-                              Mobile Number must be 10 digits
-                            </p>
-                          )}
-                      </div>
-                      {guardianType === "alternateGuardian" && (
-                        <div>
-                          <Label>Relationship</Label>
-                          <Input
-                            value={
-                              studentDetails?.guardianDetails?.alternateGuardian
-                                ?.relationship || ""
-                            }
-                            onChange={(e) =>
-                              handleGuardianDetailsChange(
-                                "alternateGuardian",
-                                "relationship",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <div className="p-4 border rounded-lg shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Emergency Contact
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Name</Label>
-                      <Input
-                        value={studentDetails.emergencyContact?.name || ""}
-                        disabled
-                      />
-                    </div>
-                    <div>
-                      <Label>Mobile Number</Label>
-                      <Input
-                        value={
-                          studentDetails.emergencyContact?.mobileNumber || ""
-                        }
-                        disabled
-                      />
-                    </div>
-                    <div>
-                      <Label>Relation</Label>
-                      <Input
-                        value={studentDetails.emergencyContact?.relation || ""}
-                        disabled
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <GuardianInfoForm
+                handleGuardianDetailsChange={handleGuardianDetailsChange}
+                studentDetails={studentDetails}
+              />
             </TabsContent>
 
             {/* Profile Picture */}
