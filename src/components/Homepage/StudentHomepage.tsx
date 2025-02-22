@@ -6,8 +6,6 @@ import BasicInfo from "./StudentHelper/BasicInfoCard";
 import NoticeComponent from "./StudentHelper/Notice";
 import DetailsNotFilledWarning from "./StudentHelper/Waraning";
 
-// TODO: add a green tick icon beside the name to show the user is verified.
-
 export default function StudentHomepage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [studentDetails, setStudentDetails] = useState(

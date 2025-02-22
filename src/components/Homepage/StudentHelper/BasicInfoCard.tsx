@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { StudentProps } from "@/utils/types";
+import { StudentData, StudentDetailsData } from "@/utils/types";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoIosWarning } from "react-icons/io";
@@ -9,16 +9,32 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
+import { useState } from "react";
+import EditStudentDialog from "./StudentEditDialogContent";
+// import { dummyStudentDetails } from "@/utils/dummy";
 
-const BasicInfo = ({ details }: { details: StudentProps }) => {
+const BasicInfo = ({ details }: { details: StudentData }) => {
   const navigate = useNavigate();
+
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleSave = (
+    updatedStudentBasicDetails: StudentData,
+    updatedStudentDetails: StudentDetailsData
+  ) => {
+    console.log(
+      "Updated Student Data:",
+      updatedStudentBasicDetails,
+      updatedStudentDetails
+    );
+  };
 
   const handleViewDetailsButtonClick = () => {
     navigate(`details`);
   };
 
   const handleEditDetailsButton = () => {
-    console.log("handle edit button");
+    setDialogOpen(true);
   };
 
   return (
@@ -38,6 +54,14 @@ const BasicInfo = ({ details }: { details: StudentProps }) => {
             Edit Details
           </button>
         </div>
+
+        {/* Dialog for editing the data */}
+        <EditStudentDialog
+          studentData={details}
+          isOpen={isDialogOpen}
+          onOpenChange={setDialogOpen}
+          onSave={handleSave} // ✅ Correctly passing a function
+        />
       </div>
 
       {/* Card Content */}
@@ -100,7 +124,9 @@ const BasicInfo = ({ details }: { details: StudentProps }) => {
           </div>
           <div>
             <span className="font-semibold">TG:</span>{" "}
-            <span className="text-gray-600">{details.TG.teacherName}</span>
+            <span className="text-gray-600">
+              {details.TG ? details.TG.teacherName : "TG not assigned"}
+            </span>
           </div>
         </div>
 

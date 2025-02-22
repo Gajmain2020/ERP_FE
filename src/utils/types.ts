@@ -8,73 +8,82 @@ interface Notice {
 export interface NoticeComponentProps {
   notices: Notice[];
 }
-
-interface TeacherGuardian {
-  teacherEmpId?: string;
-  teacherId?: string;
-  teacherName?: string;
-  teacherPhoneNumber?: string;
+export interface EditStudentDialogProps {
+  studentData: StudentData;
+  studentDetailsData?: StudentDetailsData;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (
+    studentInfo: StudentData,
+    studentDetails: StudentDetailsData
+  ) => void;
 }
 
-// ! important
-export interface StudentProps {
-  crn: string;
-  department: string;
+export interface StudentData {
+  name: string;
   email: string;
+  crn: string;
+  urn: string;
+  semester: string;
+  section: string;
+  department: string;
+  TG?: {
+    teacherName: string;
+  };
   isDetailsFilled: boolean;
   isVerified: boolean;
-  name: string;
-  section: string;
-  semester: string;
-  TG: TeacherGuardian;
-  urn: string;
 }
 
-interface Address {
+export interface StudentDetailsData {
+  currentAddress?: Address;
+  permanentAddress?: Address;
+  guardianDetails?: {
+    father?: GuardianDetails;
+    mother?: GuardianDetails;
+    alternateGuardian?: AlternateGuardianDetails;
+  };
+  emergencyContact?: EmergencyContact;
+  profilePhoto?: string;
+  aadharNumber?: string;
+  abcId?: string;
+  admissionNumber?: string;
+  dob?: string;
+  nationality?: string;
+  bloodGroup?: string;
+  category?: string;
+  gender?: string;
+  [key: string]:
+    | string
+    | EmergencyContact
+    | Address
+    | GuardianDetails
+    | AlternateGuardianDetails
+    | {
+        father?: GuardianDetails;
+        mother?: GuardianDetails;
+        alternateGuardian?: AlternateGuardianDetails;
+      }
+    | undefined; // Allow string, EmergencyContact, Address, GuardianDetails, AlternateGuardianDetails, or undefined values
+}
+
+export interface Address {
   address: string;
   city: string;
   pinCode: string;
   state: string;
 }
 
-interface EmergencyContact {
-  mobileNumber: string;
+export interface GuardianDetails {
   name: string;
+  mobileNumber: string;
+}
+
+export interface AlternateGuardianDetails extends GuardianDetails {
+  relationship: string;
+}
+
+export interface EmergencyContact {
+  name: string;
+  mobileNumber: string;
   relation: string;
-}
-
-interface GuardianDetails {
-  alternateGuardian?: {
-    mobileNumber?: string;
-    name?: string;
-    relationship?: string;
-  };
-  father: {
-    mobileNumber: string;
-    name: string;
-  };
-  mother: {
-    mobileNumber: string;
-    name: string;
-  };
-}
-
-// ! important
-export interface StudentDetailsProps {
-  aadharNumber: string;
-  abcId: string;
-  admissionNumber: string;
-  bloodGroup: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-" | string;
-  category: "GEN" | "OBC" | "ST" | "SC" | "EWS" | string;
-  currentAddress: Address;
-  dob: string;
-  emergencyContact: EmergencyContact;
-  gender: "male" | "female" | "other" | string;
-  guardianDetails: GuardianDetails;
-  nationality: string;
-  permanentAddress: Address;
-  profilePhoto: string;
-  studentId: string;
-  studentMobileNumber: string;
-  studentUrn: string;
 }
