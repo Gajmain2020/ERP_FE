@@ -145,7 +145,7 @@ export const dummyStudentBasicDetails = {
   crn: "CRN123456",
   department: "Computer Science",
   email: "student@example.com",
-  isDetailsFilled: true,
+  isDetailsFilled: false,
   isVerified: true,
   name: "John Doe",
   section: "A",

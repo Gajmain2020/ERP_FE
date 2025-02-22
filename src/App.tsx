@@ -18,40 +18,15 @@ import ImageUpload from "./components/Testing/Test";
 import StudentDetails from "./pages/Student/StudentDetails";
 
 const App: React.FC = () => {
-  const {
-    authToken,
-    // setUserType,
-    // setName,
-    // setAuthToken,
-    // setId,
-    userType,
-    name,
-  } = useAuthStore();
+  const { authToken, userType, id } = useAuthStore();
 
   // User is logged in if `authToken` exists
   const isLoggedIn = !!authToken;
 
-  // Example login function
-  // const loginExample = () => {
-  //   setUserType("student");
-  //   setName("JohnDoe");
-  //   setAuthToken("example-token-1234");
-  //   setId("123");
-  // };
-
-  const userRoute = `/user/${userType}/${name}`;
+  const userRoute = `/user/${userType}/${id}`;
 
   return (
     <>
-      {/* <button
-        onClick={loginExample}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Simulate Login
-      </button>
-      <p>
-        Current User: {name} ({userType})
-      </p> */}
       <Router>
         <Routes>
           {/* Landing Page */}
@@ -65,7 +40,7 @@ const App: React.FC = () => {
 
           {/* Protected Routes for student */}
           <Route
-            path="/user/student/:userName/*"
+            path="/user/student/:id/*"
             element={
               <ProtectedRoutes isLoggedIn={isLoggedIn}>
                 <UserTypeCheck>
