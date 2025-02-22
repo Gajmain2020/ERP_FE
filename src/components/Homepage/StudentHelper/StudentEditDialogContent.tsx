@@ -24,6 +24,9 @@ import type {
 } from "@/utils/types";
 import { Label } from "@/components/ui/label";
 import type { Address } from "@/utils/types";
+import BasicInfoForm from "../Edit forms/BasicInfoForm";
+import TabsListComponent from "../Edit forms/TabListComponent";
+import AddressForm from "../Edit forms/AddressForm";
 
 const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   studentData,
@@ -39,7 +42,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     ...studentDetailsData,
   });
 
-  const handleStudentInfoChange = (field: string, value: string) => {
+  const handleStudentInfoChange = (field: keyof StudentData, value: string) => {
     setStudentInfo((prev) => ({
       ...prev,
       [field]: value,
@@ -114,211 +117,23 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="basic" className="flex-1 flex flex-col">
-          <TabsList className="grid grid-cols-5 mb-4">
-            <TabsTrigger value="basic">Basic Info</TabsTrigger>
-            <TabsTrigger value="address">Address</TabsTrigger>
-            <TabsTrigger value="guardian">Guardian Info</TabsTrigger>
-            <TabsTrigger value="profile">Profile Pic</TabsTrigger>
-            <TabsTrigger value="other">Other Info</TabsTrigger>
-          </TabsList>
+          <TabsListComponent />
 
           <div className="flex-1 overflow-y-auto">
             {/* Basic info mostly unchangable */}
             <TabsContent className="px-1" value="basic">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Name</Label>
-                  <Input
-                    disabled
-                    className="text-black"
-                    value={studentInfo.name}
-                    onChange={(e) =>
-                      handleStudentInfoChange("name", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Email</Label>
-                  <Input
-                    value={studentInfo.email}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>CRN</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.crn}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>URN</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.urn}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Semester</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.semester}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Section</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.section}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Department</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.department}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Teacher Guardian</Label>
-                  <Input
-                    disabled
-                    value={studentInfo.TG?.teacherName}
-                    onChange={(e) =>
-                      handleStudentInfoChange("email", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
+              <BasicInfoForm
+                handleStudentInfoChange={handleStudentInfoChange}
+                studentInfo={studentInfo}
+              />
             </TabsContent>
 
             {/* Address related information */}
             <TabsContent className="px-1" value="address">
-              <div className="grid grid-cols-2 gap-6">
-                {(
-                  ["currentAddress", "permanentAddress"] as Array<
-                    keyof StudentDetailsData
-                  >
-                ).map((type, index) => (
-                  <div key={type} className="p-4 border rounded-lg shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold">
-                        {index === 0 ? "Current Address" : "Permanent Address"}
-                      </h3>
-                      {index === 0 && (
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            setStudentDetails((prev) => ({
-                              ...prev,
-                              permanentAddress: {
-                                address: prev.currentAddress?.address || "",
-                                city: prev.currentAddress?.city || "",
-                                pinCode: prev.currentAddress?.pinCode || "",
-                                state: prev.currentAddress?.state || "",
-                              },
-                            }))
-                          }
-                        >
-                          Copy to Permanent
-                        </Button>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Address</Label>
-                        <Input
-                          value={
-                            (studentDetails[type] as Address)?.address || ""
-                          }
-                          onChange={(e) =>
-                            handleStudentDetailsChange(
-                              type,
-                              "address",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                      <div>
-                        <Label>City</Label>
-                        <Input
-                          value={(studentDetails[type] as Address)?.city || ""}
-                          onChange={(e) =>
-                            handleStudentDetailsChange(
-                              type,
-                              "city",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                      <div>
-                        <Label>Pin Code</Label>
-                        <Input
-                          value={
-                            (studentDetails[type] as Address)?.pinCode || ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (/^\d{0,6}$/.test(value)) {
-                              // Allows only up to 6 digits
-                              handleStudentDetailsChange(
-                                type,
-                                "pinCode",
-                                value
-                              );
-                            }
-                          }}
-                          className={
-                            (studentDetails[type] as Address)?.pinCode
-                              ?.length === 6
-                              ? "border-green-500"
-                              : "border-red-500"
-                          }
-                        />
-                        {(studentDetails[type] as Address)?.pinCode &&
-                          (studentDetails[type] as Address)?.pinCode?.length !==
-                            6 && (
-                            <p className="text-red-500 text-sm mt-1">
-                              Pin Code must be 6 digits
-                            </p>
-                          )}
-                      </div>
-                      <div>
-                        <Label>State</Label>
-                        <Input
-                          value={(studentDetails[type] as Address)?.state || ""}
-                          onChange={(e) =>
-                            handleStudentDetailsChange(
-                              type,
-                              "state",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <AddressForm
+                studentDetails={studentDetails}
+                handleStudentDetailsChange={handleStudentDetailsChange}
+              />
             </TabsContent>
 
             {/* Guardian related information */}
