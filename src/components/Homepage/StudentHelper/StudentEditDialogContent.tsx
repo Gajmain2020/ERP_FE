@@ -28,6 +28,8 @@ import BasicInfoForm from "../Edit forms/BasicInfoForm";
 import TabsListComponent from "../Edit forms/TabListComponent";
 import AddressForm from "../Edit forms/AddressForm";
 import GuardianInfoForm from "../Edit forms/GuardianInfoForm";
+import ProfilePictureForm from "../Edit forms/ProfilePictureForm";
+import OtherInfoForm from "../Edit forms/OtherInfoForm";
 
 const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   studentData,
@@ -146,103 +148,20 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
 
             {/* Profile Picture */}
             <TabsContent className="px-1" value="profile">
-              <div className="flex flex-col items-center justify-center space-y-4 p-6 border rounded-lg shadow-sm">
-                <div className="relative w-64 h-64">
-                  <img
-                    src={
-                      studentDetails.profilePhoto ||
-                      "https://www.strasys.uk/wp-content/uploads/2022/02/Depositphotos_484354208_S.jpg"
-                    }
-                    alt="Profile"
-                    className="w-full h-full object-cover rounded-full border-2 border-gray-300 shadow-md"
-                  />
-                </div>
-
-                {/* File Upload Input */}
-                <Label className="cursor-pointer bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg shadow-sm">
-                  Upload Profile Picture
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePicChange}
-                    className="hidden"
-                  />
-                </Label>
-              </div>
+              <ProfilePictureForm
+                handleProfilePicChange={handleProfilePicChange}
+                studentDetails={studentDetails}
+              />
             </TabsContent>
 
             {/* Other Info */}
             <TabsContent className="px-1" value="other">
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: "Aadhar Number", key: "aadharNumber", type: "text" },
-                  { label: "ABC ID", key: "abcId", type: "text" },
-                  {
-                    label: "Admission Number",
-                    key: "admissionNumber",
-                    type: "text",
-                  },
-                  { label: "Date of Birth", key: "dob", type: "date" },
-                  { label: "Nationality", key: "nationality", type: "text" },
-                ].map(({ label, key, type }) => (
-                  <div key={key}>
-                    <Label>{label}</Label>
-                    <Input
-                      type={type}
-                      value={
-                        studentDetails[
-                          key as keyof StudentDetailsData
-                        ] as string
-                      }
-                      onChange={(e) =>
-                        handleStudentOtherDetailsChange(
-                          key as keyof StudentDetailsData,
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
-                ))}
-
-                {[
-                  {
-                    label: "Blood Group",
-                    key: "bloodGroup",
-                    options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-                  },
-                  {
-                    label: "Category",
-                    key: "category",
-                    options: ["Gen", "OBC", "ST", "SC"],
-                  },
-                  {
-                    label: "Gender",
-                    key: "gender",
-                    options: ["Male", "Female", "Other"],
-                  },
-                ].map(({ label, key, options }) => (
-                  <div key={key}>
-                    <Label>{label}</Label>
-                    <select
-                      value={
-                        studentDetails[
-                          key as keyof StudentDetailsData
-                        ] as string
-                      }
-                      onChange={(e) =>
-                        handleStudentOtherDetailsChange(key, e.target.value)
-                      }
-                      className="border rounded-lg p-2 w-full"
-                    >
-                      {options.map((opt) => (
-                        <option key={opt} value={opt.toLowerCase()}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-              </div>
+              <OtherInfoForm
+                handleStudentOtherDetailsChange={
+                  handleStudentOtherDetailsChange
+                }
+                studentDetails={studentDetails}
+              />
             </TabsContent>
           </div>
         </Tabs>

@@ -52,6 +52,7 @@ export interface StudentDetailsData {
   bloodGroup?: string;
   category?: string;
   gender?: string;
+  [key: string]: string | EmergencyContact | Address | undefined; // Allow string, EmergencyContact, or undefined values
 }
 
 export interface Address {
