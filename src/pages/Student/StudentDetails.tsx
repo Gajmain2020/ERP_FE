@@ -1,13 +1,32 @@
 import StudentProfileCard from "@/components/Homepage/StudentHelper/BasicDetailsProfileCard";
 import StudentDetailsCard from "@/components/Homepage/StudentHelper/DetailsCard";
+import EditStudentDialog from "@/components/Homepage/StudentHelper/StudentEditDialogContent";
 import { dummyStudentBasicDetails, dummyStudentDetails } from "@/utils/dummy";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { StudentData, StudentDetailsData } from "@/utils/types";
+
+type IncompleteDetailsPromptProps = {
+  onEdit: () => void;
+};
 
 function StudentDetails() {
-  const [studentBasicDetails, setStudentBasicDetails] = useState(
+  const [studentBasicDetails, setStudentBasicDetails] = useState<StudentData>(
     dummyStudentBasicDetails
   );
-  const [studentDetails, setStudentDetails] = useState(dummyStudentDetails);
+  const [studentDetails, setStudentDetails] =
+    useState<StudentDetailsData>(dummyStudentDetails);
+  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const handleSave = (
+    updatedBasicDetails: StudentData,
+    updatedDetails: StudentDetailsData
+  ) => {
+    setStudentBasicDetails(updatedBasicDetails);
+    setStudentDetails(updatedDetails);
+
+    console.log("Updated Student Data:", updatedBasicDetails, updatedDetails);
+  };
 
   return (
     <div className="w-full h-full flex gap-5 flex-col">
@@ -19,14 +38,26 @@ function StudentDetails() {
         <StudentDetailsCard studentDetails={studentDetails} />
       )}
 
-      {!studentBasicDetails.isDetailsFilled && <IncompleteDetailsPrompt />}
+      {!studentBasicDetails.isDetailsFilled && (
+        <IncompleteDetailsPrompt onEdit={() => setDialogOpen(true)} />
+      )}
+
+      {/* Edit Dialog */}
+      <EditStudentDialog
+        studentData={studentBasicDetails}
+        isOpen={isDialogOpen}
+        onOpenChange={setDialogOpen}
+        onSave={handleSave}
+      />
     </div>
   );
 }
 
 export default StudentDetails;
 
-const IncompleteDetailsPrompt = () => {
+const IncompleteDetailsPrompt: React.FC<IncompleteDetailsPromptProps> = ({
+  onEdit,
+}) => {
   return (
     <div className="w-full bg-red-100/60 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md">
       <p className="font-semibold text-xl">Incomplete Details</p>
@@ -34,12 +65,12 @@ const IncompleteDetailsPrompt = () => {
         Some essential information is missing. Please complete your profile to
         view all details.
       </p>
-      <a
-        href="#"
-        className="text-red-600 font-medium hover:underline mt-2 inline-block"
+      <Button
+        onClick={onEdit}
+        className="bg-red-600 text-white font-medium mt-2 hover:bg-red-700 transition"
       >
-        Click here to update your details.
-      </a>
+        Click here to update your details
+      </Button>
     </div>
   );
 };
