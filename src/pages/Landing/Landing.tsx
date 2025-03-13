@@ -64,16 +64,6 @@ export default function Landing() {
       </div>
       <ContactModal isOpen={isContactModalOpen} onClose={closeContactModal} />
 
-      {/* <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h1 className="text-4xl font-bold mb-4">Welcome to the Landing Page</h1>
-        <button
-          onClick={handleDummyLogin}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          Dummy Login
-        </button>
-      </div> */}
-
       <LandingFooter />
     </div>
   );

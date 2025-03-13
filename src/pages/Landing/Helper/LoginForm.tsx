@@ -62,6 +62,14 @@ const LoginForm = () => {
     }
   };
 
+  // Detect Enter Key
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default Enter behavior
+      handleSubmit();
+    }
+  };
+
   const handleUserTypeChange = (type: "Faculty" | "Student") => {
     console.log("Selected User Type:", type);
   };
@@ -88,6 +96,7 @@ const LoginForm = () => {
             type="email"
             placeholder="Enter your email"
             className="pr-10 text-black border-gray-300 focus:border-blue-500"
+            onKeyDown={handleKeyDown}
             required
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -101,6 +110,7 @@ const LoginForm = () => {
             placeholder="Enter your password"
             className="pr-10 text-black border-gray-300 focus:border-blue-500"
             required
+            onKeyDown={handleKeyDown}
             onChange={(e) => setPassword(e.target.value)}
             onPaste={handlePaste}
           />
