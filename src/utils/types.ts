@@ -54,18 +54,17 @@ export interface StudentDetailsData {
   bloodGroup?: string;
   category?: string;
   gender?: string;
+  // Fix: More precise index signature
   [key: string]:
     | string
     | EmergencyContact
     | Address
-    | GuardianDetails
-    | AlternateGuardianDetails
+    | undefined
     | {
         father?: GuardianDetails;
         mother?: GuardianDetails;
         alternateGuardian?: AlternateGuardianDetails;
-      }
-    | undefined; // Allow string, EmergencyContact, Address, GuardianDetails, AlternateGuardianDetails, or undefined values
+      }; // Allow nested object properly
 }
 
 export interface Address {

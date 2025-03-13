@@ -1,12 +1,15 @@
-import { StudentDetailsProps } from "@/utils/types";
+import { StudentDetailsData } from "@/utils/types";
 
 const StudentDetailsCard = ({
   studentDetails,
+  onOpenChange,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
+  onOpenChange: (arg: boolean) => void;
 }) => {
   const handleEditDetailsButton = () => {
     console.log("Edit requested");
+    onOpenChange(true);
   };
 
   return (
@@ -46,7 +49,7 @@ export default StudentDetailsCard;
 const GeneralInfo = ({
   studentDetails,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
 }) => {
   const generalInfo = [
     { label: "URN", value: studentDetails.studentUrn },
