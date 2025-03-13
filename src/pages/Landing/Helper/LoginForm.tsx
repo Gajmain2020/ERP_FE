@@ -9,6 +9,7 @@ import UserTypeSelector from "./UserTypeSelector";
 import { LoginStudentAPI } from "@/api/studentAPI";
 import useAuthStore from "@/store/userAuthStore";
 import { useNavigate } from "react-router-dom";
+import { LoginTeacherAPI } from "@/api/facultyAPI";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,6 +23,8 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const { setAuthToken, setUserType, setName, setId } = useAuthStore();
+
+  const [user, setUser] = useState<"Faculty" | "Student">("Student");
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -39,7 +42,11 @@ const LoginForm = () => {
       loginSchema.parse({ email, password });
 
       // Call API
-      const res = await LoginStudentAPI(email, password);
+      // Determine the correct API based on user type
+      const loginAPI = user === "Student" ? LoginStudentAPI : LoginTeacherAPI;
+
+      // Hit tha api
+      const res = await loginAPI(email, password);
 
       if (!res.success) return; // Stop if login fails
 
@@ -50,7 +57,7 @@ const LoginForm = () => {
       setId(res.id);
 
       // Redirect to student dashboard
-      navigate(`student/${res.id}`);
+      navigate(`${user}/${res.id}`);
     } catch (err) {
       if (err instanceof ZodError) {
         // Handle validation errors from loginSchema
@@ -71,7 +78,7 @@ const LoginForm = () => {
   };
 
   const handleUserTypeChange = (type: "Faculty" | "Student") => {
-    console.log("Selected User Type:", type);
+    setUser(type);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
