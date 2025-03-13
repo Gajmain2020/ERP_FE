@@ -1,28 +1,41 @@
 import { useEffect, useState } from "react";
 
-import { dummyNotice, dummyStudentBasicDetails } from "@/utils/dummy";
+import { dummyNotice } from "@/utils/dummy";
 import QuickLinksComponent from "./StudentHelper/ImportantLinks";
 import BasicInfo from "./StudentHelper/BasicInfoCard";
 import NoticeComponent from "./StudentHelper/Notice";
-import DetailsNotFilledWarning from "./StudentHelper/Waraning";
+import DetailsNotFilledWarning from "./StudentHelper/Warning";
+import { useParams } from "react-router-dom";
+import { FetchStudentDetailsAPI } from "@/api/studentAPI";
+import { StudentData } from "@/utils/types";
 
 export default function StudentHomepage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [studentDetails, setStudentDetails] = useState(
-    dummyStudentBasicDetails
+  const [studentDetails, setStudentDetails] = useState<StudentData | null>(
+    null
   );
 
+  const { id } = useParams();
+
   useEffect(() => {
-    // Fetch student details from the database
-    // If details are not filled, set detailsFilled to false
-    // If details are filled, set detailsFilled to true
-    // Also set the student name
-  }, []);
+    const fetchDetails = async () => {
+      try {
+        if (id) {
+          const details = await FetchStudentDetailsAPI(id); // Await here
+          console.log(details);
+          setStudentDetails(details); // Set the state correctly
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDetails(); // Call the async function inside useEffect
+  }, [id]);
 
   return (
-    <div className="w-full h-full flex gap-5">
+    <div className="w-full h-screen flex gap-5">
       <div className="w-[70%] flex flex-col gap-5">
-        {!studentDetails.isDetailsFilled && <DetailsNotFilledWarning />}
+        {!studentDetails?.isDetailsFilled && <DetailsNotFilledWarning />}
 
         <QuickLinksComponent />
 

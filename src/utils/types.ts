@@ -20,6 +20,7 @@ export interface EditStudentDialogProps {
 }
 
 export interface StudentData {
+  _id: string;
   name: string;
   email: string;
   crn: string;
@@ -28,6 +29,7 @@ export interface StudentData {
   section: string;
   department: string;
   TG?: {
+    teacherId: string | null;
     teacherName: string;
   };
   isDetailsFilled: boolean;
