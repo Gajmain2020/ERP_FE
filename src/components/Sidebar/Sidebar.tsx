@@ -122,7 +122,7 @@ export function AppSidebar() {
   // Logout function
   const handleLogout = () => {
     reset();
-    navigate("/");
+    setTimeout(() => navigate("/"), 0);
   };
 
   return (
