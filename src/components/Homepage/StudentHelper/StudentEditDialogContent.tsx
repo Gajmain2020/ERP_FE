@@ -60,20 +60,33 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   };
 
   // Handler to update guardian details
-  const handleGuardianDetailsChange = (
-    guardianType: keyof StudentDetailsData["guardianDetails"],
+  const handleDetailsChange = (
+    type: keyof StudentDetailsData["guardianDetails"] | "emergencyContact",
     field: string,
     value: string
   ) => {
     setStudentDetails((prev) => ({
       ...prev,
-      guardianDetails: {
-        ...prev.guardianDetails,
-        [guardianType]: {
-          ...(prev.guardianDetails?.[guardianType] || {}),
-          [field]: value,
-        },
-      },
+      ...(type === "emergencyContact"
+        ? {
+            emergencyContact: {
+              ...(prev.emergencyContact || {
+                name: "",
+                mobileNumber: "",
+                relation: "",
+              }),
+              [field]: value,
+            },
+          }
+        : {
+            guardianDetails: {
+              ...prev.guardianDetails,
+              [type]: {
+                ...(prev.guardianDetails?.[type] || {}),
+                [field]: value,
+              },
+            },
+          }),
     }));
   };
 
@@ -100,7 +113,6 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   // Submits updated student details
   const handleSubmit = () => {
     onSave(studentInfo, studentDetails);
-    onOpenChange(false);
   };
 
   return (
@@ -133,7 +145,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             <TabsContent className="px-1" value="guardian">
               <GuardianInfoForm
                 studentDetails={studentDetails}
-                onChangeHandler={handleGuardianDetailsChange}
+                onChangeHandler={handleDetailsChange}
               />
             </TabsContent>
 

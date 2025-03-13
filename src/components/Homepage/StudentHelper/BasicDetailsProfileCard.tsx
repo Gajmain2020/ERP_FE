@@ -3,13 +3,37 @@ import { StudentData } from "@/utils/types";
 const StudentProfileCard = ({
   studentDetails,
 }: {
-  studentDetails: StudentData;
+  studentDetails: StudentData | null;
 }) => {
+  if (!studentDetails) {
+    return (
+      <div className="w-full flex flex-col gap-4 h-fit animate-pulse">
+        <div className="flex gap-4">
+          {/* Skeleton Details Card */}
+
+          <div className="w-full bg-opacity-20 backdrop-blur-lg bg-white/30 rounded-lg shadow-lg p-6 space-y-6 border border-white/30 hover:bg-white/55 transition-all h-full">
+            <div className="text-xl text-center">Loading...</div>
+            <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-3">
+              {Array(6)
+                .fill(null)
+                .map((_, index) => (
+                  <div key={index} className="space-y-0.5">
+                    <div className="h-4 bg-gray-300 rounded w-24"></div>
+                    <div className="h-5 bg-gray-400 rounded w-full"></div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col gap-4 h-fit">
       <div className="text-2xl font-bold">Basic Details</div>
 
-      <div className="flex gap-4 ">
+      <div className="flex gap-4">
         {/* Details Card */}
         <div
           className={`${
@@ -23,6 +47,7 @@ const StudentProfileCard = ({
               { label: "Semester", value: studentDetails.semester },
               { label: "Department", value: studentDetails.department },
               { label: "Section", value: studentDetails.section },
+              { label: "CRN", value: studentDetails.crn },
               {
                 label: "Teacher Guardian",
                 value: studentDetails?.TG?.teacherName,
@@ -33,7 +58,7 @@ const StudentProfileCard = ({
                   {item.label}
                 </label>
                 <p className="text-lg font-semibold text-gray-800">
-                  {item.value}
+                  {item.value ? item.value : "N/A"}
                 </p>
               </div>
             ))}

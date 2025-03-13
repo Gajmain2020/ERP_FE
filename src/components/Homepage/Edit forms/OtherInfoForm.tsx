@@ -12,6 +12,8 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
 }) => (
   <div className="grid grid-cols-2 gap-4">
     {[
+      { label: "Mobile Number", key: "studentMobileNumber", type: "text" },
+      { label: "Emerg. Contact", key: "emergencyContact", type: "text" },
       { label: "Aadhar Number", key: "aadharNumber", type: "text" },
       { label: "ABC ID", key: "abcId", type: "text" },
       { label: "Admission Number", key: "admissionNumber", type: "text" },
@@ -54,7 +56,7 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
           className="border rounded-lg p-2 w-full"
         >
           {options.map((opt) => (
-            <option key={opt} value={opt.toLowerCase()}>
+            <option key={opt} value={opt}>
               {opt}
             </option>
           ))}

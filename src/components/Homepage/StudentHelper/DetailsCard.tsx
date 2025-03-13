@@ -1,9 +1,9 @@
-import { StudentDetailsProps } from "@/utils/types";
+import { StudentDetailsData } from "@/utils/types";
 
 const StudentDetailsCard = ({
   studentDetails,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
 }) => {
   const handleEditDetailsButton = () => {
     console.log("Edit requested");
@@ -46,7 +46,7 @@ export default StudentDetailsCard;
 const GeneralInfo = ({
   studentDetails,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
 }) => {
   const generalInfo = [
     { label: "URN", value: studentDetails.studentUrn },

@@ -1,22 +1,44 @@
 import StudentProfileCard from "@/components/Homepage/StudentHelper/BasicDetailsProfileCard";
 import StudentDetailsCard from "@/components/Homepage/StudentHelper/DetailsCard";
 import EditStudentDialog from "@/components/Homepage/StudentHelper/StudentEditDialogContent";
-import { dummyStudentBasicDetails, dummyStudentDetails } from "@/utils/dummy";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { StudentData, StudentDetailsData } from "@/utils/types";
+import {
+  FetchStudentAllDetailsAPI,
+  UpdateStudentDetailsAPI,
+} from "@/api/studentAPI";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 type IncompleteDetailsPromptProps = {
   onEdit: () => void;
 };
 
 function StudentDetails() {
-  const [studentBasicDetails, setStudentBasicDetails] = useState<StudentData>(
-    dummyStudentBasicDetails
-  );
+  const { id } = useParams();
+  const [studentBasicDetails, setStudentBasicDetails] =
+    useState<StudentData | null>(null);
   const [studentDetails, setStudentDetails] =
-    useState<StudentDetailsData>(dummyStudentDetails);
-  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+    useState<StudentDetailsData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        if (id) {
+          const details = await FetchStudentAllDetailsAPI();
+          console.log(details);
+          setStudentBasicDetails(details.basicDetails);
+          setStudentDetails(details.moreDetails);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDetails();
+  }, [id]);
 
   const handleSave = (
     updatedBasicDetails: StudentData,
@@ -24,6 +46,18 @@ function StudentDetails() {
   ) => {
     setStudentBasicDetails(updatedBasicDetails);
     setStudentDetails(updatedDetails);
+
+    if (studentBasicDetails && studentDetails) {
+      UpdateStudentDetailsAPI(studentBasicDetails, studentDetails)
+        .then((res) => {
+          console.log(res);
+          toast.success(res.message);
+          setIsDialogOpen(false);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
 
     console.log("Updated Student Data:", updatedBasicDetails, updatedDetails);
   };
@@ -34,21 +68,24 @@ function StudentDetails() {
       <StudentProfileCard studentDetails={studentBasicDetails} />
 
       {/* Student more details */}
-      {studentBasicDetails.isDetailsFilled && (
+      {studentBasicDetails?.isDetailsFilled && studentDetails && (
         <StudentDetailsCard studentDetails={studentDetails} />
       )}
 
-      {!studentBasicDetails.isDetailsFilled && (
-        <IncompleteDetailsPrompt onEdit={() => setDialogOpen(true)} />
+      {!studentBasicDetails?.isDetailsFilled && (
+        <IncompleteDetailsPrompt onEdit={() => setIsDialogOpen(true)} />
       )}
 
       {/* Edit Dialog */}
-      <EditStudentDialog
-        studentData={studentBasicDetails}
-        isOpen={isDialogOpen}
-        onOpenChange={setDialogOpen}
-        onSave={handleSave}
-      />
+      {studentBasicDetails && (
+        <EditStudentDialog
+          studentData={studentBasicDetails}
+          studentDetailsData={studentDetails || undefined}
+          isOpen={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 }
