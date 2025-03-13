@@ -37,23 +37,23 @@ export interface StudentData {
 }
 
 export interface StudentDetailsData {
-  currentAddress?: Address;
-  permanentAddress?: Address;
-  guardianDetails?: {
-    father?: GuardianDetails;
-    mother?: GuardianDetails;
-    alternateGuardian?: AlternateGuardianDetails;
+  currentAddress: Address;
+  permanentAddress: Address;
+  guardianDetails: {
+    father: GuardianDetails;
+    mother: GuardianDetails;
+    alternateGuardian: AlternateGuardianDetails;
   };
-  emergencyContact?: EmergencyContact;
-  profilePhoto?: string;
-  aadharNumber?: string;
-  abcId?: string;
-  admissionNumber?: string;
-  dob?: string;
-  nationality?: string;
-  bloodGroup?: string;
-  category?: string;
-  gender?: string;
+  emergencyContact: EmergencyContact;
+  profilePhoto: string;
+  aadharNumber: string;
+  abcId: string;
+  admissionNumber: string;
+  dob: string;
+  nationality: string;
+  bloodGroup: string;
+  category: string;
+  gender: string;
   // Fix: More precise index signature
   [key: string]:
     | string
@@ -61,9 +61,9 @@ export interface StudentDetailsData {
     | Address
     | undefined
     | {
-        father?: GuardianDetails;
-        mother?: GuardianDetails;
-        alternateGuardian?: AlternateGuardianDetails;
+        father: GuardianDetails;
+        mother: GuardianDetails;
+        alternateGuardian: AlternateGuardianDetails;
       }; // Allow nested object properly
 }
 

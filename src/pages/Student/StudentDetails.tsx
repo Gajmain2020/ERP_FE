@@ -1,7 +1,10 @@
+import { useEffect, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import StudentProfileCard from "@/components/Homepage/StudentHelper/BasicDetailsProfileCard";
 import StudentDetailsCard from "@/components/Homepage/StudentHelper/DetailsCard";
 import EditStudentDialog from "@/components/Homepage/StudentHelper/StudentEditDialogContent";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { StudentData, StudentDetailsData } from "@/utils/types";
 import {
@@ -9,89 +12,70 @@ import {
   AddStudentDetailsAPI,
   UpdateStudentDetailsAPI,
 } from "@/api/studentAPI";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 
-type IncompleteDetailsPromptProps = {
-  onEdit: () => void;
-};
-
-function StudentDetails() {
+const StudentDetails = () => {
   const { id } = useParams();
   const [studentBasicDetails, setStudentBasicDetails] =
     useState<StudentData | null>(null);
   const [studentDetails, setStudentDetails] =
     useState<StudentDetailsData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        if (id) {
-          const details = await FetchStudentAllDetailsAPI();
-          console.log(details);
-          setStudentBasicDetails(details.basicDetails);
-          setStudentDetails(details.moreDetails);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchDetails();
+  // Fetch student details
+  const fetchStudentDetails = useCallback(async () => {
+    try {
+      if (!id) return;
+      const { basicDetails, moreDetails } = await FetchStudentAllDetailsAPI();
+      setStudentBasicDetails(basicDetails);
+      setStudentDetails(moreDetails);
+    } catch (error) {
+      console.error("Error fetching student details:", error);
+      toast.error("Failed to fetch student details.");
+    }
   }, [id]);
 
-  const handleSave = (
+  useEffect(() => {
+    fetchStudentDetails();
+  }, [fetchStudentDetails]);
+
+  // Handle Save (Add or Update)
+  const handleSave = async (
     updatedBasicDetails: StudentData,
     updatedDetails: StudentDetailsData
   ) => {
-    setStudentBasicDetails(updatedBasicDetails);
-    setStudentDetails(updatedDetails);
+    try {
+      setStudentBasicDetails(updatedBasicDetails);
+      setStudentDetails(updatedDetails);
 
-    if (
-      studentBasicDetails &&
-      studentDetails &&
-      studentBasicDetails.isDetailsFilled
-    ) {
-      UpdateStudentDetailsAPI(updatedDetails)
-        .then((res) => {
-          setStudentDetails(res.data.details);
-          setIsDialogOpen(false);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-    }
+      if (updatedBasicDetails.isDetailsFilled) {
+        const response = await UpdateStudentDetailsAPI(updatedDetails);
+        setStudentDetails(response.data.details);
+      } else {
+        await AddStudentDetailsAPI(updatedBasicDetails, updatedDetails);
+      }
 
-    if (
-      studentBasicDetails &&
-      studentDetails &&
-      !studentBasicDetails.isDetailsFilled
-    ) {
-      AddStudentDetailsAPI(studentBasicDetails, studentDetails)
-        .then(() => {
-          setIsDialogOpen(false);
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      setIsDialogOpen(false);
+      toast.success("Details saved successfully!");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong.");
     }
   };
 
   return (
-    <div className="w-full h-full flex gap-5 flex-col">
+    <div className="w-full h-full flex flex-col gap-5">
       {/* Basic Details */}
       <StudentProfileCard studentDetails={studentBasicDetails} />
 
-      {/* Student more details */}
-      {studentBasicDetails?.isDetailsFilled && studentDetails && (
-        <StudentDetailsCard
-          onOpenChange={setIsDialogOpen}
-          studentDetails={studentDetails}
-        />
-      )}
-
-      {!studentBasicDetails?.isDetailsFilled && (
+      {/* More Details */}
+      {studentBasicDetails?.isDetailsFilled ? (
+        studentDetails && (
+          <StudentDetailsCard
+            onOpenChange={setIsDialogOpen}
+            studentDetails={studentDetails}
+          />
+        )
+      ) : (
         <IncompleteDetailsPrompt onEdit={() => setIsDialogOpen(true)} />
       )}
 
@@ -107,26 +91,25 @@ function StudentDetails() {
       )}
     </div>
   );
-}
+};
 
 export default StudentDetails;
 
-const IncompleteDetailsPrompt: React.FC<IncompleteDetailsPromptProps> = ({
+// Incomplete Details Prompt
+const IncompleteDetailsPrompt: React.FC<{ onEdit: () => void }> = ({
   onEdit,
-}) => {
-  return (
-    <div className="w-full bg-red-100/60 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md">
-      <p className="font-semibold text-xl">Incomplete Details</p>
-      <p className="text">
-        Some essential information is missing. Please complete your profile to
-        view all details.
-      </p>
-      <Button
-        onClick={onEdit}
-        className="bg-red-600 text-white font-medium mt-2 hover:bg-red-700 transition"
-      >
-        Click here to update your details
-      </Button>
-    </div>
-  );
-};
+}) => (
+  <div className="w-full bg-red-100/60 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md">
+    <p className="font-semibold text-xl">Incomplete Details</p>
+    <p className="text">
+      Some essential information is missing. Please complete your profile to
+      view all details.
+    </p>
+    <Button
+      onClick={onEdit}
+      className="bg-red-600 text-white font-medium mt-2 hover:bg-red-700 transition"
+    >
+      Click here to update your details
+    </Button>
+  </div>
+);
