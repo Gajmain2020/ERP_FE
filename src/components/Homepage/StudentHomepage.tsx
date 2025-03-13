@@ -21,7 +21,6 @@ export default function StudentHomepage() {
       try {
         if (id) {
           const details = await FetchStudentDetailsAPI(id); // Await here
-          console.log(details);
           setStudentDetails(details); // Set the state correctly
         }
       } catch (error) {

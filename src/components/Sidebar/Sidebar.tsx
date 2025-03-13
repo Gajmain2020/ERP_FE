@@ -24,7 +24,7 @@ import {
 import { navItems } from "@/utils/nav-items";
 import useAuthStore from "@/store/userAuthStore";
 
-// Define the type for the item
+// Define the type for the navigation item
 interface NavItem {
   title: string;
   icon: React.ComponentType;
@@ -38,6 +38,7 @@ interface SidebarNavItemProps {
   path: string;
 }
 
+// Sidebar navigation item component
 const SidebarNavItem = ({
   item,
   isActive,
@@ -47,11 +48,18 @@ const SidebarNavItem = ({
   <SidebarMenuItem key={item.title}>
     <SidebarMenuButton
       asChild
-      isActive={isActive}
+      // isActive={isActive}
       onClick={onClick}
       tooltip={item.title}
     >
-      <Link to={path} className="flex items-center gap-3 px-4 py-2">
+      <Link
+        to={path}
+        className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+          isActive
+            ? "bg-slate-600 font-semibold text-white hover:bg-gray-400 transition-all"
+            : "hover:bg-gray-100"
+        }`}
+      >
         <item.icon />
         <span>{item.title}</span>
       </Link>
@@ -59,17 +67,23 @@ const SidebarNavItem = ({
   </SidebarMenuItem>
 );
 
+// Main Sidebar Component
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const reset = useAuthStore().reset;
 
-  console.log(reset);
-  const { name, userType } = useAuthStore() as {
+  // Get user details from store
+  const { id, name, userType } = useAuthStore() as {
     name: string;
+    id: string;
     userType: keyof typeof navItems;
   };
+
+  // Get sidebar state
   const { state } = useSidebar();
+
+  // Sidebar group state for toggling sections
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
     {
       general: true,
@@ -80,11 +94,13 @@ export function AppSidebar() {
     }
   );
 
+  // Redirect if user type is not available
   if (!userType) {
     navigate("/");
     return null;
   }
 
+  // Toggle sidebar group open/close state
   const toggleGroup = (group: keyof typeof navItems) => {
     setExpandedGroups((prev) => ({
       ...prev,
@@ -92,15 +108,18 @@ export function AppSidebar() {
     }));
   };
 
+  // Generate dynamic navigation path based on user type and ID
   const getDynamicPath = (basePath: string) => {
-    return `/user/${userType}/${name}${basePath}`;
+    return `/user/${userType}/${id}${basePath}`;
   };
 
+  // Get navigation items for the user type
   const navItemsForUser = navItems[userType];
 
-  // Determine the active item based on the current path
+  // Determine the active item based on the current URL
   const activePath = location.pathname;
 
+  // Logout function
   const handleLogout = () => {
     reset();
     navigate("/");
@@ -109,6 +128,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="w-[320px] text-lg">
       <SidebarContent>
+        {/* Sidebar Header with Logo */}
         <div className="flex w-full sticky top-0 items-center justify-between p-4">
           <img
             src={NormalLogo}
@@ -117,8 +137,10 @@ export function AppSidebar() {
           />
         </div>
 
+        {/* Sidebar Menu Groups */}
         {Object.entries(navItemsForUser).map(([group, items]) => (
           <SidebarGroup className="py-1" key={group}>
+            {/* Sidebar Group Label with Toggle Button */}
             <SidebarGroupLabel
               className="flex justify-between items-center px-3 py-1 font-bold cursor-pointer"
               onClick={() => toggleGroup(group as keyof typeof navItems)}
@@ -133,6 +155,7 @@ export function AppSidebar() {
               />
             </SidebarGroupLabel>
 
+            {/* Sidebar Group Content */}
             {expandedGroups[group as keyof typeof navItems] && (
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -145,7 +168,9 @@ export function AppSidebar() {
                         item={item}
                         path={path}
                         isActive={isActive}
-                        onClick={() => {}}
+                        onClick={() => {
+                          navigate(path);
+                        }}
                       />
                     );
                   })}
@@ -156,6 +181,7 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
+      {/* Sidebar Footer with User Info and Logout */}
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
