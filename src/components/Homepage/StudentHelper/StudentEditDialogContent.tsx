@@ -33,9 +33,8 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   });
 
   // State for student additional details
-  const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
-    ...studentDetailsData,
-  });
+  const [studentDetails, setStudentDetails] =
+    useState<StudentDetailsData>(studentDetailsData);
 
   // Handler to update basic student information
   const handleStudentInfoChange = (field: keyof StudentData, value: string) => {
@@ -51,9 +50,9 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     setStudentDetails((prev) => ({
       ...prev,
       [parentField]: {
-        ...(typeof prev[parentField] === "object" && prev[parentField] !== null
+        ...(prev[parentField] && typeof prev[parentField] === "object"
           ? prev[parentField]
-          : {}),
+          : ({} as any)),
         [field]: value,
       },
     }));
@@ -82,7 +81,8 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             guardianDetails: {
               ...prev.guardianDetails,
               [type]: {
-                ...(prev.guardianDetails?.[type] || {}),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ...(prev.guardianDetails?.[type] || ({} as any)),
                 [field]: value,
               },
             },

@@ -61,9 +61,9 @@ export interface StudentDetailsData {
     | Address
     | undefined
     | {
-        father?: GuardianDetails;
-        mother?: GuardianDetails;
-        alternateGuardian?: AlternateGuardianDetails;
+        father: GuardianDetails;
+        mother: GuardianDetails;
+        alternateGuardian: AlternateGuardianDetails;
       }; // Allow nested object properly
 }
 
