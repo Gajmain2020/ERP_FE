@@ -34,7 +34,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
       <DialogContent className="bg-opacity-50 flex justify-center items-center z-50">
         <div className="w-full max-w-md rounded-lg p-6 sm:px-2">
           <DialogHeader>
-            <DialogTitle className="text-xl text-center underline font-semibold text-gray-800">
+            <DialogTitle className="text-2xl text-center underline font-semibold text-gray-800">
               Helpline
             </DialogTitle>
           </DialogHeader>

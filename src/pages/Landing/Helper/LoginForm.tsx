@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
@@ -6,6 +6,9 @@ import { Mail, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UserTypeSelector from "./UserTypeSelector";
+import { LoginStudentAPI } from "@/api/studentAPI";
+import useAuthStore from "@/store/userAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -16,6 +19,10 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+  const { setAuthToken, setUserType, setName, setId } = useAuthStore();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,22 +31,33 @@ const LoginForm = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
+      // Validate input
       loginSchema.parse({ email, password });
-      toast.success("Login Successful!");
-      // Login logic here
 
-      //
+      // Call API
+      const res = await LoginStudentAPI(email, password);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err.errors) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        err.errors.forEach((error: any) => {
-          toast.error(error.message);
-        });
+      if (!res.success) return; // Stop if login fails
+
+      // Store authentication data
+      setAuthToken(res.authToken);
+      setName(res.name);
+      setUserType(res.userType);
+      setId(res.id);
+
+      // Redirect to student dashboard
+      navigate(`student/${res.id}`);
+    } catch (err) {
+      if (err instanceof ZodError) {
+        // Handle validation errors from loginSchema
+        toast.error(err.errors.map((e) => e.message).join(", "));
+      } else {
+        // Handle unexpected errors
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   };

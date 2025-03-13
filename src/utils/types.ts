@@ -20,6 +20,7 @@ export interface EditStudentDialogProps {
 }
 
 export interface StudentData {
+  _id: string;
   name: string;
   email: string;
   crn: string;
@@ -28,6 +29,7 @@ export interface StudentData {
   section: string;
   department: string;
   TG?: {
+    teacherId: string | null;
     teacherName: string;
   };
   isDetailsFilled: boolean;
@@ -35,35 +37,34 @@ export interface StudentData {
 }
 
 export interface StudentDetailsData {
-  currentAddress?: Address;
-  permanentAddress?: Address;
-  guardianDetails?: {
-    father?: GuardianDetails;
-    mother?: GuardianDetails;
-    alternateGuardian?: AlternateGuardianDetails;
+  currentAddress: Address;
+  permanentAddress: Address;
+  guardianDetails: {
+    father: GuardianDetails;
+    mother: GuardianDetails;
+    alternateGuardian: AlternateGuardianDetails;
   };
-  emergencyContact?: EmergencyContact;
-  profilePhoto?: string;
-  aadharNumber?: string;
-  abcId?: string;
-  admissionNumber?: string;
-  dob?: string;
-  nationality?: string;
-  bloodGroup?: string;
-  category?: string;
-  gender?: string;
+  emergencyContact: EmergencyContact;
+  profilePhoto: string;
+  aadharNumber: string;
+  abcId: string;
+  admissionNumber: string;
+  dob: string;
+  nationality: string;
+  bloodGroup: string;
+  category: string;
+  gender: string;
+  // Fix: More precise index signature
   [key: string]:
     | string
     | EmergencyContact
     | Address
-    | GuardianDetails
-    | AlternateGuardianDetails
+    | undefined
     | {
-        father?: GuardianDetails;
-        mother?: GuardianDetails;
-        alternateGuardian?: AlternateGuardianDetails;
-      }
-    | undefined; // Allow string, EmergencyContact, Address, GuardianDetails, AlternateGuardianDetails, or undefined values
+        father: GuardianDetails;
+        mother: GuardianDetails;
+        alternateGuardian: AlternateGuardianDetails;
+      }; // Allow nested object properly
 }
 
 export interface Address {

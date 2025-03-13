@@ -7,7 +7,6 @@ const QuickLinksComponent: React.FC = () => {
     userType: string;
   };
   const getDynamicPath = (basePath: string) => {
-    console.log(basePath);
     return `/user/${userType}/${name}${basePath}`;
   };
   return (

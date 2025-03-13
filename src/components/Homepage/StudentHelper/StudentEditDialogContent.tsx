@@ -33,9 +33,8 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   });
 
   // State for student additional details
-  const [studentDetails, setStudentDetails] = useState<StudentDetailsData>({
-    ...studentDetailsData,
-  });
+  const [studentDetails, setStudentDetails] =
+    useState<StudentDetailsData>(studentDetailsData);
 
   // Handler to update basic student information
   const handleStudentInfoChange = (field: keyof StudentData, value: string) => {
@@ -51,29 +50,43 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
     setStudentDetails((prev) => ({
       ...prev,
       [parentField]: {
-        ...(typeof prev[parentField] === "object" && prev[parentField] !== null
+        ...(prev[parentField] && typeof prev[parentField] === "object"
           ? prev[parentField]
-          : {}),
+          : ({} as any)),
         [field]: value,
       },
     }));
   };
 
   // Handler to update guardian details
-  const handleGuardianDetailsChange = (
-    guardianType: keyof StudentDetailsData["guardianDetails"],
+  const handleDetailsChange = (
+    type: keyof StudentDetailsData["guardianDetails"] | "emergencyContact",
     field: string,
     value: string
   ) => {
     setStudentDetails((prev) => ({
       ...prev,
-      guardianDetails: {
-        ...prev.guardianDetails,
-        [guardianType]: {
-          ...(prev.guardianDetails?.[guardianType] || {}),
-          [field]: value,
-        },
-      },
+      ...(type === "emergencyContact"
+        ? {
+            emergencyContact: {
+              ...(prev.emergencyContact || {
+                name: "",
+                mobileNumber: "",
+                relation: "",
+              }),
+              [field]: value,
+            },
+          }
+        : {
+            guardianDetails: {
+              ...prev.guardianDetails,
+              [type]: {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ...(prev.guardianDetails?.[type] || ({} as any)),
+                [field]: value,
+              },
+            },
+          }),
     }));
   };
 
@@ -100,7 +113,6 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   // Submits updated student details
   const handleSubmit = () => {
     onSave(studentInfo, studentDetails);
-    onOpenChange(false);
   };
 
   return (
@@ -133,7 +145,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             <TabsContent className="px-1" value="guardian">
               <GuardianInfoForm
                 studentDetails={studentDetails}
-                onChangeHandler={handleGuardianDetailsChange}
+                onChangeHandler={handleDetailsChange}
               />
             </TabsContent>
 

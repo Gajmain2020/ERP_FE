@@ -10,29 +10,6 @@ import LandingFooter from "./Helper/LandingFooter";
 // import useAuthStore from "@/store/userAuthStore";
 
 export default function Landing() {
-  // const { setUserType, setName, setAuthToken } = useAuthStore();
-
-  // const handleDummyLogin = () => {
-  //   // Set random values for testing
-  //   const randomUserTypes: Array<"admin" | "student" | "faculty"> = [
-  //     "admin",
-  //     "student",
-  //     "faculty",
-  //   ];
-  //   const randomName = `User_${Math.floor(Math.random() * 1000)}`;
-  //   const randomAuthToken = `token_${Math.random()
-  //     .toString(36)
-  //     .substring(2, 15)}`;
-
-  //   setUserType(
-  //     randomUserTypes[Math.floor(Math.random() * randomUserTypes.length)]
-  //   );
-  //   setName(randomName);
-  //   setAuthToken(randomAuthToken);
-
-  //   console.log("Dummy login executed!");
-  // };
-
   const [isContactModalOpen, setContactModalOpen] = useState(false);
 
   const openContactModal = () => setContactModalOpen(true);
