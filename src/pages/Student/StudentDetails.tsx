@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { StudentData, StudentDetailsData } from "@/utils/types";
 import {
   FetchStudentAllDetailsAPI,
+  AddStudentDetailsAPI,
   UpdateStudentDetailsAPI,
 } from "@/api/studentAPI";
 import { useParams } from "react-router-dom";
@@ -47,11 +48,14 @@ function StudentDetails() {
     setStudentBasicDetails(updatedBasicDetails);
     setStudentDetails(updatedDetails);
 
-    if (studentBasicDetails && studentDetails) {
-      UpdateStudentDetailsAPI(studentBasicDetails, studentDetails)
+    if (
+      studentBasicDetails &&
+      studentDetails &&
+      studentBasicDetails.isDetailsFilled
+    ) {
+      UpdateStudentDetailsAPI(updatedDetails)
         .then((res) => {
-          console.log(res);
-          toast.success(res.message);
+          setStudentDetails(res.data.details);
           setIsDialogOpen(false);
         })
         .catch((err) => {
@@ -59,7 +63,19 @@ function StudentDetails() {
         });
     }
 
-    console.log("Updated Student Data:", updatedBasicDetails, updatedDetails);
+    if (
+      studentBasicDetails &&
+      studentDetails &&
+      !studentBasicDetails.isDetailsFilled
+    ) {
+      AddStudentDetailsAPI(studentBasicDetails, studentDetails)
+        .then(() => {
+          setIsDialogOpen(false);
+        })
+        .catch((err) => {
+          toast.error(err.message);
+        });
+    }
   };
 
   return (
@@ -69,7 +85,10 @@ function StudentDetails() {
 
       {/* Student more details */}
       {studentBasicDetails?.isDetailsFilled && studentDetails && (
-        <StudentDetailsCard studentDetails={studentDetails} />
+        <StudentDetailsCard
+          onOpenChange={setIsDialogOpen}
+          studentDetails={studentDetails}
+        />
       )}
 
       {!studentBasicDetails?.isDetailsFilled && (

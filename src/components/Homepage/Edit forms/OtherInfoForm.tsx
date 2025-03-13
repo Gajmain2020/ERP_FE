@@ -13,7 +13,6 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
   <div className="grid grid-cols-2 gap-4">
     {[
       { label: "Mobile Number", key: "studentMobileNumber", type: "text" },
-      { label: "Emerg. Contact", key: "emergencyContact", type: "text" },
       { label: "Aadhar Number", key: "aadharNumber", type: "text" },
       { label: "ABC ID", key: "abcId", type: "text" },
       { label: "Admission Number", key: "admissionNumber", type: "text" },
@@ -25,7 +24,13 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
         <input
           type={type}
           value={
-            typeof studentDetails[key] === "string" ? studentDetails[key] : ""
+            key === "dob"
+              ? studentDetails[key]
+                ? new Date(studentDetails[key]).toISOString().split("T")[0] // Convert to YYYY-MM-DD
+                : ""
+              : typeof studentDetails[key] === "string"
+              ? studentDetails[key]
+              : ""
           }
           onChange={(e) => onChangeHandler(key, e.target.value)}
           className="border rounded-lg p-2 w-full"
@@ -37,14 +42,18 @@ const OtherInfoForm: React.FC<OtherInfoFormProps> = ({
       {
         label: "Blood Group",
         key: "bloodGroup",
-        options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+        options: ["Select", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
       },
       {
         label: "Category",
         key: "category",
-        options: ["Gen", "OBC", "ST", "SC"],
+        options: ["Select", "Gen", "OBC", "ST", "SC"],
       },
-      { label: "Gender", key: "gender", options: ["Male", "Female", "Other"] },
+      {
+        label: "Gender",
+        key: "gender",
+        options: ["Select", "Male", "Female", "Other"],
+      },
     ].map(({ label, key, options }) => (
       <div key={key}>
         <Label>{label}</Label>

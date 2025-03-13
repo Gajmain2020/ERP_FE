@@ -74,11 +74,10 @@ export async function FetchStudentAllDetailsAPI() {
   }
 }
 
-export async function UpdateStudentDetailsAPI(
+export async function AddStudentDetailsAPI(
   updatedBasicDetails: StudentData,
   updatedDetails: StudentDetailsData
 ) {
-  console.log(updatedBasicDetails, updatedDetails);
   try {
     const response = await axios({
       headers,
@@ -92,6 +91,30 @@ export async function UpdateStudentDetailsAPI(
     });
     return response.data.data;
   } catch (error: unknown) {
+    if (error instanceof AxiosError && error.response) {
+      toast.error(error.response.data.message);
+      return { success: false, message: error.response.data.message };
+    }
+    toast.error("Something went wrong. Please try again.");
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+}
+
+export async function UpdateStudentDetailsAPI(
+  updatedDetails: StudentDetailsData
+) {
+  try {
+    const response = await axios({
+      headers,
+      url: `${StudentURL}/update-details`,
+      method: "POST",
+      data: updatedDetails,
+    });
+    return response.data;
+  } catch (error) {
     if (error instanceof AxiosError && error.response) {
       toast.error(error.response.data.message);
       return { success: false, message: error.response.data.message };

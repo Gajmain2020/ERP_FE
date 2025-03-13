@@ -2,11 +2,14 @@ import { StudentDetailsData } from "@/utils/types";
 
 const StudentDetailsCard = ({
   studentDetails,
+  onOpenChange,
 }: {
   studentDetails: StudentDetailsData;
+  onOpenChange: (arg: boolean) => void;
 }) => {
   const handleEditDetailsButton = () => {
     console.log("Edit requested");
+    onOpenChange(true);
   };
 
   return (
