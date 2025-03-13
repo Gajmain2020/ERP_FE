@@ -1,9 +1,9 @@
-import { StudentProps } from "@/utils/types";
+import { StudentData } from "@/utils/types";
 
 const StudentProfileCard = ({
   studentDetails,
 }: {
-  studentDetails: StudentProps;
+  studentDetails: StudentData;
 }) => {
   return (
     <div className="w-full flex flex-col gap-4 h-fit">
@@ -25,7 +25,7 @@ const StudentProfileCard = ({
               { label: "Section", value: studentDetails.section },
               {
                 label: "Teacher Guardian",
-                value: studentDetails.TG.teacherName,
+                value: studentDetails?.TG?.teacherName,
               },
             ].map((item, index) => (
               <div key={index} className="space-y-0.5">

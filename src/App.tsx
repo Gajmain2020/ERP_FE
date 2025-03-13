@@ -40,7 +40,7 @@ const App: React.FC = () => {
 
           {/* Protected Routes for student */}
           <Route
-            path="/user/student/:id/*"
+            path="/user/student/:id"
             element={
               <ProtectedRoutes isLoggedIn={isLoggedIn}>
                 <UserTypeCheck>
