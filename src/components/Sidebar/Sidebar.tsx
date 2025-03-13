@@ -62,6 +62,9 @@ const SidebarNavItem = ({
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const reset = useAuthStore().reset;
+
+  console.log(reset);
   const { name, userType } = useAuthStore() as {
     name: string;
     userType: keyof typeof navItems;
@@ -97,6 +100,11 @@ export function AppSidebar() {
 
   // Determine the active item based on the current path
   const activePath = location.pathname;
+
+  const handleLogout = () => {
+    reset();
+    navigate("/");
+  };
 
   return (
     <Sidebar collapsible="icon" className="w-[320px] text-lg">
@@ -164,13 +172,10 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" align="start" className="w-56">
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="cursor-pointer"
+                >
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
