@@ -49,7 +49,7 @@ const StudentDetails = () => {
 
       if (updatedBasicDetails.isDetailsFilled) {
         const response = await UpdateStudentDetailsAPI(updatedDetails);
-        setStudentDetails(response.details);
+        setStudentDetails(response.data.details);
       } else {
         await AddStudentDetailsAPI(updatedBasicDetails, updatedDetails);
       }
