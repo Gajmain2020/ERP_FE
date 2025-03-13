@@ -66,7 +66,7 @@ const LoginForm = () => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault(); // Prevent default Enter behavior
-      handleSubmit();
+      handleSubmit(e);
     }
   };
 
