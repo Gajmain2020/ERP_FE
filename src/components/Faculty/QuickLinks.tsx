@@ -1,25 +1,25 @@
 import useAuthStore from "@/store/userAuthStore";
-import { quickLinksStudent } from "@/utils/constants";
+import { quickLinksFaculty } from "@/utils/constants";
 
-const QuickLinksComponent: React.FC = () => {
-  const { name, userType } = useAuthStore() as {
-    name: string;
+const QuickLinks: React.FC = () => {
+  const { id, userType } = useAuthStore() as {
+    id: string;
     userType: string;
   };
-  const getDynamicPath = (basePath: string) => {
-    return `/user/${userType}/${name}${basePath}`;
-  };
+  const getDynamicPath = (basePath: string) =>
+    `/user/${userType}/${id}${basePath}`;
+
   return (
     <div className="flex flex-col gap-5">
       <h2 className="text-2xl font-bold text-gray-800 text-center">
         Quick Links
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {quickLinksStudent.map((link, index) => (
+        {quickLinksFaculty.map((link, index) => (
           <a
             key={index}
             href={getDynamicPath(link.link)}
-            className="flex flex-col items-center justify-center gap-3 p-6 bg-gradient-to-br from-white to-gray-100 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-300 text-center"
+            className="flex flex-col items-center justify-center gap-1 p-6 bg-gradient-to-br from-white to-gray-100 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition transform duration-300 text-center"
           >
             <div className="text-4xl">{link.icon}</div>
             <h3 className="text-lg font-semibold text-gray-800">
@@ -33,4 +33,4 @@ const QuickLinksComponent: React.FC = () => {
   );
 };
 
-export default QuickLinksComponent;
+export default QuickLinks;

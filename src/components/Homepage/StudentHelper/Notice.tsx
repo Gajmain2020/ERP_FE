@@ -3,7 +3,7 @@ import { NoticeComponentProps } from "@/utils/types";
 
 const NoticeComponent: React.FC<NoticeComponentProps> = ({ notices }) => {
   return (
-    <div className="relative flex flex-col max-w-full h-full overflow-hidden rounded-lg bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg">
+    <div className="relative flex flex-col max-w-full max-h-[50dvh] overflow-hidden rounded-lg bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg">
       {/* Heading */}
       <div className="text-2xl text-center py-2 bg-gray-100 border-gray-500 border rounded-t-lg font-semibold text-indigo-700">
         Notice & Events
