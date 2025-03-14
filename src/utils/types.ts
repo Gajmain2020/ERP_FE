@@ -88,3 +88,17 @@ export interface EmergencyContact {
   mobileNumber: string;
   relation: string;
 }
+
+export interface IFaculty {
+  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
+  department: string;
+  email: string;
+  empId: string;
+  gender?: "male" | "female" | "other";
+  mobileNumber: string;
+  isTG?: boolean;
+  name: string;
+  password: string;
+  position: string;
+  profileImage?: string;
+}
