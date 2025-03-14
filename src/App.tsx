@@ -17,6 +17,7 @@ import UserTypeCheck from "./utils/UsetTypeCheck";
 import ImageUpload from "./components/Testing/Test";
 import StudentDetails from "./pages/Student/StudentDetails";
 import Homepage from "./pages/Faculty/Homepage";
+import FacultyProfile from "./pages/Faculty/FacultyProfile";
 
 const App: React.FC = () => {
   const { authToken, userType, id } = useAuthStore();
@@ -57,7 +58,7 @@ const App: React.FC = () => {
 
           {/* Protected Routes for faculty */}
           <Route
-            path="/user/faculty/:userName/*"
+            path="/user/faculty/:id"
             element={
               <ProtectedRoutes isLoggedIn={isLoggedIn}>
                 <UserTypeCheck>
@@ -67,6 +68,7 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<Homepage />} />
+            <Route path="Profile" element={<FacultyProfile />} />
             <Route path="notice" element={<>Hello from faculty side</>} />
           </Route>
 
