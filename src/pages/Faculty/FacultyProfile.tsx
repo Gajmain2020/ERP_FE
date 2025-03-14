@@ -39,6 +39,9 @@ export default function FacultyProfile() {
     try {
       const response = await UpdateProfileInformationAPI(profile);
       console.log(response);
+      toast.success(response.message);
+      setFacultyProfile(response.data.updatedProfile);
+      setOpenModal(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Something went wrong.");
