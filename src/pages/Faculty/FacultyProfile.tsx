@@ -1,5 +1,6 @@
 import { FetchFacultyProfileAPI } from "@/api/facultyAPI";
 import FacultyProfileCard from "@/components/Faculty/BasicInfo";
+import EditFacultyProfileDialog from "@/components/Faculty/EditDialog";
 import useAuthStore from "@/store/userAuthStore";
 import { IFaculty } from "@/utils/types";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +12,7 @@ export default function FacultyProfile() {
     id: string;
   };
   const [facultyProfile, setFacultyProfile] = useState<IFaculty | null>(null);
+  const [openModal, setOpenModal] = useState(false);
 
   // Fetch student details
   const fetchFacultyProfile = useCallback(async () => {
@@ -24,17 +26,32 @@ export default function FacultyProfile() {
     }
   }, [id]);
 
-  console.log(facultyProfile);
-
   useEffect(() => {
     fetchFacultyProfile();
   }, [id]);
+
+  const handleUpdateProfile = (profile: IFaculty) => {
+    console.log(profile);
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-5">
       <div className="text-center text-xl font-semibold">Welcome {name}!</div>
       {/* Profile card */}
-      <FacultyProfileCard facultyProfile={facultyProfile} />
+      <FacultyProfileCard
+        setOpenModal={setOpenModal}
+        facultyProfile={facultyProfile}
+      />
+
+      {/* Edit modal */}
+      {openModal && facultyProfile && (
+        <EditFacultyProfileDialog
+          isOpen={openModal}
+          facultyProfile={facultyProfile}
+          onOpenChange={setOpenModal}
+          onSave={handleUpdateProfile}
+        />
+      )}
     </div>
   );
 }

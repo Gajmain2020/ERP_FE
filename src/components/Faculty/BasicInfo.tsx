@@ -1,9 +1,12 @@
 import { IFaculty } from "@/utils/types";
+import { Button } from "../ui/button";
 
 const FacultyProfileCard = ({
   facultyProfile,
+  setOpenModal,
 }: {
   facultyProfile: IFaculty | null;
+  setOpenModal: (arg: boolean) => void;
 }) => {
   if (!facultyProfile) {
     return (
@@ -34,7 +37,14 @@ const FacultyProfileCard = ({
 
       <div className="flex gap-4">
         {/* Details Card */}
-        <div className="w-full bg-opacity-20 backdrop-blur-lg bg-white/30 rounded-lg shadow-lg p-6 space-y-6 border border-white/30 hover:bg-white/55 transition-all h-full">
+        <div className="w-full relative bg-opacity-20 backdrop-blur-lg bg-white/30 rounded-lg shadow-lg p-6 space-y-6 border border-white/30 hover:bg-white/55 transition-all h-full">
+          <Button
+            className="absolute right-5 top-5"
+            onClick={() => setOpenModal(true)}
+          >
+            Edit
+          </Button>
+
           <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-3">
             {[
               { label: "Name", value: facultyProfile.name },

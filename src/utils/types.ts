@@ -19,6 +19,11 @@ export interface EditStudentDialogProps {
   ) => void;
 }
 
+export interface EditFacultyProfile {
+  setOpenModal: (open: boolean) => void;
+  studentProfile: StudentDetailsData | null;
+}
+
 export interface StudentData {
   _id: string;
   name: string;
