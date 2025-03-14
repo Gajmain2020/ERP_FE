@@ -60,7 +60,6 @@ const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
 
   const handleSave = () => {
     onSave(tempProfileInfo);
-    onOpenChange(false); // Close dialog after saving
   };
 
   return (

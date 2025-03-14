@@ -2,7 +2,7 @@ import { StudentData, StudentDetailsData } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
-const StudentURL = "http://localhost:5500/api/v1/student";
+const StudentURL = "/api/v1/student";
 
 const authStorage = JSON.parse(localStorage.getItem("auth-storage") || "{}");
 const authToken = authStorage?.state?.authToken || "";

@@ -1,4 +1,7 @@
-import { FetchFacultyProfileAPI } from "@/api/facultyAPI";
+import {
+  FetchFacultyProfileAPI,
+  UpdateProfileInformationAPI,
+} from "@/api/facultyAPI";
 import FacultyProfileCard from "@/components/Faculty/BasicInfo";
 import EditFacultyProfileDialog from "@/components/Faculty/EditDialog";
 import useAuthStore from "@/store/userAuthStore";
@@ -30,8 +33,16 @@ export default function FacultyProfile() {
     fetchFacultyProfile();
   }, [id]);
 
-  const handleUpdateProfile = (profile: IFaculty) => {
+  const handleUpdateProfile = async (profile: IFaculty) => {
     console.log(profile);
+    // make an api endpoint to update the user details
+    try {
+      const response = await UpdateProfileInformationAPI(profile);
+      console.log(response);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong.");
+    }
   };
 
   return (
