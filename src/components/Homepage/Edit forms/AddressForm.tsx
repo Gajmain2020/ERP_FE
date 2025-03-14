@@ -23,51 +23,75 @@ const AddressForm = ({ studentDetails, onChangeHandler }: AddressFormProps) => (
           {index === 0 && (
             <Button
               variant="outline"
-              onClick={() =>
-                onChangeHandler(
-                  "permanentAddress",
-                  "address",
-                  studentDetails.currentAddress?.address || ""
-                )
-              }
+              onClick={() => {
+                if (studentDetails.currentAddress) {
+                  Object.keys(studentDetails.currentAddress).forEach(
+                    (field) => {
+                      onChangeHandler(
+                        "permanentAddress",
+                        field,
+                        studentDetails.currentAddress?.[
+                          field as keyof Address
+                        ] || ""
+                      );
+                    }
+                  );
+                }
+              }}
             >
               Copy to Permanent
             </Button>
           )}
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {["address", "city", "pinCode", "state"].map((field) => (
-            <div key={field}>
-              <Label>{field.charAt(0).toUpperCase() + field.slice(1)}</Label>
-              <Input
-                value={
-                  (
-                    studentDetails[type as keyof StudentDetailsData] as Address
-                  )?.[field as keyof Address] || ""
-                }
-                onChange={(e) =>
-                  onChangeHandler(
-                    type as keyof StudentDetailsData,
-                    field,
-                    e.target.value
-                  )
-                }
-                className={
-                  field === "pinCode" &&
-                  (studentDetails[type] as Address)?.pinCode?.length === 6
-                    ? "border-green-500"
-                    : "border-red-500"
-                }
-              />
-              {field === "pinCode" &&
-                (studentDetails[type] as Address)?.pinCode &&
-                (studentDetails[type] as Address)?.pinCode?.length !== 6 && (
+          {["address", "city", "pinCode", "state"].map((field) => {
+            const isPinCode = field === "pinCode";
+            const pinCodeValue =
+              (studentDetails[type] as Address)?.pinCode || "";
+            const isPinCodeValid = pinCodeValue.length === 6;
+
+            return (
+              <div key={field}>
+                <Label>{field.charAt(0).toUpperCase() + field.slice(1)}</Label>
+                <Input
+                  value={
+                    (
+                      studentDetails[
+                        type as keyof StudentDetailsData
+                      ] as Address
+                    )?.[field as keyof Address] || ""
+                  }
+                  onInput={(e) => {
+                    if (isPinCode) {
+                      e.currentTarget.value = e.currentTarget.value.replace(
+                        /\D/g,
+                        ""
+                      );
+                    }
+                  }}
+                  onChange={(e) =>
+                    onChangeHandler(
+                      type as keyof StudentDetailsData,
+                      field,
+                      e.target.value
+                    )
+                  }
+                  className={
+                    isPinCode
+                      ? isPinCodeValid
+                        ? "border-green-500"
+                        : "border-red-500"
+                      : ""
+                  }
+                />
+                {isPinCode && pinCodeValue && !isPinCodeValid && (
                   <p className="text-red-500 text-sm mt-1">
                     Pin Code must be 6 digits
                   </p>
                 )}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     ))}

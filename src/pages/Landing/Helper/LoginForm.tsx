@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
@@ -6,6 +6,10 @@ import { Mail, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UserTypeSelector from "./UserTypeSelector";
+import { LoginStudentAPI } from "@/api/studentAPI";
+import useAuthStore from "@/store/userAuthStore";
+import { useNavigate } from "react-router-dom";
+import { LoginTeacherAPI } from "@/api/facultyAPI";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -16,6 +20,12 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+  const { setAuthToken, setUserType, setName, setId } = useAuthStore();
+
+  const [user, setUser] = useState<"Faculty" | "Student">("Student");
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,28 +34,51 @@ const LoginForm = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
+      // Validate input
       loginSchema.parse({ email, password });
-      toast.success("Login Successful!");
-      // Login logic here
 
-      //
+      // Call API
+      // Determine the correct API based on user type
+      const loginAPI = user === "Student" ? LoginStudentAPI : LoginTeacherAPI;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err.errors) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        err.errors.forEach((error: any) => {
-          toast.error(error.message);
-        });
+      // Hit tha api
+      const res = await loginAPI(email, password);
+
+      if (!res.success) return; // Stop if login fails
+
+      // Store authentication data
+      setAuthToken(res.authToken);
+      setName(res.name);
+      setUserType(res.userType);
+      setId(res.id);
+
+      // Redirect to student dashboard
+      navigate(`${user}/${res.id}`);
+    } catch (err) {
+      if (err instanceof ZodError) {
+        // Handle validation errors from loginSchema
+        toast.error(err.errors.map((e) => e.message).join(", "));
+      } else {
+        // Handle unexpected errors
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   };
 
+  // Detect Enter Key
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default Enter behavior
+      handleSubmit(e);
+    }
+  };
+
   const handleUserTypeChange = (type: "Faculty" | "Student") => {
-    console.log("Selected User Type:", type);
+    setUser(type);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,6 +103,7 @@ const LoginForm = () => {
             type="email"
             placeholder="Enter your email"
             className="pr-10 text-black border-gray-300 focus:border-blue-500"
+            onKeyDown={handleKeyDown}
             required
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -83,6 +117,7 @@ const LoginForm = () => {
             placeholder="Enter your password"
             className="pr-10 text-black border-gray-300 focus:border-blue-500"
             required
+            onKeyDown={handleKeyDown}
             onChange={(e) => setPassword(e.target.value)}
             onPaste={handlePaste}
           />

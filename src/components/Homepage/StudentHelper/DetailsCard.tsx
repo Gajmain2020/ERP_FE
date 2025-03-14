@@ -1,12 +1,15 @@
-import { StudentDetailsProps } from "@/utils/types";
+import { StudentDetailsData } from "@/utils/types";
 
 const StudentDetailsCard = ({
   studentDetails,
+  onOpenChange,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
+  onOpenChange: (arg: boolean) => void;
 }) => {
   const handleEditDetailsButton = () => {
     console.log("Edit requested");
+    onOpenChange(true);
   };
 
   return (
@@ -19,6 +22,15 @@ const StudentDetailsCard = ({
           {/* General Information */}
           <GeneralInfo studentDetails={studentDetails} />
 
+          {/* Divider */}
+          <div className="w-full h-0.5 bg-gray-400"></div>
+
+          <AddressInfo
+            addressDetails={{
+              current: studentDetails.currentAddress,
+              permanent: studentDetails.permanentAddress,
+            }}
+          />
           {/* Divider */}
           <div className="w-full h-0.5 bg-gray-400"></div>
 
@@ -46,17 +58,19 @@ export default StudentDetailsCard;
 const GeneralInfo = ({
   studentDetails,
 }: {
-  studentDetails: StudentDetailsProps;
+  studentDetails: StudentDetailsData;
 }) => {
   const generalInfo = [
     { label: "URN", value: studentDetails.studentUrn },
     { label: "Admission No.", value: studentDetails.admissionNumber },
     { label: "Aadhar No.", value: studentDetails.aadharNumber },
     { label: "Blood Group", value: studentDetails.bloodGroup },
-    { label: "Gender", value: studentDetails.gender.toUpperCase() },
+    { label: "Gender", value: studentDetails.gender?.toUpperCase() },
     {
       label: "DOB",
-      value: new Date(studentDetails.dob).toLocaleDateString("en-GB"),
+      value:
+        studentDetails.dob &&
+        new Date(studentDetails.dob).toLocaleDateString("en-GB"),
     },
     { label: "Category", value: studentDetails.category },
     { label: "Nationality", value: studentDetails.nationality },
@@ -70,8 +84,50 @@ const GeneralInfo = ({
       </h3>
       <div className="grid grid-cols-4 gap-3">
         {generalInfo.map((item, index) => (
-          <InfoItem key={index} label={item.label} value={item.value} />
+          <InfoItem
+            key={index}
+            label={item.label}
+            value={
+              typeof item.value === "string" || typeof item.value === "number"
+                ? item.value
+                : "N/A"
+            }
+          />
         ))}
+      </div>
+    </div>
+  );
+};
+
+/* ----------- Address Information Component ----------- */
+const AddressInfo = ({
+  addressDetails: { current, permanent },
+}: {
+  addressDetails: {
+    current: StudentDetailsData["currentAddress"];
+    permanent: StudentDetailsData["permanentAddress"];
+  };
+}) => {
+  const renderAddress = (label: string, address: typeof current) => (
+    <div>
+      <p className="text-sm font-medium text-gray-600">{label}</p>
+      <p className="text-lg font-semibold text-gray-900">
+        {`${address.address}, ${address.city}`}
+      </p>
+      <p className="text-lg font-semibold text-gray-900">
+        {`${address.state} - ${address.pinCode}`}
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <h3 className="underline text-lg font-semibold text-gray-800">
+        Address Information
+      </h3>
+      <div className="grid grid-cols-2 gap-2">
+        {renderAddress("Current Address", current)}
+        {renderAddress("Permanent Address", permanent)}
       </div>
     </div>
   );
@@ -81,7 +137,7 @@ const GeneralInfo = ({
 const GuardianInfo = ({
   guardianDetails,
 }: {
-  guardianDetails: StudentDetailsProps["guardianDetails"];
+  guardianDetails: StudentDetailsData["guardianDetails"];
 }) => {
   const guardians = [
     {
@@ -94,6 +150,12 @@ const GuardianInfo = ({
       name: guardianDetails.mother.name,
       mobile: guardianDetails.mother.mobileNumber,
     },
+    {
+      label: "Alternate Guardian",
+      name: guardianDetails.alternateGuardian.name,
+      relation: guardianDetails.alternateGuardian.relationship,
+      mobile: guardianDetails.alternateGuardian.mobileNumber,
+    },
   ];
 
   return (
@@ -101,15 +163,21 @@ const GuardianInfo = ({
       <h3 className="underline text-lg font-semibold text-gray-800">
         Guardian Information
       </h3>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         {guardians.map((guardian, index) => (
           <div key={index}>
             <p className="text-sm font-medium text-gray-600">
               {guardian.label}
             </p>
             <p className="text-lg font-semibold text-gray-900">
-              {guardian.name}
+              {guardian.name}{" "}
+              {guardian.relation && (
+                <span className="font-semibold text-sm text-gray-700">
+                  ({guardian.relation})
+                </span>
+              )}
             </p>
+
             <p className="font-semibold text-gray-700">{guardian.mobile}</p>
           </div>
         ))}
