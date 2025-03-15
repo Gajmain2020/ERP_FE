@@ -11,6 +11,32 @@ const headers = {
   authorization: `Bearer ${authToken}`,
 };
 
+export async function ChangeStudentPasswordAPI(
+  oldPassword: string,
+  newPassword: string,
+  confirmPassword: string
+) {
+  try {
+    const response = await axios({
+      url: `${StudentURL}/change-password`,
+      method: "PATCH",
+      data: { oldPassword, newPassword, confirmPassword },
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      toast.error(error.response.data.message);
+      return { success: false, message: error.response.data.message };
+    }
+    toast.error("Something went wrong. Please try again.");
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+}
+
 export async function LoginStudentAPI(email: string, password: string) {
   try {
     const response = await axios({
