@@ -16,6 +16,7 @@ export default function FacultyProfile() {
   };
   const [facultyProfile, setFacultyProfile] = useState<IFaculty | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
   // Fetch student details
   const fetchFacultyProfile = useCallback(async () => {
@@ -31,13 +32,15 @@ export default function FacultyProfile() {
 
   useEffect(() => {
     fetchFacultyProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleUpdateProfile = async (profile: IFaculty) => {
-    console.log(profile);
-    // make an api endpoint to update the user details
     try {
-      const response = await UpdateProfileInformationAPI(profile);
+      const response = await UpdateProfileInformationAPI(
+        profile,
+        profileImageFile
+      );
       console.log(response);
       toast.success(response.message);
       setFacultyProfile(response.data.updatedProfile);
@@ -64,6 +67,7 @@ export default function FacultyProfile() {
           facultyProfile={facultyProfile}
           onOpenChange={setOpenModal}
           onSave={handleUpdateProfile}
+          setProfileImageFile={setProfileImageFile}
         />
       )}
     </div>

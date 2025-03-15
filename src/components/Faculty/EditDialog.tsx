@@ -16,6 +16,7 @@ interface IEditProfile {
   isOpen: boolean;
   onOpenChange: (arg: boolean) => void;
   onSave: (profile: IFaculty) => void;
+  setProfileImageFile: (path: File) => void;
 }
 
 const tabItems = [
@@ -28,6 +29,7 @@ const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
   isOpen,
   onOpenChange,
   onSave,
+  setProfileImageFile,
 }) => {
   // Use temp state for modifications
   const [tempProfileInfo, setTempFacultyProfile] = useState<IFaculty>({
@@ -47,6 +49,7 @@ const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files && e.target.files[0]) {
+      setProfileImageFile(e.target.files[0]);
       const reader = new FileReader();
       reader.onload = (event) => {
         setTempFacultyProfile((prev) => ({
