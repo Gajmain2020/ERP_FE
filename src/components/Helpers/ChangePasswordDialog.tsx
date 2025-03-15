@@ -27,6 +27,10 @@ const ChangePassword: React.FC<IChangePassword> = ({
       toast.error("All fields are required.");
       return;
     }
+    if (oldPassword === newPassword) {
+      toast.error("Old and new passwords cannot be the same.");
+      return;
+    }
 
     if (newPassword !== confirmPassword) {
       toast.error("New passwords do not match.");
