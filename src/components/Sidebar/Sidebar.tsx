@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import NormalLogo from "/logo2.png";
 
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { navItems } from "@/utils/nav-items";
 import useAuthStore from "@/store/userAuthStore";
+import ChangePassword from "../Helpers/ChangePasswordDialog";
 
 // Define the type for the navigation item
 interface NavItem {
@@ -80,6 +81,8 @@ export function AppSidebar() {
     userType: keyof typeof navItems;
   };
 
+  const [changePassword, setChangePassword] = useState(false);
+
   // Get sidebar state
   const { state } = useSidebar();
 
@@ -125,90 +128,109 @@ export function AppSidebar() {
     setTimeout(() => navigate("/"), 0);
   };
 
+  const handleChangePassword = () => {
+    setChangePassword(true);
+  };
+
   return (
-    <Sidebar collapsible="icon" className="w-[320px] text-lg">
-      <SidebarContent>
-        {/* Sidebar Header with Logo */}
-        <div className="flex w-full sticky top-0 items-center justify-between p-4">
-          <img
-            src={NormalLogo}
-            alt="Full Logo"
-            className="shadow rounded border"
-          />
-        </div>
+    <>
+      <Sidebar collapsible="icon" className="w-[320px] text-lg">
+        <SidebarContent>
+          {/* Sidebar Header with Logo */}
+          <div className="flex w-full sticky top-0 items-center justify-between p-4">
+            <img
+              src={NormalLogo}
+              alt="Full Logo"
+              className="shadow rounded border"
+            />
+          </div>
 
-        {/* Sidebar Menu Groups */}
-        {Object.entries(navItemsForUser).map(([group, items]) => (
-          <SidebarGroup className="py-1" key={group}>
-            {/* Sidebar Group Label with Toggle Button */}
-            <SidebarGroupLabel
-              className="flex justify-between items-center px-3 py-1 font-bold cursor-pointer"
-              onClick={() => toggleGroup(group as keyof typeof navItems)}
-            >
-              {group.charAt(0).toUpperCase() + group.slice(1)}
-              <ChevronUp
-                className={`ml-2 transition-transform ${
-                  expandedGroups[group as keyof typeof navItems]
-                    ? "rotate-0"
-                    : "rotate-180"
-                }`}
-              />
-            </SidebarGroupLabel>
+          {/* Sidebar Menu Groups */}
+          {Object.entries(navItemsForUser).map(([group, items]) => (
+            <SidebarGroup className="py-1" key={group}>
+              {/* Sidebar Group Label with Toggle Button */}
+              <SidebarGroupLabel
+                className="flex justify-between items-center px-3 py-1 font-bold cursor-pointer"
+                onClick={() => toggleGroup(group as keyof typeof navItems)}
+              >
+                {group.charAt(0).toUpperCase() + group.slice(1)}
+                <ChevronUp
+                  className={`ml-2 transition-transform ${
+                    expandedGroups[group as keyof typeof navItems]
+                      ? "rotate-0"
+                      : "rotate-180"
+                  }`}
+                />
+              </SidebarGroupLabel>
 
-            {/* Sidebar Group Content */}
-            {expandedGroups[group as keyof typeof navItems] && (
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {items.map((item) => {
-                    const path = getDynamicPath(item.path);
-                    const isActive = activePath === path;
-                    return (
-                      <SidebarNavItem
-                        key={item.title}
-                        item={item}
-                        path={path}
-                        isActive={isActive}
-                        onClick={() => {
-                          navigate(path);
-                        }}
-                      />
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            )}
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
+              {/* Sidebar Group Content */}
+              {expandedGroups[group as keyof typeof navItems] && (
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {items.map((item) => {
+                      const path = getDynamicPath(item.path);
+                      const isActive = activePath === path;
+                      return (
+                        <SidebarNavItem
+                          key={item.title}
+                          item={item}
+                          path={path}
+                          isActive={isActive}
+                          onClick={() => {
+                            navigate(path);
+                          }}
+                        />
+                      );
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              )}
+            </SidebarGroup>
+          ))}
+        </SidebarContent>
 
-      {/* Sidebar Footer with User Info and Logout */}
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 />
-                  {state === "expanded" && (
-                    <>
-                      <span>{name}</span>
-                      <ChevronUp className="ml-auto" />
-                    </>
-                  )}
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" align="start" className="w-56">
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="cursor-pointer"
-                >
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+        {/* Sidebar Footer with User Info and Logout */}
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <User2 />
+                    {state === "expanded" && (
+                      <>
+                        <span>{name}</span>
+                        <ChevronUp className="ml-auto" />
+                      </>
+                    )}
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" align="start" className="w-56">
+                  <DropdownMenuItem
+                    onClick={handleChangePassword}
+                    className="cursor-pointer"
+                  >
+                    <span>Change Password</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer"
+                  >
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      {changePassword && (
+        <ChangePassword
+          userType={userType}
+          isOpen={changePassword}
+          onOpenChange={setChangePassword}
+        />
+      )}
+    </>
   );
 }
