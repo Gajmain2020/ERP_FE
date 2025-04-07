@@ -14,8 +14,10 @@ import ProfilePictureForm from "./ProfilePictureForm";
 interface IEditProfile {
   facultyProfile: IFaculty;
   isOpen: boolean;
+  loading: boolean;
   onOpenChange: (arg: boolean) => void;
   onSave: (profile: IFaculty) => void;
+  setProfileImageFile: (path: File) => void;
 }
 
 const tabItems = [
@@ -26,8 +28,10 @@ const tabItems = [
 const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
   facultyProfile,
   isOpen,
+  loading,
   onOpenChange,
   onSave,
+  setProfileImageFile,
 }) => {
   // Use temp state for modifications
   const [tempProfileInfo, setTempFacultyProfile] = useState<IFaculty>({
@@ -47,6 +51,7 @@ const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files && e.target.files[0]) {
+      setProfileImageFile(e.target.files[0]);
       const reader = new FileReader();
       reader.onload = (event) => {
         setTempFacultyProfile((prev) => ({
@@ -100,7 +105,9 @@ const EditFacultyProfileDialog: React.FC<IEditProfile> = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleSave} className="" disabled={loading}>
+            {loading ? "Saving..." : "Save"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

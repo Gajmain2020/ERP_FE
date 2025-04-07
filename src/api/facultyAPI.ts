@@ -79,21 +79,36 @@ export async function FetchFacultyProfileAPI() {
   }
 }
 
-export async function UpdateProfileInformationAPI(updatedData: IFaculty) {
+export async function UpdateProfileInformationAPI(
+  updatedData: IFaculty,
+  profileImageFile: File | null
+) {
   const authStorage = JSON.parse(localStorage.getItem("auth-storage") || "{}");
   const authToken = authStorage?.state?.authToken || "";
+
+  delete updatedData.profileImage;
+
+  const formData = new FormData();
+
+  if (profileImageFile) {
+    formData.append("image", profileImageFile);
+  }
+  formData.append("faculty", JSON.stringify(updatedData));
 
   try {
     const res = await axios({
       url: `${FacultyURL}/update-faculty-profile`,
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${authToken}`,
       },
-      data: updatedData,
+      data: formData,
       withCredentials: true, // ✅ Important if cookies are used
     });
+
+    console.log(res);
+
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {

@@ -1,23 +1,23 @@
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
 } from "react-router-dom";
 import { Toaster } from "sonner";
 
 import StudentHomepage from "./components/Homepage/StudentHomepage";
 import Layout from "./components/Layout/Layout";
-import Landing from "./pages/Landing/Landing";
-import useAuthStore from "./store/userAuthStore";
+import ImageUpload from "./components/Testing/Test";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
+import FacultyProfile from "./pages/Faculty/FacultyProfile";
+import Homepage from "./pages/Faculty/Homepage";
+import Landing from "./pages/Landing/Landing";
+import StudentDetails from "./pages/Student/StudentDetails";
+import useAuthStore from "./store/userAuthStore";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import UserTypeCheck from "./utils/UsetTypeCheck";
-import ImageUpload from "./components/Testing/Test";
-import StudentDetails from "./pages/Student/StudentDetails";
-import Homepage from "./pages/Faculty/Homepage";
-import FacultyProfile from "./pages/Faculty/FacultyProfile";
 
 const App: React.FC = () => {
   const { authToken, userType, id } = useAuthStore();
@@ -34,6 +34,12 @@ const App: React.FC = () => {
           {/* Landing Page */}
           <Route
             path="/"
+            element={
+              isLoggedIn ? <Navigate to={userRoute} replace /> : <Landing />
+            }
+          />
+          <Route
+            path="/admin"
             element={
               isLoggedIn ? <Navigate to={userRoute} replace /> : <Landing />
             }
