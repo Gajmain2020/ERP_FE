@@ -66,3 +66,34 @@ export async function ChangeAdminPasswordAPI(
     };
   }
 }
+
+interface IStudent {
+  name: string;
+  email: string;
+  urn: string;
+  crn: string;
+  semester: string;
+  section: string;
+}
+
+export async function EnrollStudentAPI(student: IStudent) {
+  try {
+    const res = await axios({
+      headers,
+      url: `${AdminURL}/enroll-student`,
+      method: "POST",
+      data: student,
+    });
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      toast.error(error.response.data.message);
+      return { success: false, message: error.response.data.message };
+    }
+    toast.error("Something went wrong. Please try again.");
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+}

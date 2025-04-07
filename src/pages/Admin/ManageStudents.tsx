@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { EnrollStudentAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addStudentSchema } from "@/utils/zodSchemas";
+import { toast } from "sonner";
 
 export default function ManageStudents() {
   const [student, setStudent] = useState({
@@ -43,8 +46,29 @@ export default function ManageStudents() {
     }));
   };
 
-  const handleAddStudent = () => {
-    console.log("Student Data:", student);
+  const handleAddStudent = async () => {
+    const result = addStudentSchema.safeParse(student);
+
+    if (!result.success) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    const res = await EnrollStudentAPI(student);
+
+    if (!res.success) {
+      toast.error(res.message);
+      return;
+    }
+    toast.success("Student added successfully.");
+    setStudent({
+      name: "",
+      email: "",
+      urn: "",
+      crn: "",
+      semester: "",
+      section: "",
+    });
   };
 
   const handleClear = () => {
