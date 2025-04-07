@@ -45,54 +45,54 @@ const FacultyProfileCard = ({
             Edit
           </Button>
 
-          <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-3">
-            {[
-              { label: "Name", value: facultyProfile.name },
-              { label: "Employee ID", value: facultyProfile.empId },
-              { label: "Department", value: facultyProfile.department },
-              { label: "Position", value: facultyProfile.position },
-              { label: "Email", value: facultyProfile.email },
-              { label: "Mobile", value: facultyProfile.mobileNumber },
-              {
-                label: "Gender",
-                value: facultyProfile.gender
-                  ? facultyProfile.gender.toUpperCase()
-                  : "N/A",
-              },
-              { label: "Blood Group", value: facultyProfile.bloodGroup },
-              {
-                label: "Teacher Guardian",
-                value: facultyProfile.isTG ? "Yes" : "No",
-              },
-            ].map((item, index) => (
-              <div key={index} className="space-y-0.5">
-                <label className="text-sm font-medium text-gray-700">
-                  {item.label}
-                </label>
-                <p className="text-lg font-semibold text-gray-800">
-                  {item.value ? item.value : "N/A"}
-                </p>
+          <div className="flex flex-wrap gap-6">
+            {/* Faculty Details - Takes remaining space */}
+            <div className="flex-1 grid lg:grid-cols-2 sm:grid-cols-1 gap-3">
+              {[
+                { label: "Name", value: facultyProfile.name },
+                { label: "Employee ID", value: facultyProfile.empId },
+                { label: "Department", value: facultyProfile.department },
+                { label: "Position", value: facultyProfile.position },
+                { label: "Email", value: facultyProfile.email },
+                { label: "Mobile", value: facultyProfile.mobileNumber },
+                {
+                  label: "Gender",
+                  value: facultyProfile.gender
+                    ? facultyProfile.gender.toUpperCase()
+                    : "N/A",
+                },
+                { label: "Blood Group", value: facultyProfile.bloodGroup },
+                {
+                  label: "Teacher Guardian",
+                  value: facultyProfile.isTG ? "Yes" : "No",
+                },
+              ].map((item, index) => (
+                <div key={index} className="space-y-0.5">
+                  <label className="text-sm font-medium text-gray-700">
+                    {item.label}
+                  </label>
+                  <p className="text-lg font-semibold text-gray-800">
+                    {item.value ? item.value : "N/A"}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {/* Profile Image - Takes 20-25% width */}
+            <div className="w-[20%] min-w-[120px] flex items-center justify-center">
+              <div className="relative w-full aspect-square">
+                <img
+                  src={
+                    facultyProfile.profileImage ||
+                    "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"
+                  }
+                  alt={`${facultyProfile.name}'s profile`}
+                  className="w-full h-full object-cover rounded-full border-4 border-gray-300 shadow-lg"
+                />
+                <div className="absolute inset-1 rounded-full border-2 border-transparent group-hover:border-teal-500 transition-all duration-300"></div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Profile Image */}
-        {facultyProfile.profileImage && (
-          <div className="w-[14%] flex items-center justify-center h-full">
-            <div className="group relative w-full aspect-square max-h-full">
-              <img
-                src={
-                  facultyProfile.profileImage ||
-                  "https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359554_1280.png"
-                }
-                alt={`${facultyProfile.name}'s profile`}
-                className="w-full h-full object-cover rounded-full transition-all duration-300 shadow-md"
-              />
-              <div className="absolute -inset-2 rounded-full border-2 border-transparent group-hover:border-teal-500 transition-all duration-300"></div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

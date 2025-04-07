@@ -17,6 +17,7 @@ export default function FacultyProfile() {
   const [facultyProfile, setFacultyProfile] = useState<IFaculty | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // Fetch student details
   const fetchFacultyProfile = useCallback(async () => {
@@ -36,6 +37,7 @@ export default function FacultyProfile() {
   }, [id]);
 
   const handleUpdateProfile = async (profile: IFaculty) => {
+    setLoading(true);
     try {
       const response = await UpdateProfileInformationAPI(
         profile,
@@ -48,6 +50,8 @@ export default function FacultyProfile() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,6 +67,7 @@ export default function FacultyProfile() {
       {/* Edit modal */}
       {openModal && facultyProfile && (
         <EditFacultyProfileDialog
+          loading={loading}
           isOpen={openModal}
           facultyProfile={facultyProfile}
           onOpenChange={setOpenModal}
