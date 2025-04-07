@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { EnrollStudentAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { addStudentSchema } from "@/utils/zodSchemas";
-import { toast } from "sonner";
 
 export default function ManageStudents() {
   const [student, setStudent] = useState({
@@ -61,14 +61,7 @@ export default function ManageStudents() {
       return;
     }
     toast.success("Student added successfully.");
-    setStudent({
-      name: "",
-      email: "",
-      urn: "",
-      crn: "",
-      semester: "",
-      section: "",
-    });
+    handleClear();
   };
 
   const handleClear = () => {

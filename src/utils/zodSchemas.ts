@@ -12,3 +12,13 @@ export const addStudentSchema = z.object({
     errorMap: () => ({ message: "Section is required" }),
   }),
 });
+
+export const addFacultySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  empId: z.string().min(1, "Employee ID is required"),
+  mobileNumber: z.string().min(1, "Mobile number is required"),
+  position: z.enum(["Assistant Professor", "Associate Professor"], {
+    errorMap: () => ({ message: "Position is required" }),
+  }),
+});

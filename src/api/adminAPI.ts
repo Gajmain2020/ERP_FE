@@ -1,3 +1,4 @@
+import { IFaculty, IStudent } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -67,15 +68,6 @@ export async function ChangeAdminPasswordAPI(
   }
 }
 
-interface IStudent {
-  name: string;
-  email: string;
-  urn: string;
-  crn: string;
-  semester: string;
-  section: string;
-}
-
 export async function EnrollStudentAPI(student: IStudent) {
   try {
     const res = await axios({
@@ -83,6 +75,28 @@ export async function EnrollStudentAPI(student: IStudent) {
       url: `${AdminURL}/enroll-student`,
       method: "POST",
       data: student,
+    });
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      toast.error(error.response.data.message);
+      return { success: false, message: error.response.data.message };
+    }
+    toast.error("Something went wrong. Please try again.");
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+}
+
+export async function EnrollFacultyAPI(faculty: IFaculty) {
+  try {
+    const res = await axios({
+      headers,
+      url: `${AdminURL}/enroll-faculty`,
+      method: "POST",
+      data: faculty,
     });
     return res.data;
   } catch (error) {
