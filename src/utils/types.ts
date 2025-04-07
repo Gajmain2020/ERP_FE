@@ -96,14 +96,23 @@ export interface EmergencyContact {
 
 export interface IFaculty {
   bloodGroup?: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
-  department: string;
+  department?: string;
   email: string;
   empId: string;
   gender?: "male" | "female" | "other";
   mobileNumber: string;
   isTG?: boolean;
   name: string;
-  password: string;
+  password?: string;
   position: string;
   profileImage?: string;
+}
+
+export interface IStudent {
+  name: string;
+  email: string;
+  urn: string;
+  crn: string;
+  semester: string;
+  section: string;
 }

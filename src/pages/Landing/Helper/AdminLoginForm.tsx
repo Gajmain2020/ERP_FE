@@ -2,14 +2,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { z, ZodError } from "zod";
 
-import { LoginTeacherAPI } from "@/api/facultyAPI";
-import { LoginStudentAPI } from "@/api/studentAPI";
+import { LoginAdminAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/userAuthStore";
 import { Eye, EyeOff, Mail } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserTypeSelector from "./UserTypeSelector";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,12 +17,10 @@ const loginSchema = z.object({
     .max(20, "Password must be at most 20 characters long"),
 });
 
-const LoginForm = () => {
+const AdminLoginForm = () => {
   const navigate = useNavigate();
 
   const { setAuthToken, setUserType, setName, setId } = useAuthStore();
-
-  const [user, setUser] = useState<"Faculty" | "Student">("Student");
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -43,10 +39,9 @@ const LoginForm = () => {
 
       // Call API
       // Determine the correct API based on user type
-      const loginAPI = user === "Student" ? LoginStudentAPI : LoginTeacherAPI;
 
       // Hit tha api
-      const res = await loginAPI(email, password);
+      const res = await LoginAdminAPI(email, password);
 
       if (!res.success) return; // Stop if login fails
 
@@ -56,8 +51,8 @@ const LoginForm = () => {
       setUserType(res.userType);
       setId(res.id);
 
-      // Redirect to student dashboard
-      navigate(`${user}/${res.id}`);
+      //   Redirect to admin dashboard
+      navigate(`admin/${res.id}`);
     } catch (err) {
       if (err instanceof ZodError) {
         // Handle validation errors from loginSchema
@@ -77,10 +72,6 @@ const LoginForm = () => {
     }
   };
 
-  const handleUserTypeChange = (type: "Faculty" | "Student") => {
-    setUser(type);
-  };
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePaste = (e: any) => {
     e.preventDefault();
@@ -91,10 +82,8 @@ const LoginForm = () => {
   return (
     <div className="w-full h-full mx-auto bg-white rounded-lg shadow-lg p-6 flex flex-col gap-5">
       <h2 className="text-2xl font-semibold text-gray-800 text-center">
-        Login
+        Admin Login
       </h2>
-
-      <UserTypeSelector onChange={handleUserTypeChange} />
 
       <div>
         {/* Email Input */}
@@ -146,4 +135,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default AdminLoginForm;

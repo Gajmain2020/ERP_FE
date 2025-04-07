@@ -9,10 +9,14 @@ import { Toaster } from "sonner";
 import StudentHomepage from "./components/Homepage/StudentHomepage";
 import Layout from "./components/Layout/Layout";
 import ImageUpload from "./components/Testing/Test";
+import AdminHomepage from "./pages/Admin/AdminHomepage";
+import ManageFaculty from "./pages/Admin/ManageFaculty";
+import ManageStudents from "./pages/Admin/ManageStudents";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
 import Homepage from "./pages/Faculty/Homepage";
+import AdminLanding from "./pages/Landing/AdminLanding";
 import Landing from "./pages/Landing/Landing";
 import StudentDetails from "./pages/Student/StudentDetails";
 import useAuthStore from "./store/userAuthStore";
@@ -41,10 +45,34 @@ const App: React.FC = () => {
           <Route
             path="/admin"
             element={
-              isLoggedIn ? <Navigate to={userRoute} replace /> : <Landing />
+              isLoggedIn ? (
+                <Navigate to={userRoute} replace />
+              ) : (
+                <AdminLanding />
+              )
             }
           />
           <Route path="/test" element={<ImageUpload />} />
+
+          {/* Protected Routes for admin */}
+          <Route
+            path="/user/admin/:id"
+            element={
+              <ProtectedRoutes isLoggedIn={isLoggedIn}>
+                <UserTypeCheck>
+                  <Layout />
+                </UserTypeCheck>
+              </ProtectedRoutes>
+            }
+          >
+            <Route index element={<AdminHomepage />} />
+            <Route path="manage-students" element={<ManageStudents />} />
+            <Route path="manage-faculty" element={<ManageFaculty />} />
+            <Route
+              path="manage-faculty"
+              element={<>Hello from faculty side</>}
+            />
+          </Route>
 
           {/* Protected Routes for student */}
           <Route
