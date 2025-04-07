@@ -54,3 +54,31 @@ export const quickLinksFaculty = [
     link: "/library",
   },
 ];
+
+export const quickLinksAdmin = [
+  {
+    title: "Add Students",
+    description: "Enroll new students to BIT-BUDDY.",
+    icon: "🧑‍🎓",
+    link: "/manage-students",
+  },
+  {
+    title: "Add Teachers",
+    description: "Enroll new teachers to BIT-BUDDY",
+    icon: "🧑‍🏫",
+    link: "/manage-faculty",
+  },
+  {
+    title: "Time Table",
+    description: "Check for your classes.",
+    icon: "📅",
+    link: "/time-table",
+  },
+
+  {
+    title: "TG",
+    description: "Manage works related to teacher guardian.",
+    icon: "🗃️",
+    link: "/tg",
+  },
+];

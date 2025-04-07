@@ -10,6 +10,7 @@ import StudentHomepage from "./components/Homepage/StudentHomepage";
 import Layout from "./components/Layout/Layout";
 import ImageUpload from "./components/Testing/Test";
 import AdminHomepage from "./pages/Admin/AdminHomepage";
+import ManageStudents from "./pages/Admin/ManageStudents";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
@@ -64,8 +65,11 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<AdminHomepage />} />
-            <Route path="details" element={<StudentDetails />} />
-            <Route path="notice" element={<>Hello from student side</>} />
+            <Route path="manage-students" element={<ManageStudents />} />
+            <Route
+              path="manage-faculty"
+              element={<>Hello from faculty side</>}
+            />
           </Route>
 
           {/* Protected Routes for student */}
