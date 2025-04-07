@@ -1,22 +1,22 @@
 import {
-  Home,
+  AlertCircle,
+  Archive,
+  ArrowLeftRight,
+  BadgeAlert,
+  Bell,
+  Book,
   Calendar,
   ClipboardList,
   FileText,
-  Book,
-  Archive,
-  User,
-  Bell,
-  AlertCircle,
-  ReceiptIndianRupee,
-  ArrowLeftRight,
+  Home,
   IdCard,
-  BadgeAlert,
+  ReceiptIndianRupee,
+  User,
 } from "lucide-react";
+import { FaWpforms } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { TbReportAnalytics } from "react-icons/tb";
 import { VscFeedback } from "react-icons/vsc";
-import { FaWpforms } from "react-icons/fa";
 
 // Grouped Navigation Items for Student
 export const studentNavItems = {
@@ -180,8 +180,59 @@ export const facultyNavItems = {
   ],
 };
 
+// Grouped Navigation Items for Admin
+export const adminNavItems = {
+  general: [
+    {
+      title: "Dashboard",
+      icon: Home,
+      path: "/",
+    },
+    {
+      title: "Notifications",
+      icon: Bell,
+      path: "/notifications",
+    },
+    {
+      title: "Complaints",
+      icon: AlertCircle,
+      path: "/complaints",
+    },
+  ],
+  academics: [
+    {
+      title: "Manage Students",
+      icon: IdCard,
+      path: "/manage-students",
+    },
+    {
+      title: "Manage Faculty",
+      icon: IdCard,
+      path: "/manage-faculty",
+    },
+    {
+      title: "Time Table",
+      icon: Calendar,
+      path: "/time-table",
+    },
+    {
+      title: "Previous Year Questions (PYQs)",
+      icon: Book,
+      path: "/pyqs",
+    },
+  ],
+  TG: [
+    {
+      title: "Assign TG",
+      icon: TbReportAnalytics,
+      path: "/assign-tg",
+    },
+  ],
+};
+
 // Export Combined Nav Items for Student and Faculty
 export const navItems = {
   student: studentNavItems,
   faculty: facultyNavItems,
+  admin: adminNavItems,
 };

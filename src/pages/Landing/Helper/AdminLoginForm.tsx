@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { z, ZodError } from "zod";
 
+import { LoginAdminAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/userAuthStore";
 import { Eye, EyeOff, Mail } from "lucide-react";
@@ -40,18 +41,18 @@ const AdminLoginForm = () => {
       // Determine the correct API based on user type
 
       // Hit tha api
-      const res = {};
+      const res = await LoginAdminAPI(email, password);
 
-      //   if (!res.success) return; // Stop if login fails
+      if (!res.success) return; // Stop if login fails
 
-      //   // Store authentication data
-      //   setAuthToken(res.authToken);
-      //   setName(res.name);
-      //   setUserType(res.userType);
-      //   setId(res.id);
+      // Store authentication data
+      setAuthToken(res.authToken);
+      setName(res.name);
+      setUserType(res.userType);
+      setId(res.id);
 
-      // Redirect to student dashboard
-      //   navigate(`admin/${res.id}`);
+      //   Redirect to admin dashboard
+      navigate(`admin/${res.id}`);
     } catch (err) {
       if (err instanceof ZodError) {
         // Handle validation errors from loginSchema
