@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input"; // Assuming you're using a custom Input component
-import { ChangeStudentPasswordAPI } from "@/api/studentAPI";
-import { ChangeFacultyPasswordAPI } from "@/api/facultyAPI";
 import { toast } from "sonner";
+
+import { ChangeAdminPasswordAPI } from "@/api/adminAPI";
+import { ChangeFacultyPasswordAPI } from "@/api/facultyAPI";
+import { ChangeStudentPasswordAPI } from "@/api/studentAPI";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Input } from "../ui/input"; // Assuming you're using a custom Input component
 
 interface IChangePassword {
   isOpen: boolean;
   onOpenChange: (arg: boolean) => void;
-  userType: "student" | "faculty";
+  userType: "student" | "faculty" | "admin";
 }
 
 const ChangePassword: React.FC<IChangePassword> = ({
@@ -42,7 +44,9 @@ const ChangePassword: React.FC<IChangePassword> = ({
       const api =
         userType === "student"
           ? ChangeStudentPasswordAPI(oldPassword, newPassword, confirmPassword)
-          : ChangeFacultyPasswordAPI(oldPassword, newPassword, confirmPassword);
+          : userType === "faculty"
+          ? ChangeFacultyPasswordAPI(oldPassword, newPassword, confirmPassword)
+          : ChangeAdminPasswordAPI(oldPassword, newPassword, confirmPassword);
 
       const response = await api;
 
