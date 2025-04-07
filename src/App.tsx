@@ -13,6 +13,7 @@ import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
 import Homepage from "./pages/Faculty/Homepage";
+import AdminLanding from "./pages/Landing/AdminLanding";
 import Landing from "./pages/Landing/Landing";
 import StudentDetails from "./pages/Student/StudentDetails";
 import useAuthStore from "./store/userAuthStore";
@@ -41,7 +42,11 @@ const App: React.FC = () => {
           <Route
             path="/admin"
             element={
-              isLoggedIn ? <Navigate to={userRoute} replace /> : <Landing />
+              isLoggedIn ? (
+                <Navigate to={userRoute} replace />
+              ) : (
+                <AdminLanding />
+              )
             }
           />
           <Route path="/test" element={<ImageUpload />} />
