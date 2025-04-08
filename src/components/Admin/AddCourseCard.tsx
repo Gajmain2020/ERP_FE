@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
+import { AddCourseAPI } from "@/api/adminAPI";
 import { ICourse } from "@/utils/types";
+import { addCourseSchema } from "@/utils/zodSchemas";
 import { Select } from "@radix-ui/react-select";
 import { Button } from "../ui/button";
 import {
@@ -27,6 +30,52 @@ export default function AddCourseCard() {
     semester: "",
     courseType: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddCourse = async () => {
+    setIsLoading(true);
+    try {
+      const result = addCourseSchema.safeParse(course);
+      if (!result.success) {
+        result.error.errors.forEach((error) => {
+          toast.error(error.message);
+        });
+        return;
+      }
+
+      const response = await AddCourseAPI(course);
+
+      if (!response.success) {
+        toast.error(response.message);
+        return;
+      }
+
+      toast.success(response.message);
+      handleClear();
+    } catch (error) {
+      toast.error("Error adding course");
+      console.log(error);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClear = () => {
+    setCourse({
+      courseCode: "",
+      courseName: "",
+      courseShortName: "",
+      semester: "",
+      courseType: "",
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCourse((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -39,22 +88,38 @@ export default function AddCourseCard() {
       <CardContent className="grid grid-cols-3 gap-4">
         <div>
           <label className="text-sm text-gray-800">Course Code</label>
-          <Input placeholder="Course Code" />
+          <Input
+            onChange={handleChange}
+            name="courseCode"
+            placeholder="Course Code"
+          />
         </div>
 
         <div>
           <label className="text-sm text-gray-800">Course Name</label>
-          <Input placeholder="Course Code" />
+          <Input
+            onChange={handleChange}
+            name="courseName"
+            placeholder="Course Name"
+          />
         </div>
 
         <div>
           <label className="text-sm text-gray-800">Course Short Name</label>
-          <Input placeholder="Course Code" />
+          <Input
+            onChange={handleChange}
+            name="courseShortName"
+            placeholder="Course Short Name"
+          />
         </div>
 
         <div>
           <label className="text-sm text-gray-800">Course Semester</label>
-          <Select onValueChange={(value) => console.log("semester", value)}>
+          <Select
+            onValueChange={(value) =>
+              setCourse((prev) => ({ ...prev, semester: value }))
+            }
+          >
             <SelectTrigger>
               <SelectValue placeholder="Semester" />
             </SelectTrigger>
@@ -72,7 +137,11 @@ export default function AddCourseCard() {
 
         <div>
           <label className="text-sm text-gray-800">Course Type</label>
-          <Select onValueChange={(value) => console.log("semester", value)}>
+          <Select
+            onValueChange={(value) =>
+              setCourse((prev) => ({ ...prev, courseType: value }))
+            }
+          >
             <SelectTrigger>
               <SelectValue placeholder="Course Type" />
             </SelectTrigger>
@@ -93,10 +162,12 @@ export default function AddCourseCard() {
       </CardContent>
 
       <CardFooter className="flex justify-end gap-4">
-        <Button variant="secondary" onClick={() => console.log("clear")}>
+        <Button variant="secondary" onClick={handleClear}>
           Clear
         </Button>
-        <Button onClick={() => console.log("add")}>Add Course</Button>
+        <Button disabled={isLoading} onClick={handleAddCourse}>
+          Add Course
+        </Button>
       </CardFooter>
     </Card>
   );
