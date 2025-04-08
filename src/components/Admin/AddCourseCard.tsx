@@ -89,6 +89,7 @@ export default function AddCourseCard() {
         <div>
           <label className="text-sm text-gray-800">Course Code</label>
           <Input
+            value={course.courseCode}
             onChange={handleChange}
             name="courseCode"
             placeholder="Course Code"
@@ -98,6 +99,7 @@ export default function AddCourseCard() {
         <div>
           <label className="text-sm text-gray-800">Course Name</label>
           <Input
+            value={course.courseName}
             onChange={handleChange}
             name="courseName"
             placeholder="Course Name"
@@ -107,6 +109,7 @@ export default function AddCourseCard() {
         <div>
           <label className="text-sm text-gray-800">Course Short Name</label>
           <Input
+            value={course.courseShortName}
             onChange={handleChange}
             name="courseShortName"
             placeholder="Course Short Name"
@@ -116,6 +119,7 @@ export default function AddCourseCard() {
         <div>
           <label className="text-sm text-gray-800">Course Semester</label>
           <Select
+            value={course.semester}
             onValueChange={(value) =>
               setCourse((prev) => ({ ...prev, semester: value }))
             }
@@ -138,6 +142,7 @@ export default function AddCourseCard() {
         <div>
           <label className="text-sm text-gray-800">Course Type</label>
           <Select
+            value={course.courseType}
             onValueChange={(value) =>
               setCourse((prev) => ({ ...prev, courseType: value }))
             }
