@@ -116,3 +116,11 @@ export interface IStudent {
   semester: string;
   section: string;
 }
+
+export interface ICourse {
+  courseCode: string;
+  courseName: string;
+  courseShortName: string;
+  semester: string;
+  courseType: string;
+}
