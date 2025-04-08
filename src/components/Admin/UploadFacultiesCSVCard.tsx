@@ -52,7 +52,12 @@ export default function UploadCSVCard() {
         }
       });
 
-      if (invalidCount > 0) {
+      if (invalidCount === faculties.length) {
+        toast.error(
+          `Atleast one faculty data should be correct to enroll into BIT-BUDDY`
+        );
+        return;
+      } else if (invalidCount > 0) {
         toast.error(`${invalidCount} student record(s) are invalid.`);
       }
 
@@ -81,10 +86,11 @@ export default function UploadCSVCard() {
   return (
     <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle>Upload Students via CSV</CardTitle>
+        <CardTitle>Upload Faculties via CSV</CardTitle>
         <CardDescription>
-          Upload a CSV file containing student details. The file should include
-          headers like: `name`, `email`, `urn`, `crn`, `semester`, `section`.
+          Upload a CSV file containing faculty's details. The file should
+          include headers like: `name`, `email`, `empId`,
+          `mobileNumber`,`position`.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -103,7 +109,7 @@ export default function UploadCSVCard() {
           onClick={handleAddStudents}
           disabled={faculties.length === 0 || loading}
         >
-          Add {faculties.length} students.
+          Add {faculties.length} faculties.
         </Button>
       </CardFooter>
     </Card>

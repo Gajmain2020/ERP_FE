@@ -138,7 +138,7 @@ export async function EnrollFacultiesAPI(faculties: IFaculty[]) {
   try {
     const res = await axios({
       headers,
-      url: `${AdminURL}/enroll-multiple-students`,
+      url: `${AdminURL}/enroll-multiple-faculties`,
       method: "POST",
       data: faculties,
     });
