@@ -22,3 +22,18 @@ export const addFacultySchema = z.object({
     errorMap: () => ({ message: "Position is required" }),
   }),
 });
+
+export const addCourseSchema = z.object({
+  courseCode: z.string().min(1, "Course code is required"),
+  courseName: z.string().min(1, "Course name is required"),
+  courseShortName: z.string().min(1, "Course short name is required"),
+  semester: z.enum(["I", "II", "III", "IV", "V", "VI", "VII", "VIII"], {
+    errorMap: () => ({ message: "Semester is required" }),
+  }),
+  courseType: z.enum(
+    ["First Year Subject", "Core Subject", "Prof. Elective", "Open Elective"],
+    {
+      errorMap: () => ({ message: "Course type is required" }),
+    }
+  ),
+});

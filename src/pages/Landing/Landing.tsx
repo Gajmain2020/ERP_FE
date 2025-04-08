@@ -1,12 +1,12 @@
-import LOGO from "../../../public/full logo.png";
-import BackgroundImage from "../../../public/mainbackground.jpg";
-import CenterImage from "../../../public/landing image.avif";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import LOGO from "../../../public/full logo.png";
+import CenterImage from "../../../public/landing image.avif";
+import BackgroundImage from "../../../public/mainbackground.jpg";
 
 import { ContactModal } from "./Helper/Helpline";
-import LoginForm from "./Helper/LoginForm";
 import LandingFooter from "./Helper/LandingFooter";
+import LoginForm from "./Helper/LoginForm";
 // import useAuthStore from "@/store/userAuthStore";
 
 export default function Landing() {
