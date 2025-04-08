@@ -1,4 +1,4 @@
-import { IFaculty, IStudent } from "@/utils/types";
+import { ICourse, IFaculty, IStudent } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -141,6 +141,28 @@ export async function EnrollFacultiesAPI(faculties: IFaculty[]) {
       url: `${AdminURL}/enroll-multiple-faculties`,
       method: "POST",
       data: faculties,
+    });
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response) {
+      toast.error(error.response.data.message);
+      return { success: false, message: error.response.data.message };
+    }
+    toast.error("Something went wrong. Please try again.");
+    return {
+      success: false,
+      message: "Something went wrong. Please try again.",
+    };
+  }
+}
+
+export async function AddCourseAPI(course: ICourse) {
+  try {
+    const res = await axios({
+      headers,
+      url: `${AdminURL}/add-course`,
+      method: "POST",
+      data: course,
     });
     return res.data;
   } catch (error) {
