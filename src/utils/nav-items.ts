@@ -211,14 +211,14 @@ export const adminNavItems = {
       path: "/manage-faculty",
     },
     {
+      title: "Manage Courses",
+      icon: Book,
+      path: "/manage-courses",
+    },
+    {
       title: "Time Table",
       icon: Calendar,
       path: "/time-table",
-    },
-    {
-      title: "Previous Year Questions (PYQs)",
-      icon: Book,
-      path: "/pyqs",
     },
   ],
   TG: [
