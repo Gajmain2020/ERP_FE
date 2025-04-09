@@ -117,6 +117,10 @@ export interface IStudent {
   section: string;
 }
 
+interface FaultyForCourse {
+  facultyId: string;
+}
+
 export interface ICourse {
   courseCode: string;
   courseName: string;
@@ -124,7 +128,7 @@ export interface ICourse {
   semester: string;
   courseType: string;
   _id?: string;
-  takenBy?: string[];
+  takenBy?: FaultyForCourse[];
 }
 
 export interface IFacultyForCourse {

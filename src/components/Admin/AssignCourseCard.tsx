@@ -33,6 +33,7 @@ import {
   AssignTeacherToCourseAPI,
   GetAllCoursesAPI,
   GetFacultiesAPI,
+  RemoveTeacherFromCourseAPI,
 } from "@/api/adminAPI";
 import { Input } from "../ui/input";
 
@@ -60,7 +61,7 @@ export default function AssignCourseCard() {
           courses: ICourse[];
         };
 
-        if (!res.success) {
+        if (!(res as { success: boolean }).success) {
           toast.error(res.message);
           return;
         }
@@ -86,7 +87,7 @@ export default function AssignCourseCard() {
             faculties: IFacultyForCourse[];
           };
 
-          if (!res.success) {
+          if (!(res as { success: boolean }).success) {
             toast.error(res.message);
             return;
           }
@@ -124,7 +125,7 @@ export default function AssignCourseCard() {
         facultyId
       );
 
-      if (!res.success) {
+      if (!(res as { success: boolean }).success) {
         toast.error(res.message);
         return;
       }
@@ -144,7 +145,7 @@ export default function AssignCourseCard() {
           course._id === selectedCourse._id
             ? {
                 ...course,
-                takenBy: [...(course.takenBy ?? []), facultyId],
+                takenBy: [...(course.takenBy ?? []), { facultyId }],
               }
             : course
         )
