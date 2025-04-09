@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { ICourse } from "@/utils/types";
+import { ICourse, IFacultyForCourse } from "@/utils/types";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -29,20 +29,12 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 
-import { GetAllCoursesAPI, GetFacultiesAPI } from "@/api/adminAPI";
+import {
+  AssignTeacherToCourseAPI,
+  GetAllCoursesAPI,
+  GetFacultiesAPI,
+} from "@/api/adminAPI";
 import { Input } from "../ui/input";
-
-const dummyFaculties = [
-  { _id: "f1", name: "Dr. A. Sharma", email: "a.sharma@bit.edu" },
-  { _id: "f2", name: "Prof. B. Mehta", email: "b.mehta@bit.edu" },
-  { _id: "f3", name: "Dr. C. Verma", email: "c.verma@bit.edu" },
-];
-
-interface IFacultyForCourse {
-  _id: string;
-  name: string;
-  email: string;
-}
 
 export default function AssignCourseCard() {
   // For the courses
@@ -53,6 +45,7 @@ export default function AssignCourseCard() {
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
   const [faculties, setFaculties] = useState<IFacultyForCourse[] | undefined>();
   const [facultiesLoading, setFacultiesLoading] = useState(true);
+  const [assigning, setAssigning] = useState<string[]>([]);
 
   // For searching the faculty
   const [search, setSearch] = useState("");
@@ -113,11 +106,34 @@ export default function AssignCourseCard() {
     return (faculties ?? []).filter((faculty) =>
       faculty.name.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [search, faculties]);
 
   const closeDialog = () => {
     setSelectedCourse(null);
     setSearch("");
+  };
+
+  const handleAssignCourse = async (facultyId: string) => {
+    try {
+      setAssigning((prev) => [...prev, facultyId]);
+      if (!selectedCourse) return;
+      const res = await AssignTeacherToCourseAPI(
+        selectedCourse._id as string,
+        facultyId
+      );
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success("Course assigned successfully.");
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.log(error);
+    } finally {
+      setAssigning((prev) => prev.filter((item) => item !== facultyId));
+    }
   };
 
   return (
@@ -201,7 +217,13 @@ export default function AssignCourseCard() {
                       <p className="font-medium">{faculty.name}</p>
                       <p className="text-sm text-gray-500">{faculty.email}</p>
                     </div>
-                    <Button size="sm">Assign</Button>
+                    <Button
+                      onClick={() => handleAssignCourse(faculty._id)}
+                      size="sm"
+                      disabled={assigning.includes(faculty._id)}
+                    >
+                      {assigning.includes(faculty._id) ? "Assigning" : "Assign"}
+                    </Button>
                   </div>
                 ))
               )}

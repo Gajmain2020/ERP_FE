@@ -126,3 +126,9 @@ export interface ICourse {
   _id?: string;
   takenBy?: string[];
 }
+
+export interface IFacultyForCourse {
+  _id: string;
+  name: string;
+  email: string;
+}

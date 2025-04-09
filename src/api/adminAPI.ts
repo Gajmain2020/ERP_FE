@@ -202,3 +202,14 @@ export async function GetFacultiesAPI() {
     headers,
   });
 }
+
+export async function AssignTeacherToCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-teacher-to-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
