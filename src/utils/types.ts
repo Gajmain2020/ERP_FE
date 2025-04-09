@@ -118,6 +118,7 @@ export interface IStudent {
 }
 
 export interface ICourse {
+  _id?: string;
   courseCode: string;
   courseName: string;
   courseShortName: string;
