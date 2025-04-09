@@ -1,3 +1,4 @@
+import { apiClient } from "@/utils/ApiClient";
 import { ICourse, IFaculty, IStudent } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -176,4 +177,12 @@ export async function AddCourseAPI(course: ICourse) {
       message: "Something went wrong. Please try again.",
     };
   }
+}
+
+export async function GetAllCoursesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-courses`,
+    method: "GET",
+    headers,
+  });
 }

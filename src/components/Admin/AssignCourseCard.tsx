@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ICourse } from "@/utils/types";
 import { Button } from "../ui/button";
@@ -28,6 +28,8 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 
+import { GetAllCoursesAPI } from "@/api/adminAPI";
+import { toast } from "sonner";
 import { Input } from "../ui/input";
 
 const dummyCourse = [
@@ -57,8 +59,44 @@ const dummyFaculties = [
 ];
 
 export default function AssignCourseCard() {
+  // For the courses
+  const [courses, setCourses] = useState<ICourse[]>();
+  const [coursesLoading, setCoursesLoading] = useState(true);
+
+  // For assigning the courses
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
+
+  // For searching the faculty
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    // Fetch courses from the server
+    const fetchCourses = async () => {
+      try {
+        const res = (await GetAllCoursesAPI()) as {
+          success: boolean;
+          message: string;
+          courses: ICourse[];
+        };
+
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        console.log(res);
+
+        setCourses(res.courses);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong. Please try again.");
+      } finally {
+        setCoursesLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const filteredFaculties = useMemo(() => {
     return dummyFaculties.filter((faculty) =>
@@ -93,23 +131,28 @@ export default function AssignCourseCard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dummyCourse.map((course) => (
-                <TableRow key={course._id} className="hover:bg-muted">
-                  <TableCell className="font-medium">
-                    {course.courseCode}
-                  </TableCell>
-                  <TableCell>{course.courseName}</TableCell>
-                  <TableCell>{course.courseShortName}</TableCell>
-                  <TableCell>{course.semester}</TableCell>
-                  <TableCell>{course.courseType}</TableCell>
-                  <TableCell>{"10"}</TableCell>
-                  <TableCell className="w-[150px]">
-                    <Button onClick={() => setSelectedCourse(course)}>
-                      Add Faculties
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {coursesLoading ? (
+                <p className="animate-pulse text-lg">Loading...</p>
+              ) : (
+                courses &&
+                courses.map((course) => (
+                  <TableRow key={course._id} className="hover:bg-muted">
+                    <TableCell className="font-medium">
+                      {course.courseCode}
+                    </TableCell>
+                    <TableCell>{course.courseName}</TableCell>
+                    <TableCell>{course.courseShortName}</TableCell>
+                    <TableCell>{course.semester}</TableCell>
+                    <TableCell>{course.courseType}</TableCell>
+                    <TableCell>{"10"}</TableCell>
+                    <TableCell className="w-[150px]">
+                      <Button onClick={() => setSelectedCourse(course)}>
+                        Add Faculties
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>
