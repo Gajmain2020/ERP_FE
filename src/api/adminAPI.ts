@@ -1,3 +1,4 @@
+import { apiClient } from "@/utils/ApiClient";
 import { ICourse, IFaculty, IStudent } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -176,4 +177,50 @@ export async function AddCourseAPI(course: ICourse) {
       message: "Something went wrong. Please try again.",
     };
   }
+}
+
+export async function GetAllCoursesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-courses`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetFacultiesByCourseAPI(courseId: string) {
+  return apiClient({
+    url: `${AdminURL}/get-faculty-by-course?courseId=${courseId}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetFacultiesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-faculties`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function AssignTeacherToCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-teacher-to-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function RemoveTeacherFromCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/remove-faculty-from-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
 }
