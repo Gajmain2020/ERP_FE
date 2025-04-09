@@ -135,7 +135,7 @@ export default function AssignCourseCard() {
         (prev) =>
           ({
             ...prev,
-            takenBy: [...(prev?.takenBy ?? []), facultyId],
+            takenBy: [...(prev?.takenBy ?? []), { facultyId }],
           } as ICourse)
       );
 
