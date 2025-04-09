@@ -13,6 +13,7 @@ import AdminHomepage from "./pages/Admin/AdminHomepage";
 import ManageCourses from "./pages/Admin/ManageCourses";
 import ManageFaculty from "./pages/Admin/ManageFaculty";
 import ManageStudents from "./pages/Admin/ManageStudents";
+import ManageTG from "./pages/Admin/ManageTG";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
@@ -70,6 +71,7 @@ const App: React.FC = () => {
             <Route path="manage-students" element={<ManageStudents />} />
             <Route path="manage-faculty" element={<ManageFaculty />} />
             <Route path="manage-courses" element={<ManageCourses />} />
+            <Route path="assign-tg" element={<ManageTG />} />
           </Route>
 
           {/* Protected Routes for student */}

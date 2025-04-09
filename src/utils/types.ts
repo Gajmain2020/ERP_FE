@@ -95,6 +95,7 @@ export interface EmergencyContact {
 }
 
 export interface IFaculty {
+  _id?: string;
   bloodGroup?: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
   department?: string;
   email: string;
