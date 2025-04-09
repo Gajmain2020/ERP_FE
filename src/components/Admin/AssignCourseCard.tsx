@@ -157,6 +157,57 @@ export default function AssignCourseCard() {
     }
   };
 
+  const handleRemoveCourse = async (facultyId: string) => {
+    try {
+      setAssigning((prev) => [...prev, facultyId]);
+      if (!selectedCourse) return;
+
+      // Assume your RemoveTeacherFromCourseAPI is available
+      const res = await RemoveTeacherFromCourseAPI(
+        selectedCourse._id as string,
+        facultyId
+      );
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success("Faculty removed from course.");
+
+      // Update selectedCourse locally
+      setSelectedCourse((prev) =>
+        prev
+          ? {
+              ...prev,
+              takenBy: prev.takenBy?.filter(
+                (entry) => entry.facultyId !== facultyId
+              ),
+            }
+          : null
+      );
+
+      // Also update the course list state
+      setCourses((prev) =>
+        prev?.map((course) =>
+          course._id === selectedCourse._id
+            ? {
+                ...course,
+                takenBy: course.takenBy?.filter(
+                  (entry) => entry.facultyId !== facultyId
+                ),
+              }
+            : course
+        )
+      );
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      console.log(error);
+    } finally {
+      setAssigning((prev) => prev.filter((item) => item !== facultyId));
+    }
+  };
+
   return (
     <>
       <Card>
@@ -239,7 +290,13 @@ export default function AssignCourseCard() {
                       <p className="text-sm text-gray-500">{faculty.email}</p>
                     </div>
                     <Button
-                      onClick={() => handleAssignCourse(faculty._id)}
+                      onClick={() =>
+                        selectedCourse?.takenBy?.some(
+                          (entry) => entry.facultyId === faculty._id
+                        )
+                          ? handleRemoveCourse(faculty._id)
+                          : handleAssignCourse(faculty._id)
+                      }
                       size="sm"
                       disabled={assigning.includes(faculty._id)}
                       variant={

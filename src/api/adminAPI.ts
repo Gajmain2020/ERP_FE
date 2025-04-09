@@ -213,3 +213,14 @@ export async function AssignTeacherToCourseAPI(
     headers,
   });
 }
+
+export async function RemoveTeacherFromCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/remove-teacher-from-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
