@@ -102,6 +102,8 @@ export default function AssignCourseCard() {
     }
   }, [selectedCourse]);
 
+  console.log(selectedCourse);
+
   const filteredFaculties = useMemo(() => {
     return (faculties ?? []).filter((faculty) =>
       faculty.name.toLowerCase().includes(search.toLowerCase())
@@ -128,6 +130,25 @@ export default function AssignCourseCard() {
       }
 
       toast.success("Course assigned successfully.");
+
+      setSelectedCourse(
+        (prev) =>
+          ({
+            ...prev,
+            takenBy: [...(prev?.takenBy ?? []), facultyId],
+          } as ICourse)
+      );
+
+      setCourses((prev) =>
+        prev?.map((course) =>
+          course._id === selectedCourse._id
+            ? {
+                ...course,
+                takenBy: [...(course.takenBy ?? []), facultyId],
+              }
+            : course
+        )
+      );
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
       console.log(error);
@@ -221,8 +242,21 @@ export default function AssignCourseCard() {
                       onClick={() => handleAssignCourse(faculty._id)}
                       size="sm"
                       disabled={assigning.includes(faculty._id)}
+                      variant={
+                        selectedCourse?.takenBy?.some(
+                          (entry) => entry.facultyId === faculty._id
+                        )
+                          ? "destructive"
+                          : "default"
+                      }
                     >
-                      {assigning.includes(faculty._id) ? "Assigning" : "Assign"}
+                      {assigning.includes(faculty._id)
+                        ? "Assigning"
+                        : selectedCourse?.takenBy?.some(
+                            (entry) => entry.facultyId === faculty._id
+                          )
+                        ? "Remove"
+                        : "Assign"}
                     </Button>
                   </div>
                 ))
