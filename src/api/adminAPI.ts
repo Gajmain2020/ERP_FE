@@ -135,3 +135,11 @@ export async function AssignTGAPI(facultyId: string) {
     headers,
   });
 }
+
+export async function UnassignTGAPI(facultyId: string) {
+  return apiClient({
+    url: `${AdminURL}/unassign-tg?facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}

@@ -1,4 +1,4 @@
-import { AssignTGAPI, GetFacultiesAPI } from "@/api/adminAPI";
+import { AssignTGAPI, GetFacultiesAPI, UnassignTGAPI } from "@/api/adminAPI";
 import { IFaculty } from "@/utils/types";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -86,6 +86,28 @@ export default function AssignTGCard() {
       toast.error("An error occurred while assigning TG");
     }
   };
+  const handleUnassignTG = async (id: string) => {
+    try {
+      setUnassigningTG((prev) => [...prev, id]);
+
+      const res = await UnassignTGAPI(id);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+      setUnassigningTG((prev) => prev.filter((tgId) => tgId !== id));
+
+      setFaculties((prev) =>
+        prev.map((faculty) =>
+          faculty._id === id ? { ...faculty, isTG: !faculty.isTG } : faculty
+        )
+      );
+    } catch (error) {
+      console.log("Error :", error);
+      toast.error("An error occurred while assigning TG");
+    }
+  };
 
   return (
     <Card>
@@ -144,7 +166,10 @@ export default function AssignTGCard() {
                             unassigningTG.includes(faculty._id))
                         }
                         onClick={() =>
-                          faculty._id && handleAssignTG(faculty._id)
+                          faculty._id &&
+                          (faculty.isTG
+                            ? handleUnassignTG(faculty._id)
+                            : handleAssignTG(faculty._id))
                         }
                       >
                         {faculty.isTG
