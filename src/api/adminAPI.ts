@@ -186,3 +186,19 @@ export async function GetAllCoursesAPI() {
     headers,
   });
 }
+
+export async function GetFacultiesByCourseAPI(courseId: string) {
+  return apiClient({
+    url: `${AdminURL}/get-faculty-by-course?courseId=${courseId}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetFacultiesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-faculties`,
+    method: "GET",
+    headers,
+  });
+}

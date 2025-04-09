@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { ICourse } from "@/utils/types";
 import { Button } from "../ui/button";
@@ -28,35 +29,20 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 
-import { GetAllCoursesAPI } from "@/api/adminAPI";
-import { toast } from "sonner";
+import { GetAllCoursesAPI, GetFacultiesAPI } from "@/api/adminAPI";
 import { Input } from "../ui/input";
 
-const dummyCourse = [
-  {
-    _id: "1",
-    courseName: "Course 1",
-    courseShortName: "Co1",
-    semester: "I",
-    courseType: "Core Subject",
-    courseCode: "CS101",
-  },
-  {
-    _id: "2",
-    courseName: "Course 2",
-    courseShortName: "Co2",
-    semester: "II",
-    courseType: "Core Subject",
-    courseCode: "CS102",
-  },
+const dummyFaculties = [
+  { _id: "f1", name: "Dr. A. Sharma", email: "a.sharma@bit.edu" },
+  { _id: "f2", name: "Prof. B. Mehta", email: "b.mehta@bit.edu" },
+  { _id: "f3", name: "Dr. C. Verma", email: "c.verma@bit.edu" },
 ];
 
-const dummyFaculties = [
-  { id: "f1", name: "Dr. A. Sharma", email: "a.sharma@bit.edu" },
-  { id: "f2", name: "Prof. B. Mehta", email: "b.mehta@bit.edu" },
-  { id: "f3", name: "Dr. C. Verma", email: "c.verma@bit.edu" },
-  { id: "f4", name: "Prof. D. Singh", email: "d.singh@bit.edu" },
-];
+interface IFacultyForCourse {
+  _id: string;
+  name: string;
+  email: string;
+}
 
 export default function AssignCourseCard() {
   // For the courses
@@ -65,6 +51,8 @@ export default function AssignCourseCard() {
 
   // For assigning the courses
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
+  const [faculties, setFaculties] = useState<IFacultyForCourse[] | undefined>();
+  const [facultiesLoading, setFacultiesLoading] = useState(true);
 
   // For searching the faculty
   const [search, setSearch] = useState("");
@@ -83,9 +71,6 @@ export default function AssignCourseCard() {
           toast.error(res.message);
           return;
         }
-
-        console.log(res);
-
         setCourses(res.courses);
       } catch (error) {
         console.log(error);
@@ -98,8 +83,34 @@ export default function AssignCourseCard() {
     fetchCourses();
   }, []);
 
+  useEffect(() => {
+    if (selectedCourse) {
+      const fetchFaculties = async () => {
+        try {
+          const res = (await GetFacultiesAPI()) as {
+            success: boolean;
+            message: string;
+            faculties: IFacultyForCourse[];
+          };
+
+          if (!res.success) {
+            toast.error(res.message);
+            return;
+          }
+          setFaculties(res.faculties);
+        } catch (error) {
+          console.log(error);
+          toast.error("Something went wrong. Please try again.");
+        } finally {
+          setFacultiesLoading(false);
+        }
+      };
+      fetchFaculties();
+    }
+  }, [selectedCourse]);
+
   const filteredFaculties = useMemo(() => {
-    return dummyFaculties.filter((faculty) =>
+    return (faculties ?? []).filter((faculty) =>
       faculty.name.toLowerCase().includes(search.toLowerCase())
     );
   }, [search]);
@@ -144,7 +155,7 @@ export default function AssignCourseCard() {
                     <TableCell>{course.courseShortName}</TableCell>
                     <TableCell>{course.semester}</TableCell>
                     <TableCell>{course.courseType}</TableCell>
-                    <TableCell>{"10"}</TableCell>
+                    <TableCell>{course.takenBy?.length}</TableCell>
                     <TableCell className="w-[150px]">
                       <Button onClick={() => setSelectedCourse(course)}>
                         Add Faculties
@@ -158,7 +169,7 @@ export default function AssignCourseCard() {
         </CardContent>
       </Card>
 
-      {/* Dialog */}
+      {/* Dialog to assign teacher to *selected course* */}
       <Dialog open={!!selectedCourse} onOpenChange={closeDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -178,18 +189,22 @@ export default function AssignCourseCard() {
             />
 
             <div className="max-h-64 overflow-y-auto border rounded-md p-2 space-y-2">
-              {filteredFaculties.map((faculty) => (
-                <div
-                  key={faculty.id}
-                  className="flex justify-between items-center border rounded p-2 hover:bg-muted"
-                >
-                  <div>
-                    <p className="font-medium">{faculty.name}</p>
-                    <p className="text-sm text-gray-500">{faculty.email}</p>
+              {facultiesLoading ? (
+                <p className="animate-pulse text-lg">Loading...</p>
+              ) : (
+                filteredFaculties.map((faculty) => (
+                  <div
+                    key={faculty._id}
+                    className="flex justify-between items-center border rounded p-2 hover:bg-muted"
+                  >
+                    <div>
+                      <p className="font-medium">{faculty.name}</p>
+                      <p className="text-sm text-gray-500">{faculty.email}</p>
+                    </div>
+                    <Button size="sm">Assign</Button>
                   </div>
-                  <Button size="sm">Assign</Button>
-                </div>
-              ))}
+                ))
+              )}
               {filteredFaculties.length === 0 && (
                 <p className="text-sm text-center text-gray-500">
                   No faculty found.
