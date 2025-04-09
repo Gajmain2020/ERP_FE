@@ -219,7 +219,7 @@ export async function RemoveTeacherFromCourseAPI(
   facultyId: string
 ) {
   return apiClient({
-    url: `${AdminURL}/remove-teacher-from-course?courseId=${courseId}&facultyId=${facultyId}`,
+    url: `${AdminURL}/remove-faculty-from-course?courseId=${courseId}&facultyId=${facultyId}`,
     method: "PUT",
     headers,
   });
