@@ -221,11 +221,16 @@ export const adminNavItems = {
       path: "/time-table",
     },
   ],
-  TG: [
+  "Teacher Guardian": [
     {
       title: "Assign TG",
       icon: TbReportAnalytics,
       path: "/assign-tg",
+    },
+    {
+      title: "Add Students",
+      icon: TbReportAnalytics,
+      path: "/assign-student-to-tg",
     },
   ],
 };
