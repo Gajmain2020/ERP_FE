@@ -127,3 +127,11 @@ export async function RemoveTeacherFromCourseAPI(
     headers,
   });
 }
+
+export async function AssignTGAPI(facultyId: string) {
+  return apiClient({
+    url: `${AdminURL}/assign-tg?facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}

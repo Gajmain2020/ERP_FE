@@ -1,4 +1,4 @@
-import { GetFacultiesAPI } from "@/api/adminAPI";
+import { AssignTGAPI, GetFacultiesAPI } from "@/api/adminAPI";
 import { IFaculty } from "@/utils/types";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -21,9 +21,16 @@ import {
 } from "../ui/table";
 
 export default function AssignTGCard() {
+  // Search states
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Faculty states
   const [facultiesLoading, setFacultiesLoading] = useState(true);
   const [faculties, setFaculties] = useState<IFaculty[]>([]);
+
+  // Assigning and Unassigning TG
+  const [assigningTG, setAssigningTG] = useState<string[]>([]);
+  const [unassigningTG, setUnassigningTG] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchFaculties = async () => {
@@ -57,12 +64,27 @@ export default function AssignTGCard() {
       faculty.email.toLowerCase().includes(searchTerm)
   );
 
-  const handleAssignTG = (id: string) => {
-    setFaculties((prev) =>
-      prev.map((faculty) =>
-        faculty._id === id ? { ...faculty, isTG: !faculty.isTG } : faculty
-      )
-    );
+  const handleAssignTG = async (id: string) => {
+    try {
+      setAssigningTG((prev) => [...prev, id]);
+
+      const res = await AssignTGAPI(id);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+      setAssigningTG((prev) => prev.filter((tgId) => tgId !== id));
+
+      setFaculties((prev) =>
+        prev.map((faculty) =>
+          faculty._id === id ? { ...faculty, isTG: !faculty.isTG } : faculty
+        )
+      );
+    } catch (error) {
+      console.log("Error :", error);
+      toast.error("An error occurred while assigning TG");
+    }
   };
 
   return (
@@ -87,6 +109,7 @@ export default function AssignTGCard() {
           <Table className="min-w-full">
             <TableHeader>
               <TableRow className="sticky top-0 bg-white z-10">
+                <TableHead>S.No.</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Emp ID</TableHead>
@@ -105,20 +128,32 @@ export default function AssignTGCard() {
                   </TableCell>
                 </TableRow>
               ) : filteredFaculties.length > 0 ? (
-                filteredFaculties.map((faculty) => (
+                filteredFaculties.map((faculty, idx) => (
                   <TableRow key={faculty._id}>
+                    <TableCell className="w-[64px]">{idx + 1}</TableCell>
                     <TableCell>{faculty.name}</TableCell>
                     <TableCell>{faculty.email}</TableCell>
                     <TableCell>{faculty.empId}</TableCell>
                     <TableCell>{faculty.position}</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center w-[150px]">
                       <Button
                         variant={faculty.isTG ? "destructive" : "default"}
+                        disabled={
+                          faculty._id &&
+                          (assigningTG.includes(faculty._id) ||
+                            unassigningTG.includes(faculty._id))
+                        }
                         onClick={() =>
                           faculty._id && handleAssignTG(faculty._id)
                         }
                       >
-                        {faculty.isTG ? "Unassign TG" : "Assign as TG"}
+                        {faculty.isTG
+                          ? assigningTG.includes(faculty._id)
+                            ? "Unassigning..."
+                            : "Unassign TG"
+                          : assigningTG.includes(faculty._id)
+                          ? "Assigning..."
+                          : "Assign as TG"}
                       </Button>
                     </TableCell>
                   </TableRow>
