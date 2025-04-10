@@ -1,7 +1,16 @@
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { SearchStudentAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -17,9 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { IStudent } from "@/utils/types";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export default function ManageStudentUnderTG() {
   const [section, setSection] = useState("");
@@ -27,6 +35,10 @@ export default function ManageStudentUnderTG() {
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
   const [students, setStudents] = useState<IStudent[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<IStudent | null>(null);
+
+  const [selected, setSelected] = useState<string[]>([]);
 
   const romanSemesters = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const sectionOptions = ["A", "B"];
@@ -64,8 +76,16 @@ export default function ManageStudentUnderTG() {
     setSearched(false);
   };
 
+  const handleAssignClick = (student: IStudent) => {
+    setSelectedStudent(student);
+    setIsDialogOpen(true);
+  };
+
+  console.log(selected);
+
   return (
     <div className="space-y-6">
+      {/* Filter Card */}
       <Card>
         <CardHeader>
           <CardTitle>Search Students Under TG</CardTitle>
@@ -110,6 +130,7 @@ export default function ManageStudentUnderTG() {
         </CardContent>
       </Card>
 
+      {/* Student Table */}
       {searched && (
         <Card>
           <CardHeader>
@@ -123,10 +144,6 @@ export default function ManageStudentUnderTG() {
             ) : students.length === 0 ? (
               <div className="text-center text-muted-foreground py-6">
                 No students found for the selected section and semester.
-              </div>
-            ) : students.length === 0 ? (
-              <div className="text-center text-muted-foreground py-6">
-                No matching students found.
               </div>
             ) : (
               <div className="overflow-auto">
@@ -146,25 +163,35 @@ export default function ManageStudentUnderTG() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {students.map((student, idx) => (
+                    {students.map((student) => (
                       <TableRow key={student._id}>
                         <TableCell className="w-[60px]">
-                          <Checkbox />
+                          <Checkbox
+                            onCheckedChange={(val) => {
+                              if (val)
+                                setSelected((prev) => [
+                                  ...prev,
+                                  student._id as string,
+                                ]);
+                              else
+                                setSelected((prev) =>
+                                  prev.filter((id) => id !== student._id)
+                                );
+                            }}
+                          />
                         </TableCell>
                         <TableCell>{student.name}</TableCell>
                         <TableCell>{student.email}</TableCell>
                         <TableCell>{student.urn}</TableCell>
                         <TableCell>{student.crn}</TableCell>
-                        <TableCell className="w-48">
+                        <TableCell>
                           {student.section} / {semester}
                         </TableCell>
-                        <TableCell>
-                          {student.TG?.facultyName
-                            ? student.TG.facultyName
-                            : "-"}
-                        </TableCell>
+                        <TableCell>{student.TG?.facultyName || "-"}</TableCell>
                         <TableCell className="w-24">
-                          <Button>Assign</Button>
+                          <Button onClick={() => handleAssignClick(student)}>
+                            Assign
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -175,6 +202,41 @@ export default function ManageStudentUnderTG() {
           </CardContent>
         </Card>
       )}
+
+      {/* Assign TG Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Assign TG to Student</DialogTitle>
+          </DialogHeader>
+          {selectedStudent && (
+            <div className="space-y-4">
+              <div>
+                <strong>Name:</strong> {selectedStudent.name}
+              </div>
+              <div>
+                <strong>Email:</strong> {selectedStudent.email}
+              </div>
+              <div>
+                <strong>URN:</strong> {selectedStudent.urn}
+              </div>
+              {/* Your TG selection UI can go here */}
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select TG" />
+                </SelectTrigger>
+                <SelectContent>
+                  {/* Replace with real TG options */}
+                  <SelectItem value="tg1">TG 1</SelectItem>
+                  <SelectItem value="tg2">TG 2</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button className="w-full">Assign TG</Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
