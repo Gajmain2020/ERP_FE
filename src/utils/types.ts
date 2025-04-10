@@ -110,12 +110,17 @@ export interface IFaculty {
 }
 
 export interface IStudent {
+  _id?: string;
   name: string;
   email: string;
   urn: string;
   crn: string;
   semester: string;
   section: string;
+  TG?: {
+    facultyId: string;
+    facultyName: string;
+  };
 }
 
 interface FaultyForCourse {

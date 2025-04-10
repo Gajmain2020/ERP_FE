@@ -143,3 +143,11 @@ export async function UnassignTGAPI(facultyId: string) {
     headers,
   });
 }
+
+export async function SearchStudentAPI(semester: string, section: string) {
+  return apiClient({
+    url: `${AdminURL}/search-student?semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
