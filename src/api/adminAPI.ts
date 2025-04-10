@@ -151,3 +151,11 @@ export async function SearchStudentAPI(semester: string, section: string) {
     headers,
   });
 }
+
+export async function GetTGAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-tg`,
+    method: "GET",
+    headers,
+  });
+}

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { SearchStudentAPI } from "@/api/adminAPI";
+import { GetTGAPI, SearchStudentAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -35,6 +35,13 @@ import {
 
 import { IStudent } from "@/utils/types";
 
+interface ITg {
+  _id?: string;
+  name: string;
+  email: string;
+  position: string;
+}
+
 export default function ManageStudentUnderTG() {
   const [section, setSection] = useState("");
   const [semester, setSemester] = useState("");
@@ -46,8 +53,35 @@ export default function ManageStudentUnderTG() {
 
   const [selected, setSelected] = useState<string[]>([]);
 
+  //TGs
+  const [tg, setTg] = useState<ITg[]>([]);
+  const [isTgLoading, setIsTgLoading] = useState(false);
+
   const romanSemesters = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const sectionOptions = ["A", "B"];
+
+  useEffect(() => {
+    const fetchTg = async () => {
+      try {
+        const res = await GetTGAPI();
+
+        if (!res.success) {
+          toast.error("Error occurred while fetching TG.");
+          return;
+        }
+
+        setTg(res.tg);
+      } catch (error) {
+        console.log("Error fetching TG:", error);
+        toast.error("Error occurred while fetching TG.");
+      }
+    };
+
+    if (tg.length === 0 && selectedStudent) {
+      fetchTg();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStudent]);
 
   const handleSearch = async () => {
     if (!semester) {
@@ -236,27 +270,46 @@ export default function ManageStudentUnderTG() {
         </Card>
       )}
 
-      {/* Assign TG Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={() => {
+          setIsDialogOpen(false);
+          setSelectedStudent(null);
+        }}
+      >
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Assign TG to Student(s)</DialogTitle>
+            <DialogTitle>
+              Assign TG to {selected.length > 0 && selected.length} Student(s)
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            {/* Your TG selection UI can go here */}
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select TG" />
-              </SelectTrigger>
-              <SelectContent>
-                {/* Replace with real TG options */}
-                <SelectItem value="tg1">TG 1</SelectItem>
-                <SelectItem value="tg2">TG 2</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button className="w-full">Assign TG</Button>
-          </div>
+          {selectedStudent && (
+            <>
+              <div>Student Name: {selectedStudent.name}</div>
+            </>
+          )}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Position</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tg.map((teacher) => (
+                <TableRow key={teacher._id}>
+                  <TableCell>{teacher.name}</TableCell>
+                  <TableCell>{teacher.email}</TableCell>
+                  <TableCell>{teacher.position}</TableCell>
+                  <TableCell className="w-[80px]">
+                    <Button>Assign</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </DialogContent>
       </Dialog>
     </div>
