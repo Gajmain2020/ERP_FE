@@ -3,7 +3,13 @@ import { toast } from "sonner";
 
 import { SearchStudentAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -151,7 +157,28 @@ export default function ManageStudentUnderTG() {
                   <TableHeader className="sticky top-0 bg-white z-10">
                     <TableRow>
                       <TableHead>
-                        <Checkbox />
+                        <Checkbox
+                          checked={selected.length === students.length}
+                          onCheckedChange={(val) => {
+                            if (val) {
+                              // Add all student IDs, ensuring there are no duplicates
+                              const allSelectedIds = students.map(
+                                (student) => student._id as string
+                              );
+                              setSelected((prev) => {
+                                // Combine previous selected IDs with the new ones and remove duplicates
+                                const updatedSelected = new Set([
+                                  ...prev,
+                                  ...allSelectedIds,
+                                ]);
+                                return Array.from(updatedSelected);
+                              });
+                            } else {
+                              // Deselect all students
+                              setSelected([]);
+                            }
+                          }}
+                        />
                       </TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
@@ -167,6 +194,7 @@ export default function ManageStudentUnderTG() {
                       <TableRow key={student._id}>
                         <TableCell className="w-[60px]">
                           <Checkbox
+                            checked={selected.includes(student._id as string)}
                             onCheckedChange={(val) => {
                               if (val)
                                 setSelected((prev) => [
@@ -200,6 +228,11 @@ export default function ManageStudentUnderTG() {
               </div>
             )}
           </CardContent>
+          {selected.length > 0 && (
+            <CardFooter>
+              <Button onClick={() => setIsDialogOpen(true)}>Assign TG</Button>
+            </CardFooter>
+          )}
         </Card>
       )}
 
@@ -207,34 +240,23 @@ export default function ManageStudentUnderTG() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Assign TG to Student</DialogTitle>
+            <DialogTitle>Assign TG to Student(s)</DialogTitle>
           </DialogHeader>
-          {selectedStudent && (
-            <div className="space-y-4">
-              <div>
-                <strong>Name:</strong> {selectedStudent.name}
-              </div>
-              <div>
-                <strong>Email:</strong> {selectedStudent.email}
-              </div>
-              <div>
-                <strong>URN:</strong> {selectedStudent.urn}
-              </div>
-              {/* Your TG selection UI can go here */}
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select TG" />
-                </SelectTrigger>
-                <SelectContent>
-                  {/* Replace with real TG options */}
-                  <SelectItem value="tg1">TG 1</SelectItem>
-                  <SelectItem value="tg2">TG 2</SelectItem>
-                </SelectContent>
-              </Select>
+          <div className="space-y-4">
+            {/* Your TG selection UI can go here */}
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select TG" />
+              </SelectTrigger>
+              <SelectContent>
+                {/* Replace with real TG options */}
+                <SelectItem value="tg1">TG 1</SelectItem>
+                <SelectItem value="tg2">TG 2</SelectItem>
+              </SelectContent>
+            </Select>
 
-              <Button className="w-full">Assign TG</Button>
-            </div>
-          )}
+            <Button className="w-full">Assign TG</Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
