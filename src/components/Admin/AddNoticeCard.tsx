@@ -15,7 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function AddNoticeCard() {
+export default function AddNoticeCard({
+  onPublish,
+}: {
+  onPublish: (notice: any) => void;
+}) {
   const [noticeNumber, setNoticeNumber] = useState("");
   const [noticeSubject, setNoticeSubject] = useState("");
   const [noticeDescription, setNoticeDescription] = useState("");
@@ -51,6 +55,8 @@ export default function AddNoticeCard() {
         toast.error(res.message);
         return;
       }
+
+      onPublish(res.notice);
 
       toast.success("Notice published successfully.");
       handleReset();

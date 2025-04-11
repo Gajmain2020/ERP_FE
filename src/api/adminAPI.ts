@@ -194,3 +194,11 @@ export async function PublishNoticeAPI(formdata: FormData) {
     data: formdata,
   });
 }
+
+export function getAllNoticesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-notices`,
+    method: "GET",
+    headers,
+  });
+}
