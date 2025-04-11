@@ -12,6 +12,7 @@ import ImageUpload from "./components/Testing/Test";
 import AdminHomepage from "./pages/Admin/AdminHomepage";
 import ManageCourses from "./pages/Admin/ManageCourses";
 import ManageFaculty from "./pages/Admin/ManageFaculty";
+import ManageNotice from "./pages/Admin/ManageNotice";
 import ManageStudents from "./pages/Admin/ManageStudents";
 import ManageStudentUnderTG from "./pages/Admin/ManageStudentUnderTG";
 import ManageTG from "./pages/Admin/ManageTG";
@@ -77,6 +78,7 @@ const App: React.FC = () => {
               path="assign-student-to-tg"
               element={<ManageStudentUnderTG />}
             />
+            <Route path="notice" element={<ManageNotice />} />
           </Route>
 
           {/* Protected Routes for student */}
