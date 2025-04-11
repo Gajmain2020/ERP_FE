@@ -143,3 +143,42 @@ export async function UnassignTGAPI(facultyId: string) {
     headers,
   });
 }
+
+export async function SearchStudentAPI(semester: string, section: string) {
+  return apiClient({
+    url: `${AdminURL}/search-student?semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetTGAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-tg`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function AssignMultipleStudentsToTGAPI(
+  tgId: string,
+  studentIds: string[]
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-students-to-tg?tgId=${tgId}`,
+    method: "PUT",
+    headers,
+    data: studentIds,
+  });
+}
+
+export async function AssignSingleStudentToTGAPI(
+  tgId: string,
+  studentId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-student-to-tg?tgId=${tgId}&studentId=${studentId}`,
+    method: "PUT",
+    headers,
+  });
+}
