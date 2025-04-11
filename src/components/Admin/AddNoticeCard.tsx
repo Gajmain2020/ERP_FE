@@ -14,17 +14,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { INotice } from "@/utils/types";
 
 export default function AddNoticeCard({
   onPublish,
 }: {
-  onPublish: (notice: any) => void;
+  onPublish: (notice: INotice) => void;
 }) {
   const [noticeNumber, setNoticeNumber] = useState("");
   const [noticeSubject, setNoticeSubject] = useState("");
   const [noticeDescription, setNoticeDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [publishing, setPublishing] = useState(false);
 
   const handleReset = () => {
     setNoticeNumber("");
@@ -38,6 +40,7 @@ export default function AddNoticeCard({
 
   const handlePublish = async () => {
     try {
+      setPublishing(true);
       const formData = new FormData();
 
       formData.append("noticeNumber", noticeNumber);
@@ -49,20 +52,30 @@ export default function AddNoticeCard({
       }
 
       // Send formData to the server
-      const res = await PublishNoticeAPI(formData);
+      const res = (await PublishNoticeAPI(formData)) as {
+        success: boolean;
+        message: string;
+        notice?: INotice;
+      };
 
       if (!res.success) {
         toast.error(res.message);
         return;
       }
 
-      onPublish(res.notice);
+      if (res.notice) {
+        onPublish(res.notice);
+      } else {
+        toast.error("Notice data is missing.");
+      }
 
       toast.success("Notice published successfully.");
       handleReset();
     } catch (error) {
       console.log("Error while publishing notice.", error);
       toast.error("Error occurred while publishing notice.");
+    } finally {
+      setPublishing(false);
     }
   };
   return (
@@ -120,7 +133,9 @@ export default function AddNoticeCard({
         <Button variant="outline" onClick={handleReset}>
           Reset
         </Button>
-        <Button onClick={handlePublish}>Publish</Button>
+        <Button disabled={publishing} onClick={handlePublish}>
+          {publishing ? "Publishing..." : "Publish"}
+        </Button>
       </CardFooter>
     </Card>
   );

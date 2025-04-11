@@ -14,7 +14,10 @@ export default function ManageNotice() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const res = await getAllNoticesAPI();
+        const res = (await getAllNoticesAPI()) as {
+          success: boolean;
+          notices: INotice[];
+        };
         if (res.success) {
           setNotices(res.notices);
         }
