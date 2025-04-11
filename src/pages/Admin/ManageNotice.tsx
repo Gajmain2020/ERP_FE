@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { PublishNoticeAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,35 +14,46 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
 
 export default function ManageNotice() {
-  const [mail, setMail] = useState("");
   const [noticeNumber, setNoticeNumber] = useState("");
   const [noticeSubject, setNoticeSubject] = useState("");
   const [noticeDescription, setNoticeDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const handleReset = () => {
-    setMail("");
     setNoticeNumber("");
     setNoticeSubject("");
     setNoticeDescription("");
     setFile(null);
   };
 
-  const handlePublish = () => {
-    const formData = new FormData();
+  const handlePublish = async () => {
+    try {
+      const formData = new FormData();
 
-    formData.append("noticeNumber", noticeNumber);
-    formData.append("noticeSubject", noticeSubject);
-    formData.append("noticeDescription", noticeDescription);
+      formData.append("noticeNumber", noticeNumber);
+      formData.append("noticeSubject", noticeSubject);
+      formData.append("noticeDescription", noticeDescription);
 
-    if (file) {
-      formData.append("pdf", file); // key is "pdf", filename is unchanged
+      if (file) {
+        formData.append("pdf", file); // key is "pdf", filename is unchanged
+      }
+
+      // Send formData to the server
+      const res = await PublishNoticeAPI(formData);
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success("Notice published successfully.");
+      handleReset();
+    } catch (error) {
+      console.log("Error while publishing notice.", error);
+      toast.error("Error occurred while publishing notice.");
     }
-
-    // Send formData to the server
   };
 
   return (
