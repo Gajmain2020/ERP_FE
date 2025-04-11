@@ -38,6 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Input } from "@/components/ui/input";
 import { IStudent } from "@/utils/types";
 
 interface ITg {
@@ -48,15 +49,23 @@ interface ITg {
 }
 
 export default function ManageStudentUnderTG() {
+  // states to search students
   const [section, setSection] = useState("");
   const [semester, setSemester] = useState("");
+
+  // To check if searched
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
   const [students, setStudents] = useState<IStudent[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // assign single student to tg and dialog
   const [selectedStudent, setSelectedStudent] = useState<IStudent | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // To assign multiple students under TG
   const [selected, setSelected] = useState<string[]>([]);
+
+  // To Search Student in the list
+  const [searchQuery, setSearchQuery] = useState("");
 
   //TGs
   const [tg, setTg] = useState<ITg[]>([]);
@@ -164,6 +173,7 @@ export default function ManageStudentUnderTG() {
           toast.error("Error occurred while assigning TG.");
         } finally {
           setAssigning(false);
+          setSearchQuery("");
         }
       }
       if (selected.length === 0) {
@@ -202,8 +212,15 @@ export default function ManageStudentUnderTG() {
       toast.error("Error occurred while assigning TG.");
     } finally {
       setAssigning(false);
+      setSearchQuery("");
     }
   };
+
+  const filteredStudents = students.filter((student) =>
+    `${student.name} ${student.email} ${student.urn}`
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-6">
@@ -268,80 +285,101 @@ export default function ManageStudentUnderTG() {
                 No students found for the selected section and semester.
               </div>
             ) : (
-              <div className="overflow-auto">
-                <Table>
-                  <TableHeader className="sticky top-0 bg-white z-10">
-                    <TableRow>
-                      <TableHead>
-                        <Checkbox
-                          checked={selected.length === students.length}
-                          onCheckedChange={(val) => {
-                            if (val) {
-                              // Add all student IDs, ensuring there are no duplicates
-                              const allSelectedIds = students.map(
-                                (student) => student._id as string
-                              );
-                              setSelected((prev) => {
-                                // Combine previous selected IDs with the new ones and remove duplicates
-                                const updatedSelected = new Set([
-                                  ...prev,
-                                  ...allSelectedIds,
-                                ]);
-                                return Array.from(updatedSelected);
-                              });
-                            } else {
-                              // Deselect all students
-                              setSelected([]);
-                            }
-                          }}
-                        />
-                      </TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>URN</TableHead>
-                      <TableHead>CRN</TableHead>
-                      <TableHead>Section / Semester</TableHead>
-                      <TableHead>TG</TableHead>
-                      <TableHead>Assign TG</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {students.map((student) => (
-                      <TableRow key={student._id}>
-                        <TableCell className="w-[60px]">
+              <>
+                <div className="flex items-center justify-between py-2">
+                  <Input
+                    type="text"
+                    placeholder="Search students by name, email, or URN"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="overflow-auto">
+                  <Table>
+                    <TableHeader className="sticky top-0 bg-white z-10">
+                      <TableRow>
+                        <TableHead>
                           <Checkbox
-                            checked={selected.includes(student._id as string)}
+                            checked={selected.length === students.length}
                             onCheckedChange={(val) => {
-                              if (val)
-                                setSelected((prev) => [
-                                  ...prev,
-                                  student._id as string,
-                                ]);
-                              else
-                                setSelected((prev) =>
-                                  prev.filter((id) => id !== student._id)
+                              if (val) {
+                                // Add all student IDs, ensuring there are no duplicates
+                                const allSelectedIds = students.map(
+                                  (student) => student._id as string
                                 );
+                                setSelected((prev) => {
+                                  // Combine previous selected IDs with the new ones and remove duplicates
+                                  const updatedSelected = new Set([
+                                    ...prev,
+                                    ...allSelectedIds,
+                                  ]);
+                                  return Array.from(updatedSelected);
+                                });
+                              } else {
+                                // Deselect all students
+                                setSelected([]);
+                              }
                             }}
                           />
-                        </TableCell>
-                        <TableCell>{student.name}</TableCell>
-                        <TableCell>{student.email}</TableCell>
-                        <TableCell>{student.urn}</TableCell>
-                        <TableCell>{student.crn}</TableCell>
-                        <TableCell>
-                          {student.section} / {semester}
-                        </TableCell>
-                        <TableCell>{student.TG?.facultyName || "-"}</TableCell>
-                        <TableCell className="w-24">
-                          <Button onClick={() => handleAssignClick(student)}>
-                            Assign
-                          </Button>
-                        </TableCell>
+                        </TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>URN</TableHead>
+                        <TableHead>CRN</TableHead>
+                        <TableHead>Section / Semester</TableHead>
+                        <TableHead>TG</TableHead>
+                        <TableHead>Assign TG</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredStudents.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={8} className="text-center">
+                            No Students found!
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {filteredStudents.map((student) => (
+                        <TableRow key={student._id}>
+                          <TableCell className="w-[60px]">
+                            <Checkbox
+                              checked={selected.includes(student._id as string)}
+                              onCheckedChange={(val) => {
+                                if (val)
+                                  setSelected((prev) => [
+                                    ...prev,
+                                    student._id as string,
+                                  ]);
+                                else
+                                  setSelected((prev) =>
+                                    prev.filter((id) => id !== student._id)
+                                  );
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>{student.name}</TableCell>
+                          <TableCell>{student.email}</TableCell>
+                          <TableCell>{student.urn}</TableCell>
+                          <TableCell>{student.crn}</TableCell>
+                          <TableCell>
+                            {student.section} / {semester}
+                          </TableCell>
+                          <TableCell>
+                            {student.TG?.facultyName || "-"}
+                          </TableCell>
+                          <TableCell className="w-24">
+                            <Button onClick={() => handleAssignClick(student)}>
+                              Assign
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             )}
           </CardContent>
           {selected.length > 0 && (
