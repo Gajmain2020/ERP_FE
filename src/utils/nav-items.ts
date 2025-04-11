@@ -194,9 +194,9 @@ export const adminNavItems = {
       path: "/notifications",
     },
     {
-      title: "Complaints",
+      title: "Notice",
       icon: AlertCircle,
-      path: "/complaints",
+      path: "/notice",
     },
   ],
   academics: [

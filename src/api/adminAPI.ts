@@ -182,3 +182,23 @@ export async function AssignSingleStudentToTGAPI(
     headers,
   });
 }
+
+export async function PublishNoticeAPI(formdata: FormData) {
+  return apiClient({
+    url: `${AdminURL}/publish-notice`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formdata,
+  });
+}
+
+export function getAllNoticesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-notices`,
+    method: "GET",
+    headers,
+  });
+}

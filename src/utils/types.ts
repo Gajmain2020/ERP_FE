@@ -142,3 +142,12 @@ export interface IFacultyForCourse {
   name: string;
   email: string;
 }
+
+export interface INotice {
+  _id: string;
+  noticeNumber: string;
+  noticeLink?: string;
+  author: { userType: string; userId: string; userName: string };
+  pdf?: string;
+  createdAt: string;
+}
