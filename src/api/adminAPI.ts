@@ -159,3 +159,15 @@ export async function GetTGAPI() {
     headers,
   });
 }
+
+export async function AssignMultipleStudentsToTGAPI(
+  tgId: string,
+  studentIds: string[]
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-students-to-tg?tgId=${tgId}`,
+    method: "PUT",
+    headers,
+    data: studentIds,
+  });
+}

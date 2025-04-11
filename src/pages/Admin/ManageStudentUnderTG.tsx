@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { GetTGAPI, SearchStudentAPI } from "@/api/adminAPI";
+import {
+  AssignMultipleStudentsToTGAPI,
+  GetTGAPI,
+  SearchStudentAPI,
+} from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,7 +59,7 @@ export default function ManageStudentUnderTG() {
 
   //TGs
   const [tg, setTg] = useState<ITg[]>([]);
-  const [isTgLoading, setIsTgLoading] = useState(false);
+  const [assigning, setAssigning] = useState(false);
 
   const romanSemesters = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   const sectionOptions = ["A", "B"];
@@ -77,7 +81,7 @@ export default function ManageStudentUnderTG() {
       }
     };
 
-    if (tg.length === 0 && selectedStudent) {
+    if (tg.length === 0) {
       fetchTg();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,7 +125,52 @@ export default function ManageStudentUnderTG() {
     setIsDialogOpen(true);
   };
 
-  console.log(selected);
+  const handleAssign = async (tgId: string) => {
+    try {
+      setAssigning(true);
+
+      if (selectedStudent) {
+        console.log("call here api for single assign");
+        return;
+      }
+      if (selected.length === 0) {
+        toast.warning("Please select at least one student.");
+        return;
+      }
+
+      const res = await AssignMultipleStudentsToTGAPI(tgId, selected);
+
+      if (!res.success) {
+        toast.error("Error occurred while assigning TG.");
+        return;
+      }
+
+      setStudents((prev) =>
+        prev.map((student) => {
+          if (selected.includes(student._id as string)) {
+            return {
+              ...student,
+              TG: {
+                facultyId: tgId,
+                facultyName:
+                  tg.find((tg) => tg._id === tgId)?.name || "Unknown",
+              },
+            };
+          }
+          return student;
+        })
+      );
+
+      setIsDialogOpen(false);
+      setSelected([]);
+      toast.success(res.message);
+    } catch (error) {
+      console.log("Error assigning TG:", error);
+      toast.error("Error occurred while assigning TG.");
+    } finally {
+      setAssigning(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -304,7 +353,12 @@ export default function ManageStudentUnderTG() {
                   <TableCell>{teacher.email}</TableCell>
                   <TableCell>{teacher.position}</TableCell>
                   <TableCell className="w-[80px]">
-                    <Button>Assign</Button>
+                    <Button
+                      onClick={() => handleAssign(teacher._id)}
+                      disabled={assigning}
+                    >
+                      {assigning ? "Assigning..." : "Assign"}
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
