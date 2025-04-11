@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import {
   AssignMultipleStudentsToTGAPI,
+  AssignSingleStudentToTGAPI,
   GetTGAPI,
   SearchStudentAPI,
 } from "@/api/adminAPI";
@@ -130,8 +131,40 @@ export default function ManageStudentUnderTG() {
       setAssigning(true);
 
       if (selectedStudent) {
-        console.log("call here api for single assign");
-        return;
+        try {
+          const res = await AssignSingleStudentToTGAPI(
+            tgId,
+            selectedStudent._id as string
+          );
+
+          if (!res.success) {
+            toast.error("Error occurred while assigning TG.");
+            return;
+          }
+          setStudents((prev) =>
+            prev.map((student) => {
+              if (student._id === selectedStudent._id) {
+                return {
+                  ...student,
+                  TG: {
+                    facultyId: tgId,
+                    facultyName:
+                      tg.find((tg) => tg._id === tgId)?.name || "Unknown",
+                  },
+                };
+              }
+              return student;
+            })
+          );
+          setSelectedStudent(null);
+          setIsDialogOpen(false);
+          return;
+        } catch (error) {
+          console.log("Error assigning TG:", error);
+          toast.error("Error occurred while assigning TG.");
+        } finally {
+          setAssigning(false);
+        }
       }
       if (selected.length === 0) {
         toast.warning("Please select at least one student.");
@@ -329,7 +362,9 @@ export default function ManageStudentUnderTG() {
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
-              Assign TG to {selected.length > 0 && selected.length} Student(s)
+              {selectedStudent
+                ? `Assign TG to ${selectedStudent.name}`
+                : `Assign TG to ${selected.length} Student(s)`}
             </DialogTitle>
           </DialogHeader>
           {selectedStudent && (
@@ -354,8 +389,11 @@ export default function ManageStudentUnderTG() {
                   <TableCell>{teacher.position}</TableCell>
                   <TableCell className="w-[80px]">
                     <Button
-                      onClick={() => handleAssign(teacher._id)}
-                      disabled={assigning}
+                      onClick={() => handleAssign(teacher._id as string)}
+                      disabled={
+                        assigning ||
+                        selectedStudent?.TG?.facultyId === teacher._id
+                      }
                     >
                       {assigning ? "Assigning..." : "Assign"}
                     </Button>

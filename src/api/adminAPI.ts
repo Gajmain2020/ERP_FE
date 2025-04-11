@@ -171,3 +171,14 @@ export async function AssignMultipleStudentsToTGAPI(
     data: studentIds,
   });
 }
+
+export async function AssignSingleStudentToTGAPI(
+  tgId: string,
+  studentId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-student-to-tg?tgId=${tgId}&studentId=${studentId}`,
+    method: "PUT",
+    headers,
+  });
+}
