@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -67,8 +68,12 @@ const dummyCourses = [
 ];
 
 export default function CreateTimeTable() {
-  const [selectedCourses, setSelectedCourses] = useState({});
-  const [selectedFaculty, setSelectedFaculty] = useState({});
+  const [selectedCourses, setSelectedCourses] = useState<
+    Record<string, string>
+  >({});
+  const [selectedFaculty, setSelectedFaculty] = useState<
+    Record<string, string>
+  >({});
 
   const handleCourseSelect = (
     day: string,
@@ -77,7 +82,7 @@ export default function CreateTimeTable() {
   ) => {
     const key = `${day}_${period}`;
     const course = getCourseById(courseId);
-    const maxPeriods = periodsPerDay[day];
+    const maxPeriods = periodsPerDay[day as keyof typeof periodsPerDay];
 
     if (course?.classType === "Lab") {
       if (period >= 6 || period + 2 > maxPeriods) {
@@ -118,7 +123,7 @@ export default function CreateTimeTable() {
     const weekData = [];
 
     for (const day of days) {
-      const totalPeriods = periodsPerDay[day];
+      const totalPeriods = periodsPerDay[day as keyof typeof periodsPerDay];
       let period = 1;
       const periods = [];
 
@@ -128,31 +133,18 @@ export default function CreateTimeTable() {
         const facultyId = selectedFaculty[key];
 
         if (!courseId) {
-          alert(`Please select a course for ${day}, period ${period}`);
+          toast.error(`Please select a course for ${day}, period ${period}`);
           return;
         }
 
         if (!facultyId) {
-          alert(`Please select a faculty for ${day}, period ${period}`);
+          toast.error(`Please select a faculty for ${day}, period ${period}`);
           return;
         }
 
         const course = getCourseById(courseId);
 
-        if (course.classType === "Lab") {
-          if (
-            period + 2 > totalPeriods ||
-            selectedCourses[`${day}_${period + 1}`] !== courseId ||
-            selectedCourses[`${day}_${period + 2}`] !== courseId ||
-            selectedFaculty[`${day}_${period + 1}`] !== facultyId ||
-            selectedFaculty[`${day}_${period + 2}`] !== facultyId
-          ) {
-            alert(
-              `Lab session on ${day}, period ${period} is not properly filled.`
-            );
-            return;
-          }
-
+        if (course && course.classType === "Lab") {
           for (let i = 0; i < 3; i++) {
             periods.push({
               periodNumber: period + i,
@@ -176,9 +168,9 @@ export default function CreateTimeTable() {
     }
 
     const payload = {
-      semester: "III", // e.g., "V"
-      section: "A", // e.g., "A"
-      department: "CSE", // e.g., "CSE"
+      semester: "III",
+      section: "A",
+      department: "CSE",
       week: weekData,
     };
 
@@ -217,7 +209,8 @@ export default function CreateTimeTable() {
           {/* Body of the table */}
           <TableBody>
             {days.map((day) => {
-              const totalPeriods = periodsPerDay[day];
+              const totalPeriods =
+                periodsPerDay[day as keyof typeof periodsPerDay];
               let skip = 0;
               return (
                 <TableRow key={day}>
