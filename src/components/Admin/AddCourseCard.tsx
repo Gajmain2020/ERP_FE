@@ -22,7 +22,11 @@ import {
   SelectValue,
 } from "../ui/select";
 
-export default function AddCourseCard() {
+export default function AddCourseCard({
+  setData,
+}: {
+  setData: React.Dispatch<React.SetStateAction<ICourse[]>>;
+}) {
   const [course, setCourse] = useState<ICourse>({
     courseCode: "",
     courseName: "",
@@ -52,6 +56,7 @@ export default function AddCourseCard() {
       }
 
       toast.success(response.message);
+      setData((prev) => [response.course, ...prev]);
       handleClear();
     } catch (error) {
       toast.error("Error adding course");

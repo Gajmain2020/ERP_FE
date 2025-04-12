@@ -31,17 +31,20 @@ import {
 
 import {
   AssignTeacherToCourseAPI,
-  GetAllCoursesAPI,
   GetFacultiesAPI,
   RemoveTeacherFromCourseAPI,
 } from "@/api/adminAPI";
 import { Input } from "../ui/input";
 
-export default function AssignCourseCard() {
-  // For the courses
-  const [courses, setCourses] = useState<ICourse[]>();
-  const [coursesLoading, setCoursesLoading] = useState(true);
-
+export default function AssignCourseCard({
+  data,
+  isLoading,
+  setData,
+}: {
+  data: ICourse[];
+  isLoading: boolean;
+  setData: React.Dispatch<React.SetStateAction<ICourse[]>>;
+}) {
   // For assigning the courses
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
   const [faculties, setFaculties] = useState<IFacultyForCourse[] | undefined>();
@@ -50,32 +53,6 @@ export default function AssignCourseCard() {
 
   // For searching the faculty
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    // Fetch courses from the server
-    const fetchCourses = async () => {
-      try {
-        const res = (await GetAllCoursesAPI()) as {
-          success: boolean;
-          message: string;
-          courses: ICourse[];
-        };
-
-        if (!(res as { success: boolean }).success) {
-          toast.error(res.message);
-          return;
-        }
-        setCourses(res.courses);
-      } catch (error) {
-        console.log(error);
-        toast.error("Something went wrong. Please try again.");
-      } finally {
-        setCoursesLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, []);
 
   useEffect(() => {
     if (selectedCourse) {
@@ -140,7 +117,7 @@ export default function AssignCourseCard() {
           } as ICourse)
       );
 
-      setCourses((prev) =>
+      setData((prev) =>
         prev?.map((course) =>
           course._id === selectedCourse._id
             ? {
@@ -189,7 +166,7 @@ export default function AssignCourseCard() {
       );
 
       // Also update the course list state
-      setCourses((prev) =>
+      setData((prev) =>
         prev?.map((course) =>
           course._id === selectedCourse._id
             ? {
@@ -231,11 +208,11 @@ export default function AssignCourseCard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {coursesLoading ? (
+              {isLoading ? (
                 <p className="animate-pulse text-lg">Loading...</p>
               ) : (
-                courses &&
-                courses.map((course) => (
+                data &&
+                data.map((course) => (
                   <TableRow key={course._id} className="hover:bg-muted">
                     <TableCell className="font-medium">
                       {course.courseCode}
