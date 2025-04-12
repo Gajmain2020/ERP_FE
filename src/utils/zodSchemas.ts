@@ -36,4 +36,7 @@ export const addCourseSchema = z.object({
       errorMap: () => ({ message: "Course type is required" }),
     }
   ),
+  classType: z.enum(["Lab", "Theory"], {
+    errorMap: () => ({ message: "Class type is required" }),
+  }),
 });

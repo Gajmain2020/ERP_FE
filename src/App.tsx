@@ -16,6 +16,7 @@ import ManageNotice from "./pages/Admin/ManageNotice";
 import ManageStudents from "./pages/Admin/ManageStudents";
 import ManageStudentUnderTG from "./pages/Admin/ManageStudentUnderTG";
 import ManageTG from "./pages/Admin/ManageTG";
+import ManageTimeTable from "./pages/Admin/ManageTimeTable";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
@@ -79,6 +80,10 @@ const App: React.FC = () => {
               element={<ManageStudentUnderTG />}
             />
             <Route path="notice" element={<ManageNotice />} />
+            {/* //TODO: */}
+            {/* // - add notice details page here  */}
+
+            <Route path="time-table" element={<ManageTimeTable />} />
           </Route>
 
           {/* Protected Routes for student */}
