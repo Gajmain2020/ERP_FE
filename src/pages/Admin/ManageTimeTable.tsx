@@ -26,7 +26,7 @@ export default function ManageTimeTable() {
 
       {timetable && <>Show timetable here</>}
 
-      <CreateTimeTable />
+      {createNewTimetable && <CreateTimeTable />}
     </div>
   );
 }

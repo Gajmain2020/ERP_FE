@@ -48,7 +48,11 @@ export default function SearchTimeTableCard({
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleReset = () => {};
+  const handleReset = () => {
+    setCreateNewTimetable(false);
+    setSemester("");
+    setSection("");
+  };
 
   const handleSearch = async () => {
     setSearching(true);
