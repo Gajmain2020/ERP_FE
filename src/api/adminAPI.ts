@@ -202,3 +202,11 @@ export function getAllNoticesAPI() {
     headers,
   });
 }
+
+export function GetTimeTableAPI(semester: string, section: string) {
+  return apiClient({
+    url: `${AdminURL}/get-timetable?semester=${semester}&section=${section}}`,
+    method: "GET",
+    headers,
+  });
+}

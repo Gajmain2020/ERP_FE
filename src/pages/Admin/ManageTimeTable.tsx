@@ -1,10 +1,30 @@
+import { useState } from "react";
+
 import CreateTimeTable from "@/components/Admin/CreateTimeTable";
 import SearchTimeTableCard from "@/components/Admin/SearchTimeTableCard";
 
 export default function ManageTimeTable() {
+  const [semester, setSemester] = useState("");
+  const [section, setSection] = useState("");
+
+  // for existing and set timetable
+  const [timetable, setTimetable] = useState<any>();
+
+  // to create new timetable
+  const [createNewTimetable, setCreateNewTimetable] = useState(false);
+
   return (
     <div className="w-full h-screen flex flex-col gap-5">
-      <SearchTimeTableCard />
+      <SearchTimeTableCard
+        semester={semester}
+        section={section}
+        setSemester={setSemester}
+        setSection={setSection}
+        setTimetable={setTimetable}
+        setCreateNewTimetable={setCreateNewTimetable}
+      />
+
+      {timetable && <>Show timetable here</>}
 
       <CreateTimeTable />
     </div>
