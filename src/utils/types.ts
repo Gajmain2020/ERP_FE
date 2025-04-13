@@ -121,6 +121,8 @@ export interface IStudent {
     facultyId: string;
     facultyName: string;
   };
+  isDetailsFilled?: boolean;
+  isVerified?: boolean;
 }
 
 interface FaultyForCourse {

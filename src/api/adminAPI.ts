@@ -228,3 +228,11 @@ export function SaveTimetableAPI(payload: IPayload) {
     headers,
   });
 }
+
+export async function GetStudentDetailsAPI(studentId: string) {
+  return apiClient({
+    url: `${AdminURL}/get-student-details?studentId=${studentId}`,
+    method: "GET",
+    headers,
+  });
+}
