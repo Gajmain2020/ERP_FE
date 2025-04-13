@@ -58,6 +58,7 @@ export default function SearchTimeTableCard({
   const handleSearch = async () => {
     setSearching(true);
     setTimetable(null);
+    setCreateNewTimetable(false);
     try {
       if (semester === "" || section === "") {
         toast.error("Semester and section both are required.");
