@@ -1,4 +1,5 @@
 import AddStudentCard from "@/components/Admin/AddStudentCard";
+import ShowStudentsCard from "@/components/Admin/ShowStudentsCard";
 import UploadCSVCard from "@/components/Admin/UploadCSVCard";
 
 export default function ManageStudents() {
@@ -9,6 +10,9 @@ export default function ManageStudents() {
 
       {/* Add students via csv sheet */}
       <UploadCSVCard />
+
+      {/* Show students on basis of search filters */}
+      <ShowStudentsCard />
     </div>
   );
 }

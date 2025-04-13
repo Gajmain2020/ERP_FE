@@ -28,6 +28,7 @@ export default function AddCourseCard({
   setData: React.Dispatch<React.SetStateAction<ICourse[]>>;
 }) {
   const [course, setCourse] = useState<ICourse>({
+    _id: "",
     courseCode: "",
     courseName: "",
     courseShortName: "",
@@ -69,6 +70,7 @@ export default function AddCourseCard({
 
   const handleClear = () => {
     setCourse({
+      _id: "",
       courseCode: "",
       courseName: "",
       courseShortName: "",
