@@ -125,7 +125,7 @@ export interface IStudent {
 
 interface FaultyForCourse {
   facultyId: string;
-  facultyName?: string;
+  name?: string;
 }
 
 export interface ICourse {
@@ -152,4 +152,15 @@ export interface INotice {
   author: { userType: string; userId: string; userName: string };
   pdf?: string;
   createdAt: string;
+}
+
+interface Period {
+  periodNumber: number;
+  courseShortName: string;
+  facultyName: string;
+}
+
+export interface ITimetable {
+  day: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
+  periods: Period[];
 }

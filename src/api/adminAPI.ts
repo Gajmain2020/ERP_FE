@@ -205,8 +205,26 @@ export function getAllNoticesAPI() {
 
 export function GetTimeTableAPI(semester: string, section: string) {
   return apiClient({
-    url: `${AdminURL}/get-timetable?semester=${semester}&section=${section}}`,
+    url: `${AdminURL}/get-timetable?semester=${semester}&section=${section}`,
     method: "GET",
+    headers,
+  });
+}
+
+interface IPayload {
+  semester: string;
+  section: string;
+  weekData: {
+    day: string;
+    periods: { periodNumber: number; course: string; faculty: string }[];
+  }[];
+}
+
+export function SaveTimetableAPI(payload: IPayload) {
+  return apiClient({
+    url: `${AdminURL}/save-timetable`,
+    method: "POST",
+    data: payload,
     headers,
   });
 }

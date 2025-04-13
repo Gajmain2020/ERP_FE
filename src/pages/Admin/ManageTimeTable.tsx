@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import CreateTimeTable from "@/components/Admin/CreateTimeTable";
 import SearchTimeTableCard from "@/components/Admin/SearchTimeTableCard";
+import ShowTimetable from "@/components/Admin/ShowTimetable";
 
 export default function ManageTimeTable() {
   const [semester, setSemester] = useState("");
@@ -24,7 +25,7 @@ export default function ManageTimeTable() {
         setCreateNewTimetable={setCreateNewTimetable}
       />
 
-      {timetable && <>Show timetable here</>}
+      {timetable && <ShowTimetable data={timetable} />}
 
       {!timetable && createNewTimetable && (
         <CreateTimeTable

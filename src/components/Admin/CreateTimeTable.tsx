@@ -1,4 +1,4 @@
-import { GetAllCoursesAPI } from "@/api/adminAPI";
+import { GetAllCoursesAPI, SaveTimetableAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -57,6 +57,9 @@ export default function CreateTimeTable({
   //for courses
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [courseLoading, setCourseLoading] = useState(true);
+
+  // saving
+  const [saving, setSaving] = useState(false);
 
   // for timetable creation
   const [selectedCourses, setSelectedCourses] = useState<
@@ -186,13 +189,32 @@ export default function CreateTimeTable({
     }
 
     const payload = {
-      semester: "III",
-      section: "A",
-      department: "CSE",
-      week: weekData,
+      semester,
+      section,
+      weekData: weekData,
     };
 
-    console.log("Saving timetable:", payload);
+    setSaving(true);
+    try {
+      const res = (await SaveTimetableAPI(payload)) as {
+        success: boolean;
+        message: string;
+        timetable: any;
+      };
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success(res.message);
+      setTimetable(res.timetable);
+    } catch (error) {
+      console.log("Error while saving timetable.", error);
+      toast.error("Error while saving timetable.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   function handleReset() {
@@ -391,7 +413,10 @@ export default function CreateTimeTable({
       </CardContent>
 
       <CardFooter className="flex gap-4">
-        <Button disabled={courseLoading} onClick={handleSaveTimetable}>
+        <Button
+          disabled={courseLoading || saving}
+          onClick={handleSaveTimetable}
+        >
           Save Timetable
         </Button>
         <Button variant="secondary" onClick={handleReset}>
