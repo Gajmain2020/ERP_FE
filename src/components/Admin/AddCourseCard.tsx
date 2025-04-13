@@ -22,13 +22,18 @@ import {
   SelectValue,
 } from "../ui/select";
 
-export default function AddCourseCard() {
+export default function AddCourseCard({
+  setData,
+}: {
+  setData: React.Dispatch<React.SetStateAction<ICourse[]>>;
+}) {
   const [course, setCourse] = useState<ICourse>({
     courseCode: "",
     courseName: "",
     courseShortName: "",
     semester: "",
     courseType: "",
+    classType: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,6 +56,7 @@ export default function AddCourseCard() {
       }
 
       toast.success(response.message);
+      setData((prev) => [response.course, ...prev]);
       handleClear();
     } catch (error) {
       toast.error("Error adding course");
@@ -68,6 +74,7 @@ export default function AddCourseCard() {
       courseShortName: "",
       semester: "",
       courseType: "",
+      classType: "",
     });
   };
 
@@ -157,6 +164,27 @@ export default function AddCourseCard() {
                 "Prof. Elective",
                 "Open Elective",
               ].map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label className="text-sm text-gray-800">Class Type</label>
+          <Select
+            value={course.classType}
+            onValueChange={(value) =>
+              setCourse((prev) => ({ ...prev, classType: value }))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Class Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {["Lab", "Theory"].map((type) => (
                 <SelectItem key={type} value={type}>
                   {type}
                 </SelectItem>
