@@ -26,7 +26,13 @@ export default function ManageTimeTable() {
 
       {timetable && <>Show timetable here</>}
 
-      {createNewTimetable && <CreateTimeTable />}
+      {!timetable && createNewTimetable && (
+        <CreateTimeTable
+          semester={semester}
+          section={section}
+          setTimetable={setTimetable}
+        />
+      )}
     </div>
   );
 }

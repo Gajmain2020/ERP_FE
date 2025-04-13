@@ -82,9 +82,9 @@ export async function AddCourseAPI(course: ICourse) {
   });
 }
 
-export async function GetAllCoursesAPI() {
+export async function GetAllCoursesAPI(semester: string = "") {
   return apiClient({
-    url: `${AdminURL}/get-courses`,
+    url: `${AdminURL}/get-courses?semester=${semester}`,
     method: "GET",
     headers,
   });

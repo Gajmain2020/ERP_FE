@@ -1,3 +1,4 @@
+import { GetAllCoursesAPI } from "@/api/adminAPI";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { ICourse } from "@/utils/types";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Table,
@@ -43,37 +45,53 @@ const periodsPerDay = {
   Saturday: 5,
 };
 
-const dummyCourses = [
-  {
-    _id: "course1",
-    courseName: "Data Structures",
-    classType: "Theory",
-    takenBy: [
-      { facultyId: "fac1", facultyName: "Prof. A" },
-      { facultyId: "fac2", facultyName: "Prof. B" },
-    ],
-  },
-  {
-    _id: "course2",
-    courseName: "Operating Systems Lab",
-    classType: "Lab",
-    takenBy: [{ facultyId: "fac3", facultyName: "Prof. C" }],
-  },
-  {
-    _id: "course3",
-    courseName: "DBMS",
-    classType: "Theory",
-    takenBy: [{ facultyId: "fac4", facultyName: "Prof. D" }],
-  },
-];
+export default function CreateTimeTable({
+  semester,
+  section,
+  setTimetable,
+}: {
+  semester: string;
+  section: string;
+  setTimetable: React.Dispatch<React.SetStateAction<any>>;
+}) {
+  //for courses
+  const [courses, setCourses] = useState<ICourse[]>([]);
+  const [courseLoading, setCourseLoading] = useState(true);
 
-export default function CreateTimeTable() {
+  // for timetable creation
   const [selectedCourses, setSelectedCourses] = useState<
     Record<string, string>
   >({});
   const [selectedFaculty, setSelectedFaculty] = useState<
     Record<string, string>
   >({});
+
+  //fetch the courses initially
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = (await GetAllCoursesAPI(semester)) as {
+          success: boolean;
+          message: string;
+          courses: ICourse[];
+        };
+
+        if (!res.success) {
+          toast.error(res.message);
+          return;
+        }
+
+        setCourses(res.courses);
+      } catch (error) {
+        console.log("Error while fetching courses.", error);
+        toast.error("Error while fetching courses.");
+      } finally {
+        setCourseLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleCourseSelect = (
     day: string,
@@ -117,7 +135,7 @@ export default function CreateTimeTable() {
     setSelectedFaculty({ ...selectedFaculty, [key]: facultyId });
   };
 
-  const getCourseById = (id: string) => dummyCourses.find((c) => c._id === id);
+  const getCourseById = (id: string) => courses.find((c) => c._id === id);
 
   const handleSaveTimetable = async () => {
     const weekData = [];
@@ -193,63 +211,127 @@ export default function CreateTimeTable() {
       </CardHeader>
 
       <CardContent className="overflow-auto">
-        <Table className="table-auto border-collapse w-full text-sm">
-          {/* Header for table */}
-          <TableHeader>
-            <TableRow>
-              <TableHead className="border p-2">Day / Period</TableHead>
-              {[...Array(7)].map((_, i) => (
-                <TableHead key={i} className="border p-2">
-                  Period {i + 1}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
+        {courseLoading && (
+          <div className="animate-pulse">
+            Courses are loading please wait...
+          </div>
+        )}
 
-          {/* Body of the table */}
-          <TableBody>
-            {days.map((day) => {
-              const totalPeriods =
-                periodsPerDay[day as keyof typeof periodsPerDay];
-              let skip = 0;
-              return (
-                <TableRow key={day}>
-                  <TableCell className="border p-2 font-medium">
-                    {day}
-                  </TableCell>
-                  {[...Array(7)].map((_, i) => {
-                    const period = i + 1;
-                    const key = `${day}_${period}`;
+        {!courseLoading && courses.length === 0 && (
+          <div>No course found for given semester.</div>
+        )}
+        {!courseLoading && courses.length > 0 && (
+          <Table className="table-auto border-collapse w-full text-sm">
+            {/* Header for table */}
+            <TableHeader>
+              <TableRow>
+                <TableHead className="border p-2">Day / Period</TableHead>
+                {[...Array(7)].map((_, i) => (
+                  <TableHead key={i} className="border p-2">
+                    Period {i + 1}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
 
-                    if (period > totalPeriods) {
+            {/* Body of the table */}
+            <TableBody>
+              {days.map((day) => {
+                const totalPeriods =
+                  periodsPerDay[day as keyof typeof periodsPerDay];
+                let skip = 0;
+                return (
+                  <TableRow key={day}>
+                    <TableCell className="border p-2 font-medium">
+                      {day}
+                    </TableCell>
+                    {[...Array(7)].map((_, i) => {
+                      const period = i + 1;
+                      const key = `${day}_${period}`;
+
+                      if (period > totalPeriods) {
+                        return (
+                          <TableCell
+                            key={period}
+                            className="border p-2 bg-gray-100"
+                          />
+                        );
+                      }
+
+                      if (skip > 0) {
+                        skip--;
+                        return null;
+                      }
+
+                      const selectedCourseId = selectedCourses[key];
+                      const course = getCourseById(selectedCourseId);
+
+                      if (
+                        course?.classType === "Lab" &&
+                        period <= totalPeriods - 2 &&
+                        period < 6
+                      ) {
+                        skip = 2;
+                        return (
+                          <TableCell
+                            key={period}
+                            className="border p-2"
+                            colSpan={3}
+                          >
+                            <div className="flex flex-col gap-1">
+                              <Select
+                                value={selectedCourseId || ""}
+                                onValueChange={(val) =>
+                                  handleCourseSelect(day, period, val)
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Course" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {courses
+                                    .filter(
+                                      (c) =>
+                                        c.classType !== "Lab" ||
+                                        (period < 6 &&
+                                          period + 2 <= totalPeriods)
+                                    )
+                                    .map((c) => (
+                                      <SelectItem key={c._id} value={c._id}>
+                                        {c.courseName}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+
+                              <Select
+                                disabled={!selectedCourseId}
+                                value={selectedFaculty[key] || ""}
+                                onValueChange={(val) =>
+                                  handleFacultySelect(day, period, val)
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Faculty" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {course?.takenBy?.map((f) => (
+                                    <SelectItem
+                                      key={f.facultyId}
+                                      value={f.facultyId}
+                                    >
+                                      {f.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableCell>
+                        );
+                      }
+
                       return (
-                        <TableCell
-                          key={period}
-                          className="border p-2 bg-gray-100"
-                        />
-                      );
-                    }
-
-                    if (skip > 0) {
-                      skip--;
-                      return null;
-                    }
-
-                    const selectedCourseId = selectedCourses[key];
-                    const course = getCourseById(selectedCourseId);
-
-                    if (
-                      course?.classType === "Lab" &&
-                      period <= totalPeriods - 2 &&
-                      period < 6
-                    ) {
-                      skip = 2;
-                      return (
-                        <TableCell
-                          key={period}
-                          className="border p-2"
-                          colSpan={3}
-                        >
+                        <TableCell key={period} className="border p-2">
                           <div className="flex flex-col gap-1">
                             <Select
                               value={selectedCourseId || ""}
@@ -261,7 +343,7 @@ export default function CreateTimeTable() {
                                 <SelectValue placeholder="Select Course" />
                               </SelectTrigger>
                               <SelectContent>
-                                {dummyCourses
+                                {courses
                                   .filter(
                                     (c) =>
                                       c.classType !== "Lab" ||
@@ -269,7 +351,7 @@ export default function CreateTimeTable() {
                                   )
                                   .map((c) => (
                                     <SelectItem key={c._id} value={c._id}>
-                                      {c.courseName}
+                                      {c.courseShortName}
                                     </SelectItem>
                                   ))}
                               </SelectContent>
@@ -291,7 +373,7 @@ export default function CreateTimeTable() {
                                     key={f.facultyId}
                                     value={f.facultyId}
                                   >
-                                    {f.facultyName}
+                                    {f.name}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -299,69 +381,19 @@ export default function CreateTimeTable() {
                           </div>
                         </TableCell>
                       );
-                    }
-
-                    return (
-                      <TableCell key={period} className="border p-2">
-                        <div className="flex flex-col gap-1">
-                          <Select
-                            value={selectedCourseId || ""}
-                            onValueChange={(val) =>
-                              handleCourseSelect(day, period, val)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select Course" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {dummyCourses
-                                .filter(
-                                  (c) =>
-                                    c.classType !== "Lab" ||
-                                    (period < 6 && period + 2 <= totalPeriods)
-                                )
-                                .map((c) => (
-                                  <SelectItem key={c._id} value={c._id}>
-                                    {c.courseName}
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-
-                          <Select
-                            disabled={!selectedCourseId}
-                            value={selectedFaculty[key] || ""}
-                            onValueChange={(val) =>
-                              handleFacultySelect(day, period, val)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select Faculty" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {course?.takenBy?.map((f) => (
-                                <SelectItem
-                                  key={f.facultyId}
-                                  value={f.facultyId}
-                                >
-                                  {f.facultyName}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
 
       <CardFooter className="flex gap-4">
-        <Button onClick={handleSaveTimetable}>Save Timetable</Button>
+        <Button disabled={courseLoading} onClick={handleSaveTimetable}>
+          Save Timetable
+        </Button>
         <Button variant="secondary" onClick={handleReset}>
           Reset
         </Button>

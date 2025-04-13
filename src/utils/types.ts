@@ -125,10 +125,11 @@ export interface IStudent {
 
 interface FaultyForCourse {
   facultyId: string;
+  facultyName?: string;
 }
 
 export interface ICourse {
-  _id?: string;
+  _id: string;
   courseCode: string;
   courseName: string;
   courseShortName: string;
