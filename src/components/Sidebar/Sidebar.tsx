@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NormalLogo from "/logo2.png";
 
-import { ChevronUp, User2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -15,14 +20,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { navItems } from "@/utils/nav-items";
 import useAuthStore from "@/store/userAuthStore";
+import { navItems } from "@/utils/nav-items";
+import { ChevronUp, User2 } from "lucide-react";
 import ChangePassword from "../Helpers/ChangePasswordDialog";
 
 // Define the type for the navigation item
@@ -94,6 +94,7 @@ export function AppSidebar() {
       profile: true,
       financial: true,
       performance: true,
+      "Teacher Guardian": true,
     }
   );
 

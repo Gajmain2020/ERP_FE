@@ -1,6 +1,7 @@
-import { ICourse, IFaculty, IStudent } from "@/utils/types";
-import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+
+import { apiClient } from "@/utils/ApiClient";
+import { ICourse, IFaculty, IStudent } from "@/utils/types";
 
 const AdminURL = "/api/v1/admin";
 
@@ -12,24 +13,11 @@ const headers = {
 };
 
 export async function LoginAdminAPI(email: string, password: string) {
-  try {
-    const res = await axios({
-      url: `${AdminURL}/login`,
-      method: "POST",
-      data: { email, password },
-    });
-    return res.data;
-  } catch (error: unknown) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    url: `${AdminURL}/login`,
+    method: "POST",
+    data: { email, password },
+  });
 }
 
 export async function ChangeAdminPasswordAPI(
@@ -37,143 +25,214 @@ export async function ChangeAdminPasswordAPI(
   newPassword: string,
   confirmNewPassword: string
 ) {
-  try {
-    if (oldPassword === newPassword) {
-      toast.error("New password can not be same as old password.");
-      return;
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      toast.error("New and Confirm New Passwords do not match.");
-      return;
-    }
-
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/change-password`,
-      method: "PUT",
-      data: { oldPassword, newPassword, confirmNewPassword },
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
+  if (oldPassword === newPassword) {
+    toast.error("New password can not be same as old password.");
+    return;
   }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/change-password`,
+    method: "PUT",
+    data: { oldPassword, newPassword, confirmNewPassword },
+  });
 }
 
 export async function EnrollStudentAPI(student: IStudent) {
-  try {
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/enroll-student`,
-      method: "POST",
-      data: student,
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/enroll-student`,
+    method: "POST",
+    data: student,
+  });
 }
 
 export async function EnrollFacultyAPI(faculty: IFaculty) {
-  try {
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/enroll-faculty`,
-      method: "POST",
-      data: faculty,
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/enroll-faculty`,
+    method: "POST",
+    data: faculty,
+  });
 }
 
 export async function EnrollStudentsAPI(students: IStudent[]) {
-  try {
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/enroll-multiple-students`,
-      method: "POST",
-      data: students,
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/enroll-multiple-students`,
+    method: "POST",
+    data: students,
+  });
 }
 
 export async function EnrollFacultiesAPI(faculties: IFaculty[]) {
-  try {
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/enroll-multiple-faculties`,
-      method: "POST",
-      data: faculties,
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/enroll-multiple-faculties`,
+    method: "POST",
+    data: faculties,
+  });
 }
 
 export async function AddCourseAPI(course: ICourse) {
-  try {
-    const res = await axios({
-      headers,
-      url: `${AdminURL}/add-course`,
-      method: "POST",
-      data: course,
-    });
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError && error.response) {
-      toast.error(error.response.data.message);
-      return { success: false, message: error.response.data.message };
-    }
-    toast.error("Something went wrong. Please try again.");
-    return {
-      success: false,
-      message: "Something went wrong. Please try again.",
-    };
-  }
+  return apiClient({
+    headers,
+    url: `${AdminURL}/add-course`,
+    method: "POST",
+    data: course,
+  });
+}
+
+export async function GetAllCoursesAPI(semester: string = "") {
+  return apiClient({
+    url: `${AdminURL}/get-courses?semester=${semester}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetFacultiesByCourseAPI(courseId: string) {
+  return apiClient({
+    url: `${AdminURL}/get-faculty-by-course?courseId=${courseId}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetFacultiesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-faculties`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function AssignTeacherToCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-teacher-to-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function RemoveTeacherFromCourseAPI(
+  courseId: string,
+  facultyId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/remove-faculty-from-course?courseId=${courseId}&facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function AssignTGAPI(facultyId: string) {
+  return apiClient({
+    url: `${AdminURL}/assign-tg?facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function UnassignTGAPI(facultyId: string) {
+  return apiClient({
+    url: `${AdminURL}/unassign-tg?facultyId=${facultyId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function SearchStudentAPI(semester: string, section: string) {
+  return apiClient({
+    url: `${AdminURL}/search-student?semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetTGAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-tg`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function AssignMultipleStudentsToTGAPI(
+  tgId: string,
+  studentIds: string[]
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-students-to-tg?tgId=${tgId}`,
+    method: "PUT",
+    headers,
+    data: studentIds,
+  });
+}
+
+export async function AssignSingleStudentToTGAPI(
+  tgId: string,
+  studentId: string
+) {
+  return apiClient({
+    url: `${AdminURL}/assign-student-to-tg?tgId=${tgId}&studentId=${studentId}`,
+    method: "PUT",
+    headers,
+  });
+}
+
+export async function PublishNoticeAPI(formdata: FormData) {
+  return apiClient({
+    url: `${AdminURL}/publish-notice`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formdata,
+  });
+}
+
+export function getAllNoticesAPI() {
+  return apiClient({
+    url: `${AdminURL}/get-notices`,
+    method: "GET",
+    headers,
+  });
+}
+
+export function GetTimeTableAPI(semester: string, section: string) {
+  return apiClient({
+    url: `${AdminURL}/get-timetable?semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
+
+interface IPayload {
+  semester: string;
+  section: string;
+  weekData: {
+    day: string;
+    periods: { periodNumber: number; course: string; faculty: string }[];
+  }[];
+}
+
+export function SaveTimetableAPI(payload: IPayload) {
+  return apiClient({
+    url: `${AdminURL}/save-timetable`,
+    method: "POST",
+    data: payload,
+    headers,
+  });
+}
+
+export async function GetStudentDetailsAPI(studentId: string) {
+  return apiClient({
+    url: `${AdminURL}/get-student-details?studentId=${studentId}`,
+    method: "GET",
+    headers,
+  });
 }

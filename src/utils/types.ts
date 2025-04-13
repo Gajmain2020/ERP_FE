@@ -95,6 +95,7 @@ export interface EmergencyContact {
 }
 
 export interface IFaculty {
+  _id?: string;
   bloodGroup?: "A+" | "A-" | "B+" | "B-" | "O+" | "O-" | "AB+" | "AB-";
   department?: string;
   email: string;
@@ -109,18 +110,59 @@ export interface IFaculty {
 }
 
 export interface IStudent {
+  _id?: string;
   name: string;
   email: string;
   urn: string;
   crn: string;
   semester: string;
   section: string;
+  TG?: {
+    facultyId: string;
+    facultyName: string;
+  };
+  isDetailsFilled?: boolean;
+  isVerified?: boolean;
+}
+
+interface FaultyForCourse {
+  facultyId: string;
+  name?: string;
 }
 
 export interface ICourse {
+  _id: string;
   courseCode: string;
   courseName: string;
   courseShortName: string;
   semester: string;
   courseType: string;
+  takenBy?: FaultyForCourse[];
+  classType: string;
+}
+
+export interface IFacultyForCourse {
+  _id: string;
+  name: string;
+  email: string;
+}
+
+export interface INotice {
+  _id: string;
+  noticeNumber: string;
+  noticeLink?: string;
+  author: { userType: string; userId: string; userName: string };
+  pdf?: string;
+  createdAt: string;
+}
+
+interface Period {
+  periodNumber: number;
+  courseShortName: string;
+  facultyName: string;
+}
+
+export interface ITimetable {
+  day: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
+  periods: Period[];
 }
