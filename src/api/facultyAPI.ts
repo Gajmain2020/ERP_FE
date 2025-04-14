@@ -1,6 +1,8 @@
-import { IFaculty } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+
+import { apiClient } from "@/utils/ApiClient";
+import { IFaculty } from "@/utils/types";
 
 const FacultyURL = "/api/v1/faculty";
 
@@ -121,4 +123,24 @@ export async function UpdateProfileInformationAPI(
       message: "Something went wrong. Please try again.",
     };
   }
+}
+
+export async function GetAllNoticesAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-notices`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function PublishNoticeAPI(formData: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/publish-notice`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formData,
+  });
 }
