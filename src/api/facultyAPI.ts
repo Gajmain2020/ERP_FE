@@ -144,3 +144,20 @@ export async function PublishNoticeAPI(formData: FormData) {
     data: formData,
   });
 }
+
+export async function GetPyqAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-pyq`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function PostPyqAPI(formdata: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/get-pyq`,
+    method: "POST",
+    data: formdata,
+    headers,
+  });
+}
