@@ -166,3 +166,21 @@ export interface ITimetable {
   day: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
   periods: Period[];
 }
+
+export interface IPyq {
+  _id: string;
+  examSession: string;
+  pdfUrl: string;
+  examType: string;
+  course: {
+    _id: string;
+    courseName: string;
+    courseShortName: string;
+    semester: string;
+  };
+  author: {
+    _id: string;
+    email: string;
+    name: string;
+  };
+}

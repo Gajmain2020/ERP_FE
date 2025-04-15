@@ -144,3 +144,31 @@ export async function PublishNoticeAPI(formData: FormData) {
     data: formData,
   });
 }
+
+export async function GetPyqAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-pyq`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function UploadPyqAPI(formdata: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/upload-pyq`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formdata,
+  });
+}
+
+export async function DeletePyqAPI(pyqId: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-pyq?pyqId=${pyqId}`,
+    method: "DELETE",
+    headers,
+  });
+}
