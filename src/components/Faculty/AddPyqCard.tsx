@@ -1,3 +1,6 @@
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+
 import { UploadPyqAPI } from "@/api/facultyAPI";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
 
 export default function AddPyqCard() {
   const [courseCode, setCourseCode] = useState("");
@@ -62,6 +63,8 @@ export default function AddPyqCard() {
         return;
       }
       toast.error(res.message);
+
+      handleReset();
 
       //todo save the pyq here
     } catch (error) {
@@ -129,7 +132,7 @@ export default function AddPyqCard() {
           Reset
         </Button>
         <Button onClick={handleSave} disabled={saving}>
-          Save
+          {saving ? "Saving..." : "Save"}
         </Button>
       </CardFooter>
     </Card>
