@@ -20,6 +20,7 @@ import ManageTimeTable from "./pages/Admin/ManageTimeTable";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyManageNotice from "./pages/Faculty/FacultyManageNotice";
+import FacultyManagePyq from "./pages/Faculty/FacultyManagePyq";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
 import Homepage from "./pages/Faculty/Homepage";
 import AdminLanding from "./pages/Landing/AdminLanding";
@@ -117,6 +118,7 @@ const App: React.FC = () => {
             <Route index element={<Homepage />} />
             <Route path="Profile" element={<FacultyProfile />} />
             <Route path="notice" element={<FacultyManageNotice />} />
+            <Route path="pyqs" element={<FacultyManagePyq />} />
           </Route>
 
           {/* Not Authorized Page */}

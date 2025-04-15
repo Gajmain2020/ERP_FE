@@ -153,11 +153,14 @@ export async function GetPyqAPI() {
   });
 }
 
-export async function PostPyqAPI(formdata: FormData) {
+export async function UploadPyqAPI(formdata: FormData) {
   return apiClient({
-    url: `${FacultyURL}/get-pyq`,
+    url: `${FacultyURL}/upload-pyq`,
     method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
     data: formdata,
-    headers,
   });
 }
