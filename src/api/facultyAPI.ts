@@ -172,3 +172,11 @@ export async function DeletePyqAPI(pyqId: string) {
     headers,
   });
 }
+
+export async function GetTimetableAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-timetable`,
+    method: "GET",
+    headers,
+  });
+}
