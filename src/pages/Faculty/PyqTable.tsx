@@ -21,9 +21,11 @@ import { Trash2 } from "lucide-react";
 export default function PyqTable({
   data,
   isLoading,
+  handleDeletePyq,
 }: {
   data: IPyq[];
   isLoading: boolean;
+  handleDeletePyq: (id: string) => void;
 }) {
   return (
     <Card className="w-full">
@@ -83,7 +85,10 @@ export default function PyqTable({
                     </Button>
                   </TableCell>
                   <TableCell className="w-10">
-                    <Button variant="destructive">
+                    <Button
+                      onClick={() => handleDeletePyq(pyq._id)}
+                      variant="destructive"
+                    >
                       <Trash2 />
                     </Button>
                   </TableCell>

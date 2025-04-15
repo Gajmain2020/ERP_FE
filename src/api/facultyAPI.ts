@@ -164,3 +164,11 @@ export async function UploadPyqAPI(formdata: FormData) {
     data: formdata,
   });
 }
+
+export async function DeletePyqAPI(pyqId: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-pyq?pyqId=${pyqId}`,
+    method: "DELETE",
+    headers,
+  });
+}
