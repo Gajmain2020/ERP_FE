@@ -74,6 +74,7 @@ export async function EnrollFacultiesAPI(faculties: IFaculty[]) {
 }
 
 export async function AddCourseAPI(course: ICourse) {
+  delete course._id;
   return apiClient({
     headers,
     url: `${AdminURL}/add-course`,
