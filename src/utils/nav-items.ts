@@ -119,26 +119,26 @@ export const facultyNavItems = {
       path: "/profile",
     },
     {
-      title: "Notifications",
+      title: "Notice",
       icon: Bell,
-      path: "/notifications",
+      path: "/notice",
     },
-    {
-      title: "Complaints",
-      icon: AlertCircle,
-      path: "/complaints",
-    },
+    // {
+    //   title: "Complaints",
+    //   icon: AlertCircle,
+    //   path: "/complaints",
+    // },
   ],
   academics: [
     {
-      title: "Manage Attendance",
+      title: "Attendance",
       icon: ClipboardList,
-      path: "/manage-attendance",
+      path: "/attendance",
     },
     {
-      title: "Manage Students",
+      title: "Students",
       icon: IdCard,
-      path: "/manage-attendance",
+      path: "/students",
     },
     {
       title: "Time Table",

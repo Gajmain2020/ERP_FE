@@ -1,6 +1,8 @@
-import { IFaculty } from "@/utils/types";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+
+import { apiClient } from "@/utils/ApiClient";
+import { IFaculty } from "@/utils/types";
 
 const FacultyURL = "/api/v1/faculty";
 
@@ -121,4 +123,117 @@ export async function UpdateProfileInformationAPI(
       message: "Something went wrong. Please try again.",
     };
   }
+}
+
+export async function GetAllNoticesAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-notices`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function PublishNoticeAPI(formData: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/publish-notice`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formData,
+  });
+}
+
+export async function GetPyqAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-pyq`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function UploadPyqAPI(formdata: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/upload-pyq`,
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: formdata,
+  });
+}
+
+export async function DeletePyqAPI(pyqId: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-pyq?pyqId=${pyqId}`,
+    method: "DELETE",
+    headers,
+  });
+}
+
+export async function GetTimetableAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-timetable`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetAssignmentAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-assignments`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function UploadAssignmentAPI(formData: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/upload-assignment`,
+    method: "POST",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+}
+
+export async function DeleteAssignmentAPI(id: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-assignment?assignmentId=${id}`,
+    method: "DELETE",
+    headers,
+  });
+}
+
+export async function GetPendingClassAttendanceAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-pending-attendance-classes`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetStudentsByFiltersAPI(
+  semester: string,
+  section: string,
+  department: string
+) {
+  return apiClient({
+    url: `${FacultyURL}/get-students?department=${department}&semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function SaveAttendanceAPI(data: IAttendanceData) {
+  return apiClient({
+    headers,
+    url: `${FacultyURL}/save-attendance`,
+    method: "POST",
+    data,
+  });
 }

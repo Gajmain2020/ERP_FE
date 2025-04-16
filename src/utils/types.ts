@@ -131,7 +131,7 @@ interface FaultyForCourse {
 }
 
 export interface ICourse {
-  _id: string;
+  _id?: string;
   courseCode: string;
   courseName: string;
   courseShortName: string;
@@ -165,4 +165,59 @@ interface Period {
 export interface ITimetable {
   day: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
   periods: Period[];
+}
+
+export interface IPyq {
+  _id: string;
+  examSession: string;
+  pdfUrl: string;
+  examType: string;
+  course: {
+    _id: string;
+    courseName: string;
+    courseShortName: string;
+    semester: string;
+  };
+  author: {
+    _id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export interface IAssignment {
+  _id: string;
+  assignmentNumber: string;
+  assignmentName: string;
+  dueDate: string;
+  assignmentFileUrl: string;
+  submittedStudents?: string[];
+  submittedStudentsCount?: number;
+  course: {
+    _id: string;
+    courseCode: string;
+    courseName: string;
+    courseShortName: string;
+    semester: string;
+  };
+  facultyId: {
+    _id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export interface PendingAttendance {
+  date: string; // e.g., "2025-04-14"
+  day: string; // e.g., "Monday"
+  periodNumber: number;
+  course: {
+    _id: string;
+    courseName: string;
+    courseCode: string;
+    courseShortName: string;
+  };
+  section: string;
+  department: string;
+  semester: string;
 }

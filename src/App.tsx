@@ -19,7 +19,12 @@ import ManageTG from "./pages/Admin/ManageTG";
 import ManageTimeTable from "./pages/Admin/ManageTimeTable";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
+import FacultyAssignment from "./pages/Faculty/FacultyAssignment";
+import FacultyManageAttendance from "./pages/Faculty/FacultyManageAttendance";
+import FacultyManageNotice from "./pages/Faculty/FacultyManageNotice";
+import FacultyManagePyq from "./pages/Faculty/FacultyManagePyq";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
+import FacultyTimeTable from "./pages/Faculty/FacultyTimeTable";
 import Homepage from "./pages/Faculty/Homepage";
 import AdminLanding from "./pages/Landing/AdminLanding";
 import Landing from "./pages/Landing/Landing";
@@ -115,7 +120,11 @@ const App: React.FC = () => {
           >
             <Route index element={<Homepage />} />
             <Route path="Profile" element={<FacultyProfile />} />
-            <Route path="notice" element={<>Hello from faculty side</>} />
+            <Route path="notice" element={<FacultyManageNotice />} />
+            <Route path="pyqs" element={<FacultyManagePyq />} />
+            <Route path="time-table" element={<FacultyTimeTable />} />
+            <Route path="attendance" element={<FacultyManageAttendance />} />
+            <Route path="assignments" element={<FacultyAssignment />} />
           </Route>
 
           {/* Not Authorized Page */}
