@@ -14,11 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function AddAssignmentCard({
-  onPublish,
-}: {
-  onPublish: (assignment: any) => void;
-}) {
+export default function AddAssignmentCard() {
   const [courseCode, setCourseCode] = useState("");
   const [assignmentNumber, setAssignmentNumber] = useState("");
   const [assignmentTitle, setAssignmentTitle] = useState("");
@@ -67,7 +63,6 @@ export default function AddAssignmentCard({
       }
 
       toast.success(res.message);
-      onPublish(res.assignment);
       handleReset();
     } catch (error) {
       console.error("Error occurred while uploading assignment:", error);

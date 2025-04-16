@@ -200,3 +200,11 @@ export async function UploadAssignmentAPI(formData: FormData) {
     },
   });
 }
+
+export async function DeleteAssignmentAPI(id: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-assignment?assignmentId=${id}`,
+    method: "DELETE",
+    headers,
+  });
+}

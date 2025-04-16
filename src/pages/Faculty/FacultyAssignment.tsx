@@ -1,16 +1,23 @@
-import { DeletePyqAPI, GetAssignmentAPI } from "@/api/facultyAPI";
-import AddAssignmentCard from "@/components/Faculty/AddAssignmentCard";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { DeleteAssignmentAPI, GetAssignmentAPI } from "@/api/facultyAPI";
+import AddAssignmentCard from "@/components/Faculty/AddAssignmentCard";
+import AssignmentTable from "@/components/Faculty/AssignmentTable";
+import { IAssignment } from "@/utils/types";
+
 export default function FacultyAssignment() {
-  const [assignments, setAssignments] = useState<IAssignments[]>([]);
+  const [assignments, setAssignments] = useState<IAssignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAssignments = async () => {
       setLoading(true);
-      const res = await GetAssignmentAPI();
+      const res = (await GetAssignmentAPI()) as {
+        success: boolean;
+        message: string;
+        assignments: IAssignment[];
+      };
 
       if (!res.success) {
         setLoading(false);
@@ -26,8 +33,11 @@ export default function FacultyAssignment() {
     fetchAssignments();
   }, []);
 
-  const handleDeletePyq = async (id: string) => {
-    const res = await DeletePyqAPI(id);
+  const handleDeleteAssignment = async (id: string) => {
+    const res = (await DeleteAssignmentAPI(id)) as {
+      success: boolean;
+      message: string;
+    };
 
     if (!res.success) {
       toast.error("Error while deleting the pyq.");
@@ -36,10 +46,12 @@ export default function FacultyAssignment() {
 
     toast.success(res.message);
 
-    setPyqs((pyqs) => pyqs.filter((pyq) => pyq._id !== id));
+    setAssignments((assignments) =>
+      assignments.filter((assignment) => assignment._id !== id)
+    );
   };
 
-  const onPublish = (assignment) => {
+  const onPublish = (assignment: IAssignment) => {
     setAssignments((prev) => [assignment, ...prev]);
     return;
   };
@@ -47,7 +59,13 @@ export default function FacultyAssignment() {
   return (
     <div className="w-full h-screen flex flex-col gap-5">
       {/* Add pyq card */}
-      <AddAssignmentCard onPublish={onPublish} />
+      <AddAssignmentCard />
+
+      <AssignmentTable
+        isLoading={loading}
+        data={assignments}
+        handleDelete={handleDeleteAssignment}
+      />
     </div>
   );
 }
