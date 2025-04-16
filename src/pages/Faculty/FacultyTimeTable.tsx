@@ -36,11 +36,7 @@ const days = [
 ];
 const periodsCount = 7;
 
-export default function FacultyTimetableTable({
-  facultyId,
-}: {
-  facultyId: string;
-}) {
+export default function FacultyTimetableTable() {
   const [data, setData] = useState<FacultyPeriod[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +61,7 @@ export default function FacultyTimetableTable({
     };
 
     fetchTimetable();
-  }, [facultyId]);
+  }, []);
 
   // Group periods by day
   const groupedByDay: { [key: string]: FacultyPeriod[] } = {};
