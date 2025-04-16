@@ -1,6 +1,7 @@
 import {
   GetPendingClassAttendanceAPI,
   GetStudentsByFiltersAPI,
+  SaveAttendanceAPI,
 } from "@/api/facultyAPI";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -72,10 +73,33 @@ const FacultyManageAttendance = ({ facultyId }: { facultyId: string }) => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Submit attendance for:", selectedClass);
     console.log("Present students:", present);
-    setOpenDialog(false);
+
+    if (selectedClass) {
+      const res = await SaveAttendanceAPI({
+        courseId: selectedClass.course._id,
+        facultyId: facultyId,
+        department: selectedClass.department,
+        semester: selectedClass.semester,
+        section: selectedClass.section,
+        date: selectedClass.date, // ISO string or Date object
+        periodNumber: selectedClass.periodNumber,
+        presentStudentIds: present, // Array of present student ObjectIds
+      });
+
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      fetchPendingClasses?.();
+      setSelectedClass(null);
+      setStudents([]);
+      setPresent([]);
+      setOpenDialog(false);
+    }
   };
 
   useEffect(() => {

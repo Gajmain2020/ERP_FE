@@ -228,3 +228,12 @@ export async function GetStudentsByFiltersAPI(
     headers,
   });
 }
+
+export async function SaveAttendanceAPI(data: IAttendanceData) {
+  return apiClient({
+    headers,
+    url: `${FacultyURL}/save-attendance`,
+    method: "POST",
+    data,
+  });
+}
