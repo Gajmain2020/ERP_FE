@@ -180,3 +180,31 @@ export async function GetTimetableAPI() {
     headers,
   });
 }
+
+export async function GetAssignmentAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-assignments`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function UploadAssignmentAPI(formData: FormData) {
+  return apiClient({
+    url: `${FacultyURL}/upload-assignment`,
+    method: "POST",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+}
+
+export async function DeleteAssignmentAPI(id: string) {
+  return apiClient({
+    url: `${FacultyURL}/delete-assignment?assignmentId=${id}`,
+    method: "DELETE",
+    headers,
+  });
+}

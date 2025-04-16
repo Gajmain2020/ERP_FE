@@ -184,3 +184,25 @@ export interface IPyq {
     name: string;
   };
 }
+
+export interface IAssignment {
+  _id: string;
+  assignmentNumber: string;
+  assignmentName: string;
+  dueDate: string;
+  assignmentFileUrl: string;
+  submittedStudents?: string[];
+  submittedStudentsCount?: number;
+  course: {
+    _id: string;
+    courseCode: string;
+    courseName: string;
+    courseShortName: string;
+    semester: string;
+  };
+  facultyId: {
+    _id: string;
+    email: string;
+    name: string;
+  };
+}
