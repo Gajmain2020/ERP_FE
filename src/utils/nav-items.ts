@@ -131,14 +131,14 @@ export const facultyNavItems = {
   ],
   academics: [
     {
-      title: "Manage Attendance",
+      title: "Attendance",
       icon: ClipboardList,
-      path: "/manage-attendance",
+      path: "/attendance",
     },
     {
-      title: "Manage Students",
+      title: "Students",
       icon: IdCard,
-      path: "/manage-attendance",
+      path: "/students",
     },
     {
       title: "Time Table",

@@ -206,3 +206,18 @@ export interface IAssignment {
     name: string;
   };
 }
+
+export interface PendingAttendance {
+  date: string; // e.g., "2025-04-14"
+  day: string; // e.g., "Monday"
+  periodNumber: number;
+  course: {
+    _id: string;
+    courseName: string;
+    courseCode: string;
+    courseShortName: string;
+  };
+  section: string;
+  department: string;
+  semester: string;
+}

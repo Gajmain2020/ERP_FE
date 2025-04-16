@@ -208,3 +208,32 @@ export async function DeleteAssignmentAPI(id: string) {
     headers,
   });
 }
+
+export async function GetPendingClassAttendanceAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-pending-attendance-classes`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function GetStudentsByFiltersAPI(
+  semester: string,
+  section: string,
+  department: string
+) {
+  return apiClient({
+    url: `${FacultyURL}/get-students?department=${department}&semester=${semester}&section=${section}`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function SaveAttendanceAPI(data: IAttendanceData) {
+  return apiClient({
+    headers,
+    url: `${FacultyURL}/save-attendance`,
+    method: "POST",
+    data,
+  });
+}

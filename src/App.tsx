@@ -20,6 +20,7 @@ import ManageTimeTable from "./pages/Admin/ManageTimeTable";
 import NotAuthorized from "./pages/Common/NotAuthorized";
 import NotFound from "./pages/Common/NotFound";
 import FacultyAssignment from "./pages/Faculty/FacultyAssignment";
+import FacultyManageAttendance from "./pages/Faculty/FacultyManageAttendance";
 import FacultyManageNotice from "./pages/Faculty/FacultyManageNotice";
 import FacultyManagePyq from "./pages/Faculty/FacultyManagePyq";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
@@ -122,6 +123,7 @@ const App: React.FC = () => {
             <Route path="notice" element={<FacultyManageNotice />} />
             <Route path="pyqs" element={<FacultyManagePyq />} />
             <Route path="time-table" element={<FacultyTimeTable />} />
+            <Route path="attendance" element={<FacultyManageAttendance />} />
             <Route path="assignments" element={<FacultyAssignment />} />
           </Route>
 
