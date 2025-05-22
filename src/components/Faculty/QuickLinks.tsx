@@ -11,9 +11,6 @@ const QuickLinks: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-2xl font-bold text-gray-800 text-center">
-        Quick Links
-      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {quickLinksFaculty.map((link, index) => (
           <a
