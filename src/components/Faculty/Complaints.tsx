@@ -1,17 +1,15 @@
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 const Complaints: React.FC = () => {
   const complaints = [
-    {
-      subject: "WiFi Not Working",
-      text: "The WiFi in the library has been down for the past two days.",
-      raisedBy: "Amit Sharma",
-    },
-    {
-      subject: "WiFi Not Working",
-      text: "The WiFi in the library has been down for the past two days.",
-      raisedBy: "Amit Sharma",
-    },
     {
       subject: "WiFi Not Working",
       text: "The WiFi in the library has been down for the past two days.",
@@ -28,46 +26,58 @@ const Complaints: React.FC = () => {
       raisedBy: "Rahul Singh",
     },
     {
-      subject: "WiFi Not Working",
-      text: "The WiFi in the library has been down for the past two days.",
-      raisedBy: "Amit Sharma",
+      subject: "Washroom Hygiene",
+      text: "The cleanliness of the washrooms in Block A needs improvement.",
+      raisedBy: "Priya Sinha",
     },
     {
-      subject: "WiFi Not Working",
-      text: "The WiFi in the library has been down for the past two days.",
-      raisedBy: "Amit Sharma",
+      subject: "Library AC Problem",
+      text: "The air conditioning in the library is not working.",
+      raisedBy: "Ravi Patel",
+    },
+    {
+      subject: "Noisy Fans in Lab",
+      text: "The fans in Lab 5 are making too much noise.",
+      raisedBy: "Sakshi Mehra",
     },
   ];
 
   return (
-    <div className="relative flex flex-col max-w-full max-h-[50dvh] overflow-hidden rounded-lg bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg">
-      <div className="text-2xl text-center py-2 bg-gray-100 border-gray-500 border rounded-t-lg font-semibold text-indigo-700">
-        Complaints
-      </div>
+    <Card className="max-h-[50dvh] flex flex-col overflow-hidden">
+      <CardHeader>
+        <CardTitle>Complaints</CardTitle>
+        <CardDescription>
+          Recently raised complaints by students
+        </CardDescription>
+      </CardHeader>
 
-      <div className="overflow-y-auto flex-grow max-h-full scrollbar-thin scrollbar-thumb-gray-600">
-        {complaints.map((complaint, index) => (
-          <div key={index}>
-            <div className="border-b border-gray-300 my-1"></div>
-            <div className="px-4 py-2 hover:bg-gray-200 transition cursor-pointer">
-              <h3 className="text-xl font-bold text-indigo-600">
-                {complaint.subject}{" "}
-                <span className="text-xs text-gray-500">
-                  Raised by:{" "}
-                  <span className="font-medium">{complaint.raisedBy}</span>
-                </span>
+      <CardContent className="overflow-y-auto flex-grow max-h-full px-1">
+        <div className="space-y-3 pr-1 scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 transition-all duration-300">
+          {complaints.map((complaint, index) => (
+            <div
+              key={index}
+              className="px-3 py-2 border border-gray-200 rounded-md shadow-sm hover:bg-gray-50 transition"
+            >
+              <h3 className="text-sm font-semibold text-indigo-700 flex items-end gap-2">
+                {complaint.subject}
+                <p className="text-xs text-gray-600">
+                  <span className="font-medium">Raised by:</span>{" "}
+                  {complaint.raisedBy}
+                </p>
               </h3>
-              <p className="text-sm text-gray-600">{complaint.text}</p>
+
+              <p className="text-sm text-gray-700">{complaint.text}</p>
             </div>
-          </div>
-        ))}
-        <div className="px-4 py-1 text-center mt-4 mb-4">
-          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white">
-            View All Complaints
-          </Button>
+          ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+
+      <CardFooter className="justify-center">
+        <Button className="bg-indigo-500 hover:bg-indigo-600 text-white">
+          View All Complaints
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

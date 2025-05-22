@@ -1,17 +1,15 @@
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 const UpcomingQuizzes: React.FC = () => {
   const quizzes = [
-    {
-      title: "Data Structures Quiz",
-      date: "March 20, 2025",
-      subject: "Data Structures & Algorithms",
-    },
-    {
-      title: "Data Structures Quiz",
-      date: "March 20, 2025",
-      subject: "Data Structures & Algorithms",
-    },
     {
       title: "Data Structures Quiz",
       date: "March 20, 2025",
@@ -27,36 +25,53 @@ const UpcomingQuizzes: React.FC = () => {
       date: "March 25, 2025",
       subject: "Operating Systems",
     },
+    {
+      title: "Networks Quiz",
+      date: "March 28, 2025",
+      subject: "Computer Networks",
+    },
+    {
+      title: "Compiler Design Test",
+      date: "March 30, 2025",
+      subject: "Compiler Design",
+    },
   ];
 
   return (
-    <div className="relative flex flex-col max-w-full max-h-[40dvh] overflow-hidden rounded-lg bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-lg">
-      <div className="text-2xl text-center py-2 bg-gray-100 border-gray-500 border rounded-t-lg font-semibold text-indigo-700">
-        Upcoming Quizzes
-      </div>
+    <Card className="max-h-[40dvh] flex flex-col overflow-hidden">
+      <CardHeader>
+        <CardTitle>Upcoming Quizzes</CardTitle>
+        <CardDescription>
+          Don’t miss out on the upcoming assessments.
+        </CardDescription>
+      </CardHeader>
 
-      <div className="overflow-y-auto flex-grow max-h-full scrollbar-thin scrollbar-thumb-gray-600">
-        {quizzes.map((quiz, index) => (
-          <div key={index}>
-            <div className="border-b border-gray-300 my-1"></div>
-            <div className="px-4 py-2 hover:bg-gray-200 transition cursor-pointer">
-              <h3 className="text-xl font-bold text-indigo-600">
+      {/* Smooth scroll container */}
+      <CardContent className="overflow-y-auto flex-grow max-h-full px-1">
+        <div className="space-y-3 pr-1 scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 transition-all duration-300">
+          {quizzes.map((quiz, index) => (
+            <div
+              key={index}
+              className="px-3 py-2 border border-gray-200 rounded-md shadow-sm hover:bg-gray-50 transition"
+            >
+              <h3 className="text-sm font-semibold text-indigo-700">
                 {quiz.title}
               </h3>
-              <p className="text-sm text-gray-500">
-                {quiz.subject} -{" "}
+              <p className="text-xs text-gray-600">
+                {quiz.subject} —{" "}
                 <span className="font-medium">{quiz.date}</span>
               </p>
             </div>
-          </div>
-        ))}
-        <div className="px-4 py-1 text-center mt-4 mb-4">
-          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white">
-            View All Quizzes
-          </Button>
+          ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+
+      <CardFooter className="justify-center">
+        <Button className="bg-indigo-500 hover:bg-indigo-600 text-white">
+          View All Quizzes
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
