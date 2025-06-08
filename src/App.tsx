@@ -24,6 +24,7 @@ import FacultyManageAttendance from "./pages/Faculty/FacultyManageAttendance";
 import FacultyManageNotice from "./pages/Faculty/FacultyManageNotice";
 import FacultyManagePyq from "./pages/Faculty/FacultyManagePyq";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
+import FacultyQuizzes from "./pages/Faculty/FacultyQuizes";
 import FacultyTimeTable from "./pages/Faculty/FacultyTimeTable";
 import Homepage from "./pages/Faculty/Homepage";
 import AdminLanding from "./pages/Landing/AdminLanding";
@@ -123,8 +124,12 @@ const App: React.FC = () => {
             <Route path="notice" element={<FacultyManageNotice />} />
             <Route path="pyqs" element={<FacultyManagePyq />} />
             <Route path="time-table" element={<FacultyTimeTable />} />
-            <Route path="attendance" element={<FacultyManageAttendance />} />
+            <Route
+              path="attendance"
+              element={<FacultyManageAttendance facultyId={id} />}
+            />
             <Route path="assignments" element={<FacultyAssignment />} />
+            <Route path="quizzes" element={<FacultyQuizzes />} />
           </Route>
 
           {/* Not Authorized Page */}

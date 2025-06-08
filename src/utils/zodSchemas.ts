@@ -40,3 +40,18 @@ export const addCourseSchema = z.object({
     errorMap: () => ({ message: "Class type is required" }),
   }),
 });
+
+//  quizName: "",
+//       date: "",
+//       startTime: "",
+//       endTime: "",
+//       courseId: "",
+//       passcode: "",
+export const quizSchema = z.object({
+  quizName: z.string().min(1, "Quiz Name is required."),
+  date: z.string().min(1, "Date is required."),
+  startTime: z.string().min(1, "Start time can not be empty"),
+  endTime: z.string().min(1, "End time can not be empty."),
+  courseId: z.string().min(1, "Course must be selected."),
+  passcode: z.string().min(4, "Password can not be less than 4 characters."),
+});

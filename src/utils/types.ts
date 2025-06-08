@@ -24,6 +24,12 @@ export interface EditFacultyProfile {
   studentProfile: StudentDetailsData | null;
 }
 
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
 export interface StudentData {
   _id: string;
   name: string;
@@ -220,4 +226,13 @@ export interface PendingAttendance {
   section: string;
   department: string;
   semester: string;
+}
+
+export interface IQuizData {
+  quizName: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  courseId: string;
+  passcode: string;
 }

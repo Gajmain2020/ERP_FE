@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import { apiClient } from "@/utils/ApiClient";
-import { IFaculty } from "@/utils/types";
+import { ApiResponse, IFaculty, IQuizData } from "@/utils/types";
 
 const FacultyURL = "/api/v1/faculty";
 
@@ -236,4 +236,32 @@ export async function SaveAttendanceAPI(data: IAttendanceData) {
     method: "POST",
     data,
   });
+}
+
+export async function GetCoursesAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-courses`,
+    method: "GET",
+    headers,
+  });
+}
+
+export async function ScheduleQuizAPI(
+  formData: IQuizData
+): Promise<ApiResponse> {
+  const response = (await apiClient({
+    headers,
+    url: `${FacultyURL}/schedule-quiz`,
+    method: "POST",
+    data: formData,
+  })) as ApiResponse;
+  return response;
+}
+
+export async function GetQuizzesAPI() {
+  return apiClient({
+    url: `${FacultyURL}/get-quizzes`,
+    method: "GET",
+    headers,
+  }) as Promise<{ success: boolean; message: string; quizzes: IQuizData[] }>;
 }
